@@ -15,7 +15,7 @@
         <div class="design_view">
             <div class="row">
               <div class="col-md-4" [ngClass]="{' mb-5':!isLast}" *ngFor="let design of design?.res;last as isLast">
-                <div class="mb-options" (click)="selectDesign(design)" [ngClass]="{'active':designInfo.id==design?.sgid}">
+                <div class="mb-options" (click)="selectDesign(design)" tabindex="0" [ngClass]="{'active':designInfo.id==design?.sgid}">
                   <img *ngIf="designInfo?.id !=design?.sgid" src="{{design?.img}}"/>
                   <img *ngIf="design?.url && designInfo.id==design?.sgid" src="{{design?.url}}"/>
                   <p>{{design?.design_type}}</p>
@@ -48,7 +48,7 @@
               </div>
               <div class="row">
                 <div class="col-md-6 mt-4 pb-4" *ngFor="let room of designRoomType?.res">
-                  <div class="mb-options" (click)="selectRoom(room)" [ngClass]="{'active':roomInfo?.sub_id==room?.sgid}">
+                  <div class="mb-options" (click)="selectRoom(room)" tabindex="0" [ngClass]="{'active':roomInfo?.sub_id==room?.sgid}">
                     <img *ngIf="roomInfo?.sub_id !=room?.sgid" src="{{room?.img}}"/>
                     <img *ngIf="room?.url && roomInfo?.sub_id==room?.sgid" src="{{room?.url}}"/>
                     <p>{{room?.room_type_name}}</p>
