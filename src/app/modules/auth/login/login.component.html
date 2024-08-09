@@ -1,0 +1,78 @@
+
+
+<section class="login-section">
+  <div class="container-fluid">
+    
+    <div class="row position-relative">
+      <div class="col-lg-7">
+        <div class="login_img_one">
+          <img src="assets/images/login_img/login_img_1.png" />
+        </div>
+        <div class="login_img_two">
+          <img src="assets/images/login_img/login_img_2.png" />
+        </div>
+      </div>
+      <div class="col-lg-5">
+       
+        <div class="card login_card">
+          <div class="card-body">
+            <p class="heading">Sign in to your Inhabitr account</p>
+            <form [formGroup]="loginForm" (ngSubmit)="doLogin()" class="font14">
+              <div class="form-group login_label mt-4" [ngClass]="{'border_active':loginForm.get('email').hasError('pattern') || loginForm.controls['email'].invalid && isSubmitted}">
+                <input type="text" class="form-control" placeholder="Email address" name="email" formControlName="email"
+                  [pattern]='emailPattern' />
+                <div class="error-view" *ngIf="loginForm.get('email').hasError('pattern')">
+                  Email must be a valid email address
+                </div>
+                <div class="error-view pt-1" *ngIf="loginForm.controls['email'].invalid && isSubmitted">
+
+                  <div *ngIf="loginForm.controls['email'].errors.required">
+                    Email is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group login_label mt-4">
+                <input type="password" placeholder="Password" class="form-control" name="password" formControlName="password" />
+                <div class="error-view pt-1" *ngIf="loginForm.controls['password'].invalid && isSubmitted">
+
+                  <div *ngIf="loginForm.controls['password'].errors.required">
+                    Password is required
+                  </div>
+                </div>
+              </div>
+              <div class="forgot_view">
+                <a  class="forgot" routerLink='/forgot/password'>Forgot password?</a>
+                <span> <span>Don't have an account?</span> <a class="singup"  routerLink='/signup'> Sign Up</a></span>
+              </div>
+              <div class="row mt-4 justify-content-center">
+                <div class="col-md-12">
+                  <div class="form-group m-0">
+                    <button type="submit" class="btn btn-dark btn-block "> Login </button>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-4">
+                <div class="col-md-12">
+                  <p class="google_option">OR</p>
+                </div>
+              </div>
+              <div class="row mt-4">
+                <div class="col-md-12">
+                  <div id="google-button">
+                    
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ul class="login_content">
+      <li>Welcome to</li>
+      <li>Inhabitr Furniture Data Cloud </li>
+    </ul>
+  </div>
+</section>
+

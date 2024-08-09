@@ -1,0 +1,213 @@
+.portfolio-section .isotopeSelector:hover img {
+    -webkit-transform: scale(1.2) rotate(2deg);
+    transform: scale(1.2) rotate(2deg);
+    transition: all .4s ease;
+}
+.portfolio-section .isotopeSelector img {
+    width: 100%;
+    height: auto;
+    transition: all .4s ease;
+}
+.shop_container{
+    margin-top: 20px;
+}
+ .img_block{
+  opacity: 1;
+    top: 0;
+    left: 0;
+    transition: all .5s ease;
+    width: 200px;
+}
+.product-box .img-wrapper, .product-wrap .img-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+img {
+    vertical-align: middle;
+    border-style: none;
+}
+a{
+  transition:.5s ease;
+}
+.img-fluid {
+    max-width: 100%;
+    width: 100%;
+}
+
+.shop-view {
+    overflow: hidden;
+    position: relative;
+    }
+    .image-block-grid {
+        min-height: 120px;
+        overflow: hidden;
+        position: relative;
+    }
+    .apply-spacing {
+        width: 90%;
+    }
+    .image-block-grid img {
+        height: auto;
+        margin: 0 auto;
+        position: relative;
+        width: 100% !important;
+    }
+    ul {
+        list-style: none;
+    }
+    .apply-spacing {
+        display: inline-block;
+        background-color: white;
+        margin: 10px;
+        height: 93%;
+        width: 91%;
+        /* border: 1px solid whitesmoke; */
+        box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+    }
+    .list-feed {
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 0.3s, top 1s;
+    }
+    
+    img{
+        transition: transform .2s;
+    }
+    
+    img:hover {
+        transform: scale(1.5); 
+    }
+    .sub_header{
+        background: #fff;
+        color: #000;
+        height: 40px;
+    }
+    #waterfall{
+        margin-top: 20px;
+    }
+    
+
+p a{
+    color:black;
+    text-transform: capitalize;
+    font-size: 13px;
+}
+.circle-menu-block .menu-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    text-align: center;
+    background-color: whitesmoke;
+    margin: 5px auto;
+    margin-bottom: 0px;
+    display: block;
+    box-shadow: inset 0 1px 5px rgba(255, 255, 255, 0.3), 0 1px 5px rgba(0, 0, 0, 0.15), 0 1px 8px rgba(0, 0, 0, 0.15);
+}
+.circle-menu-block.active .shop .icon {
+    color: whitesmoke;
+}
+.circle-menu-block .menu-circle .icon {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 30px;
+    color: grey;
+}
+.circle-menu-block .menu-name {
+    font-size: 12px !important;
+    margin-left: 0 !important;
+}
+.cashback{
+    background: palegoldenrod;
+    font-size: 10px;
+    font-weight: bold;
+    border: 1px solid forestgreen;
+    border-radius: 5px;
+    padding: 5px;
+}
+.light_gray {
+    color: #aaa;
+    font-size: 11px;
+    white-space: nowrap;
+    text-align: center
+}
+.offer_color {
+    color: dodgerblue!important;
+    font-size: 11px;
+    white-space: nowrap;
+    text-align: center
+}
+
+.prd_title{
+    color:#666 !important;
+    font-size: 11px;
+}
+
+.drop_down{
+    height: 300px;
+    overflow-y: scroll;
+}
+.filters{
+    height: 40px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 10px;
+    /* border-bottom: 2px solid #ffc000; */
+}
+.filters .col{
+    cursor: pointer;
+}
+.tag{
+  display: block;
+  width: 120px;
+  height: 24px;
+  background-color: #ffc000;
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  position: absolute;
+  text-align: center;
+  line-height: 24px;
+  right: -26px;
+  top: 22px;
+  z-index: 99;
+  color: #000;
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.dialogContent ul{ margin: 0; padding:30px 60px !important;}
+.dialogContent ul li{ width:150px; display: inline-block; outline: none; vertical-align: top;/*border-right:1px solid #000;*/}
+.dialogContent ul li:nth-child(4n+0){border-right:0px none;}
+.dialogContent ul li span{display: block; font-size: 12px; padding: 5px}
+.dialogContent ul li span:hover{ font-weight: bold;cursor: pointer;}
+
+
+
+/* search */
+a.back-link{
+    text-decoration:underline;
+    color:#000;
+    font-size:13px;
+    cursor:pointer;
+    font-weight:bold;
+    position: relative;
+    top: 3px;
+}
+a.back-link:hover{
+    cursor:pointer;
+    text-decoration:underline;
+    
+}
+.control-label{
+    font-size:13px;
+    color:grey;
+   }
+   .control-span{
+       font-size:13px;
+       font-weight:bold;
+   }
+   #content.active{
+margin-top:60px !important;
+   }
+/* search end */

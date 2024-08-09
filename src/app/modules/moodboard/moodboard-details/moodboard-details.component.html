@@ -1,0 +1,201 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<section class="mb_list_section">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="new_mb_list">
+                    <li class="nav-item"  [ngClass]="{'menu_active':productShowTabs ==='moodboard' ,'event-pointer' : mbInfo?.moodboard?.disable ===false}"
+                    (click)="productTabs('moodboard')">MOODBOARD
+                    </li>
+                    <li class="nav-item" [ngClass]="{'menu_active':productShowTabs ==='add-prodcuts','event-pointer' : mbInfo?.moodboard?.disable ===false}"
+                    (click)="productTabs('add-prodcuts')">ADD PRODUCTS
+                    </li>
+                   
+                </ul>
+            </div> 
+        </div>
+    </div>
+</section>
+
+<section *ngIf="productShowTabs ==='moodboard'">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn mb_button" [ngClass]="{'event-pointer' : mbInfo?.moodboard?.disable ===false}"  (click)="mbDetailsPopup()">Moodboard Details</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div *ngIf="!mbForm">
+
+<!-- moodboard moodboard tab section -->
+
+<section class="mb-tab-section" *ngIf="productShowTabs ==='moodboard'">
+    <div class="container-fluid">
+        <div class="col-md-12">
+            
+            <!-- Tab panes -->
+            <div class="tab-content custom-tab-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card mb_tabs">
+                            <div class="card-header">
+                                <ul class="tab-header-list">
+                                    <li>{{mbInfo?.moodboard?.boardname}}</li>
+                                    <li> No. of Products:{{mbInfo?.moodboard_items?.length}}</li>
+                                </ul>
+                                <ul class="add_product_view">
+                                    <li (click)="productTabs('add-prodcuts')" [ngClass]="{'event-pointer' : mbInfo?.moodboard?.disable ===false}" >
+                                        <i class="fa fa-plus" aria-hidden="true"></i> Add Products
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="row product_overflow">
+                                    <div class="col-lg-2 pb-3" *ngFor="let item of mbInfo?.moodboard_items">
+                                        <div class="card item-view">
+                                            <div class="card-header" *ngIf="mbInfo?.moodboard?.disable">
+                                                <div class="delete_icon_view">
+                                                    <a (click)="deletePopUp(item)" class="fa fa-trash pointer"></a>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <img src="{{item?.image}}" />
+                                            </div>
+                                            <div class="card-footer">
+                                                <ul class="quantity-view">
+                                                    <li>
+                                                        <span class="minus" (click)="itemQtyUpdate(item , '-')"
+                                                            *ngIf="mbInfo?.moodboard?.disable"><i
+                                                                class="fa fa-minus"></i></span>
+                                                                <span class="bg-transparent">
+                                                                    <input type="text"  [ngClass]="{'event-pointer' : mbInfo?.moodboard?.disable ===false}" oninput="if(!this.value.match('^[1-9][0-9]*$'))this.value='';" minlength="1" maxlength="3"
+                                                                        value="{{item?.qty}}" (change)="qtyUpdate(item,$event)" />
+                                                                    
+                                                                </span>
+                                                                
+                                                        <span class="plus" (click)="itemQtyUpdate(item , '+')"
+                                                            *ngIf="mbInfo?.moodboard?.disable"><i
+                                                                class="fa fa-plus"></i></span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="no_products" *ngIf="!mbInfo?.moodboard_items?.length">
+                                        No Products Added
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right" *ngIf="mbInfo?.moodboard_items?.length">
+                                <button type="button" 
+                                [ngClass]="{'event-pointer' : mbInfo?.moodboard?.disable ===false}" 
+                                (click)="pptGenerate()" class="btn button-view"><i class="fa fa-arrow-down" aria-hidden="true"></i> Generate Moodboard
+                                    Summary PPT </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table_summary_view mt-5" *ngIf="mbInfo?.moodboard_items?.length">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h5>Moodboard Summary</h5>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="table_border">
+                            <table class="moodbard-table-view" id="mainTable">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Image</th>
+                                        <th>Product Name</th>
+                                        <th>Supplier Name</th>
+                                        <th>Inventory Level</th>
+                                        <th>Quantity</th>
+                                        <th>Buy Price</th>
+                                        <th>Rental Price / Month</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of mbInfo?.moodboard_items;let i=index;let first = first" [ngClass]="{'first_row':first}">
+                                        <td>{{i+1}}</td>
+                                        <td>
+                                            <img src="{{item?.image}}" />
+                                        </td>
+                                        <td>{{item?.name}}</td>
+                                        <td>{{item?.supplier_name}}</td>
+                                        <td>{{item?.inventory_level}}</td>
+                                        <td class="quantity-view">
+                                            <span class="minus" (click)="itemQtyUpdate(item, '-')" *ngIf="mbInfo?.moodboard?.disable"><i
+                                                    class="fa fa-minus"></i></span>
+                                            <span class="bg-transparent">
+                                                <input type="text" [ngClass]="{'event-pointer' : mbInfo?.moodboard?.disable ===false}"
+                                                    oninput="if(!this.value.match('^[1-9][0-9]*$'))this.value='';" minlength="1"
+                                                    maxlength="3" value="{{item?.qty}}" (change)="qtyUpdate(item,$event)" />
+                
+                                            </span>
+                                            <span class="plus" (click)="itemQtyUpdate(item , '+')" *ngIf="mbInfo?.moodboard?.disable"><i
+                                                    class="fa fa-plus"></i></span>
+                                        </td>
+                                        <td>$ {{item?.buy_price_total | number:"1.2-2"}}</td>
+                                        <td>$ {{item?.sale_price_total | number:"1.2-2"}}</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td colspan="7" class="text-right  border-0">Buy Total</td>
+                                        <td class="text-center" style="font-weight: 500;">$ {{mbInfo?.moodboard_summery?.buy_total | number:"1.2-2"}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7" class="text-right  border-0">
+                                            Monthly Rent Total per Month
+                                        </td>
+                                        <td class="text-center" style="font-weight: 500;">
+                                            $ {{
+                                            mbInfo?.moodboard_summery?.rent_total | number:"1.2-2"
+                                            }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- is_public -->
+            <div class="col-md-1" [ngClass]="{'event-pointer' : mbInfo?.moodboard?.disable ===false}">
+                <input type="checkbox" class="is_public_checkbox_box" [attr.checked]="mbInfo?.moodboard?.is_public=='1' ? 'checked' : null" (change)="changeStatus($event)" id="checkbox-2" />
+                <label for="checkbox-2" class="is_public_label">
+                    <span class="is_public_custom_checkbox_box"></span><span>Public</span>
+                </label>
+            </div>
+            
+            <!-- is_public -->
+        </div>
+    </div>
+</section>
+
+
+
+<!-- moodboard moodboard tab section -->
+</div>
+
+<!-- moodboard add product section -->
+<section *ngIf="productShowTabs ==='add-prodcuts'" class="position-relative">
+    <div class="add_product_btn_view"> <button class="btn mb_button" [ngClass]="{'event-pointer' : mbInfo?.moodboard?.disable ===false}"  (click)="mbDetailsPopup()">Moodboard Details</button></div>
+    <app-moodboard-filter [mbData]="mbInfo" (mbOpData)="mbOpData($event)"></app-moodboard-filter>
+</section>
+
+<!-- moodboard add product section -->
+
+<!-- update moodboard -->
+
+<div *ngIf="mbForm">
+    <app-edit-moodboard [editMbData]="mbInfo" (editMbOpData)="editMbOpData($event)"></app-edit-moodboard>
+</div>
+
+<!-- update moodboard -->

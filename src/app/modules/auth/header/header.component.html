@@ -1,0 +1,33 @@
+<header class="header_section" *ngIf="is_show">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2">
+        <div>
+          <a routerLink="/admin/dashboard"><img src="/assets/img/inhabitr-logo.jpg" width="162px" /></a>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <ul class="nav header_options">
+          <li class="nav-item" *ngFor="let navLink of navLinks">
+            <a  routerLink="{{navLink?.url}}" class="nav-link">
+              <span>{{navLink?.name}}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-2 flex_view">
+        <div class="dropdown my_account_view">
+          <a class="btn btn-secondary dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false">
+            My Account
+          </a>
+        
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+

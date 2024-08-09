@@ -1,0 +1,65 @@
+<section class="item-details">
+    <div class="container">
+        <div class="row">
+            <img src="/assets/img/project/arrow-left.png" routerLink="/admin/products/inspirationList" class="cursor-pointer pr-1">Back to Inspiration List
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-12">
+                <div class="card custom-card">
+                    <div class="d-flex justify-content-between">
+                        <h4>Inspiration Image</h4>
+                       
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="insp-img">
+                            <img src="{{item?.img}}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="tab-content tab-space">
+                    <div class="tab-pane active" id="dashboard-1">
+                        <div [id]="'accordion'+i" class="faq_question" *ngFor="let req of item?.requestResult.items;let i=index">
+                            <p class="m-1">Category : {{req?.category}}</p>
+                            <div class="card mt-2 border-0 custom-warehouse-card">
+                                <div class="card-header accordion-custom-header" id="heading{{i}}">
+                                    <a class="mb-0" data-toggle="collapse" [href]="'#collapseOne'+i" aria-expanded="false"
+                                        > <span class="request">Request</span> </a>
+                                </div>
+                                <div [id]="'collapseOne'+i" class="collapse"  data-parent="#accordion1">
+                                    <div class="card-body text-justify">
+                                        <ngx-json-viewer [json]="req?.request_json" [expanded]="false" [depth]="3"></ngx-json-viewer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="tab-content tab-space">
+                    <div class="tab-pane active" id="dashboard-1">
+                        <div id="accordion2" class="faq_question" *ngFor="let req of item?.requestResult.items;let i=index">
+                            <p class="m-1 invisible">Category : {{req?.category}}</p>
+                            <div class="card mt-2 border-0 custom-warehouse-card">
+                                <div class="card-header accordion-custom-header" id="heading{{i}}">
+                                    <a class="mb-0" data-toggle="collapse" [href]="'#collapseTwo'+i" aria-expanded="false"
+                                        > <span class="request">Response</span></a>
+                                </div>
+                                <div [id]="'collapseTwo'+i" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion2">
+                                    <div class="card-body text-justify">
+                                        <ngx-json-viewer [json]="req?.response_json" [expanded]="false" [depth]="3"></ngx-json-viewer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

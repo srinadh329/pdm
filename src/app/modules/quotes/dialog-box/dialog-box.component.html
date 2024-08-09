@@ -1,0 +1,690 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+
+
+<div *ngIf="quoteMbInData?.dialogType=='moodboard-delete'">
+    <div class="modal-header">
+        <h4 class="modal-title title-font text-center w-100 color"></h4>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        <div class="delete-popup">
+            <h5>Are you sure, you want to delete?</h5>
+            <button (click)="removeFloorMb(quoteMbInData?.res)">Yes</button>
+            <button class="no"  (click)="activeModal.close('Close click')">No</button>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- delivery fee popup -->
+<div *ngIf="deliveryFeeInData?.dialogType=='delivery-fee'">
+    <div class="modal-header">
+        <h6 class="modal-title">{{deliveryFeeInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        <ul class="delivery_fee_view">
+            <li>
+                <input type="radio"  (change)="deliveryFee('unit_level')" name="checkbox-1"/>Delivery Fee / Unit
+            </li>
+            <li>
+                <input type="radio"  (change)="deliveryFee('order_level')" name="checkbox-1"/>Change Delivery fee - Quote/Order
+            </li>
+        </ul>
+
+        <div *ngIf="deliveryFeeShow=='unit_level'" [ngClass]="{'event-none':deliveryFeeInData?.delivery_fee?.quote?.is_disable==true}">
+            <ul class="row details_view">
+                <li class="col-6">Delivery Fee / Unit (Default)</li>
+                <li class="col-6 text-right">$199</li>
+            </ul>
+            <ul class="row details_view">
+                <li class="col-6">Change Delivery Fee / Unit *</li>
+                <li class="col-6 d-flex align-items-center">$&nbsp; <input type="number" onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)" [(ngModel)]="quoteDeliveryFee" class="form-control"/></li>
+            </ul>
+            <div class="row d-flex justify-content-center mt-0 pb-2">
+                  <button type="button" [disabled]="quoteDeliveryFee <0" class="border btn  mt-2 px-5 add-btn" data-dismiss="modal"
+                    (click)="updateDeliveryFee('unit_level')">
+                    Submit
+                  </button>
+              </div>
+        </div>
+        <div *ngIf="deliveryFeeShow=='order_level'" [ngClass]="{'event-none':deliveryFeeInData?.delivery_fee?.quote?.is_disable==true}">
+            <ul class="row details_view">
+                <li class="col-6">Delivery fee - Quote/Order</li>
+                <li class="col-6 text-right">${{deliveryFeeInData?.delivery_fee?.quote?.delivery_fee}}</li>
+            </ul>
+            <ul class="row details_view">
+                <li class="col-6">Change Delivery fee - Quote/Order</li>
+                <li class="col-6 d-flex align-items-center">$&nbsp; <input type="number" onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)"  [(ngModel)]="quoteDeliveryFee" class="form-control"/></li>
+            </ul>
+            <div class="row d-flex justify-content-center mt-0 pb-2">
+                  <button type="button" [disabled]="quoteDeliveryFee <0" class="border btn  mt-2 px-5 add-btn" data-dismiss="modal"
+                    (click)="updateDeliveryFee('order_level')">
+                    Submit
+                  </button>
+              </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- delivery fee popup -->
+
+
+<!-- pickup fee popup -->
+
+<div *ngIf="deliveryFeeInData?.dialogType=='pickup-fee'">
+    <div class="modal-header">
+        <h6 class="modal-title">{{deliveryFeeInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        <div>
+            <ul class="row details_view">
+                <li class="col-6">Pickup Fee / Unit</li>
+                <li class="col-6 text-right">$199</li>
+            </ul>
+            <ul class="row details_view">
+                <li class="col-6">Change Pickup Fee / Unit *</li>
+                <li class="col-6 d-flex align-items-center">$&nbsp; <input type="number" onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)" [ngClass]="{'event-none':deliveryFeeInData?.delivery_fee.quote?.is_disable==true}"  [(ngModel)]="quotePickupFee" class="form-control"/></li>
+            </ul>
+            <div class="row d-flex justify-content-center mt-0 pb-2">
+                  <button type="button" [ngClass]="{'event-none':deliveryFeeInData?.delivery_fee?.quote?.is_disable==true}" [disabled]="!quotePickupFee" class="border btn  mt-2 px-5 add-btn" data-dismiss="modal"
+                    (click)="updatePickupFee()">
+                    Submit
+                  </button>
+              </div>
+        </div>
+    </div>
+</div>    
+
+
+<!-- pickup fee popup -->
+
+
+<!-- add floor plan -->
+<div *ngIf="floorPlanInData?.dialogType=='add-floor-plan'">
+    <div class="modal-header">
+        <h6 class="m-0">{{floorPlanInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        <form [formGroup]="floorForm">
+            <div class="row floor-plan-row">
+                <div class="col-6">
+                    <label class="m-0"> Floor Plan Name*</label>
+                </div>
+                <div class="col-6">
+                    <div>
+                        <input formControlName="floorplan_name" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2 floor-plan-row">
+                <div class="col-6">
+                    <label class="m-0">Floor Plan Types</label>
+                </div>
+                <div class="col-6">
+                    <div>
+                       <select class="form-control" formControlName="floorplan_type_id">
+                            <option value="">Select Floor Plan Type</option>
+                            <option *ngFor="let floor of floorPlanInData?.res" value="{{floor?.sgid}}">{{floor?.name}}</option>
+                       </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2 floor-plan-row">
+                <div class="col-6">
+                    <label class="m-0">No. of Units*</label>
+                </div>
+                <div class="col-6">
+                    <div>
+                        <input type="text"  class="form-control" formControlName="units">
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4 mb-2">
+                <div class="col-md-12 text-center">
+                    <button class="btn add-floor-btn px-5" *ngIf="!floorPlanInData?.editInfo" 
+                    (click)="addFloorPlan('add')" [disabled]="!floorForm?.valid">Add</button>
+                    <button class="btn add-floor-btn px-5" *ngIf="floorPlanInData?.editInfo" 
+                    (click)="addFloorPlan('update')" [disabled]="!floorForm?.valid">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- add floor plan -->
+
+
+<!-- add units -->
+<div *ngIf="unitsInData?.dialogType=='add-units'">
+    <div class="modal-header">
+        <h6 class="m-0">{{unitsInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        <form [formGroup]="unitForm">
+            <div class="row floor-plan-row">
+                <div class="col-4 d-flex justify-content-center align-items-center" *ngIf="!unitsInData?.res">
+                    <label class="m-0">No. of units</label>
+                </div>
+                <div class="col-6 m-auto">
+                    <div>
+                        <input formControlName="unit" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4 mb-2">
+                <div class="col-md-12 text-center">
+                    <button class="btn add-floor-btn" *ngIf="!unitsInData?.res"  [disabled]="!unitForm?.valid" (click)="addUnits('add')">Add</button>
+                    <button class="btn add-floor-btn" *ngIf="unitsInData?.res" [disabled]="!unitForm?.valid" (click)="addUnits('update')">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- add units -->
+
+
+
+<!-- add floor units -->
+<div *ngIf="floorUnitsInData?.dialogType=='add-floor-units'">
+    <div class="modal-header">
+        <h6 class="m-0">{{floorUnitsInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        <form [formGroup]="floorUnitForm">
+            <div class="row floor-plan-row">
+                <div class="col-6">
+                    <label class="m-0">No. of units</label>
+                </div>
+                <div class="col-6">
+                    <div>
+                        <input formControlName="unit" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4 mb-2">
+                <div class="col-md-12 text-center">
+                    <button class="btn add-floor-btn" [disabled]="!floorUnitForm?.valid" (click)="addFloorUnits()">Add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- add floor units -->
+
+
+<!-- moodboard popup -->
+<div *ngIf="moodInData?.dialogType=='moodboard-popup'">
+    <div class="modal-header">
+        <h6 class="m-0">{{moodInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        <div class="mb-2 ml-3">
+            <div class="dropdown text-center position-relative w-100">
+                <span class="mr-4">Select Moodboard</span> 
+                <a
+                    class="btn btn-white dropdown-toggle custom-toggle border position-relative text-left rounded-0 pr-4"
+                    type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{mbData?.boardname}}
+                </a>
+                <div class="dropdown-menu scroll" aria-labelledby="dropdownMenuButton1">
+                    <a class="dropdown-item" *ngFor="let mb of moodInData?.res" (click)="selectMb(mb)" href="javascript:void(0)"
+                        [ngClass]="{'md-active':mb?.sgid==mbData?.sgid}">{{ mb.boardname }}</a>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="moodInData?.type=='floor'">
+            <div class="row d-flex justify-content-center mb-3 mt-4">
+                <div class="form-check-inline mr-5">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" (click)="isAllUnit('1')" [checked]="true"
+                    name="optradio" />All Units
+                </label>
+                </div>
+                <div class="form-check-inline ml-5">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" (click)="isAllUnit('0')" name="optradio" />Selected Unit
+                </label>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center flex-wrap p-2 my-3">
+                <div *ngFor="let unit of moodInData?.units" 
+                class="border position-relative add-unit-mb" (click)="selectUnit(unit)">
+                {{ unit.name }}
+                <span aria-hidden="true" [ngClass]="{ 'fa-check': unit.selected ? true : false }"
+                    class="px-2 pb-1 cross-close fa"></span>
+                </div>
+            </div>
+        </div>
+          <div class="row mt-4 mb-2">
+            <div class="col-md-12 text-center">
+                <button class="btn add-floor-btn" (click)="addMoodboard()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- moodboard popup -->
+
+
+<!-- rent adjument amount popup -->
+<div *ngIf="amountInData?.dialogType=='rent_adjument_amount'">
+    <div class="modal-header">
+        <h6 class="modal-title">{{amountInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body"
+        [ngClass]="{'event-none':amountInData.data?.is_disable==true}">
+        <div class="adjust_view">
+            <span>Monthly Rent Adjustment:</span>
+            <button class="buttonPlus" (click)="itemRentchange('-')"><b>-</b></button>
+            <input type="number" onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)"
+                (keyup)="itemDiscount($event,amountInData?.dialogType)" value="{{amountInData?.rent_value}}"
+                class="inputOf ng-pristine ng-valid ng-touched" disabled="{{amountInData.data.is_disable}}">
+            <button id="increase_counter" (click)="itemRentchange('+')" class="buttonPlus"><b>+</b></button>
+        </div>
+
+        <div class="row mt-4 mb-2">
+            <div class="col-md-12 text-center">
+                <button [disabled]="!amountInData.data.rent_adjustment_type" class="btn add-floor-btn"
+                    (click)="submitAdjustAmount()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- rent adjument amount popup -->
+
+<!-- buy discount amount -->
+<div *ngIf="amountInData?.dialogType=='buy_discount_amount'">
+    <div class="modal-header">
+        <h6 class="modal-title">{{amountInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body" >
+        
+        <div class="adjust_view">
+            <span>Buy Discount:</span>
+            $ <input type="number" step="0.01" 
+            min="0" 
+            max="100000"   [ngClass]="{'event-none':amountInData.data?.is_disable==true}"
+            (keyup)="itemDiscount($event,amountInData?.dialogType)" 
+            [(ngModel)]="amountInData.data.buy_discount" class="inputOf ng-pristine ng-valid ng-touched">
+        </div>
+        <div class="row mt-4 mb-2">
+            <div class="col-md-12 text-center">
+                <button [ngClass]="{'event-none':amountInData.data?.is_disable==true}" [disabled]="!amountInData.data.buy_discount" class="btn add-floor-btn" (click)="submitAdjustAmount()">Submit</button>
+            </div>
+        </div>
+</div>
+</div>
+
+<!-- buy discount amount -->
+
+
+
+<!-- floor unit rent adjument amount popup -->
+<div *ngIf="flooramountInData?.dialogType=='rent_adjument_amount'">
+    <div class="modal-header">
+        <h6 class="modal-title">{{amountInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        
+        <div class="adjust_view">
+            <span>Monthly Rent Adjustment:</span>
+            <button class="buttonPlus" (click)="floorItemRentchange('-')"><b>-</b></button>
+            <input type="number" onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)"  
+            (keyup)="floorItemDiscount($event,flooramountInData?.dialogType)" value="{{flooramountInData?.data?.rent_adjument_value}}" class="inputOf">
+            <button id="increase_counter" (click)="floorItemRentchange('+')" class="buttonPlus"><b>+</b></button></div>
+        </div>
+        <div class="row mt-4 mb-2">
+            <div class="col-md-12 text-center">
+                <button [disabled]="!flooramountInData?.data?.indv_unit?.rent_adjustment_type" class="btn add-floor-btn" (click)="submitFloorAdjustAmount()">Submit</button>
+            </div>
+        </div>
+</div>
+
+
+<!-- floor unit rent adjument amount popup -->
+
+<!-- buy discount amount -->
+<div *ngIf="flooramountInData?.dialogType=='buy_discount_amount'">
+    <div class="modal-header">
+        <h6 class="modal-title">{{amountInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        
+        <div class="adjust_view">
+            <span>Buy Discount:</span>
+            $ <input type="number" onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)"
+            (keyup)="floorItemDiscount($event,flooramountInData?.dialogType)" 
+            value="{{flooramountInData?.data?.indv_unit?.buy_discount}}" class="inputOf ng-pristine ng-valid ng-touched">
+        </div>
+        <div class="row mt-4 mb-2">
+            <div class="col-md-12 text-center">
+                <button [disabled]="!flooramountInData?.data?.indv_unit?.buy_discount" class="btn add-floor-btn" (click)="submitFloorAdjustAmount()">Submit</button>
+            </div>
+        </div>
+</div>
+</div>
+
+<!-- buy discount amount -->
+
+<!-- Freight Charges Other Services popup -->
+<div *ngIf="freightInData?.dialogType=='freight_charges'">
+    <div class="modal-header">
+        <h6 class="modal-title"></h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body" [ngClass]="{'event-none':freightInData?.data?.is_disable==true}">
+
+        <div class="adjust_view" >
+            <span>Freight Charges:</span>
+            $&nbsp; <input type="number" onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)" (keyup)="nonTaxCharges($event,freightInData?.dialogType)"
+                value="{{freightInData?.data?.freight_charges}}" class="inputOf ng-pristine ng-valid ng-touched">
+        </div>
+        <div class="row mt-4 mb-2">
+            <div class="col-md-12 text-center">
+                <button [disabled]="freightInData.data.freight_charges <0" [ngClass]="{'event-none':freightInData?.data?.is_disable==true}" class="btn add-floor-btn"
+                    (click)="taxSubmit()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="otherServiceInData?.dialogType=='other_services'">
+    <div class="modal-header">
+        <h6 class="modal-title">{{otherServiceInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+
+        <button type="submit" [ngClass]="{'event-none':otherServiceInData?.is_disable==true}" (click)="addServices()" class="btn add_more_button"><i class="fa fa-plus" aria-hidden="true"></i>Add More</button>
+        <form class="service_form" [formGroup]="servicesForm">
+            <div formArrayName="services">
+                <div >
+                    <div class="service_table">
+                        <table class="other_service_table table">
+                            <thead>
+                                <th>Service Description</th>
+                                <th>Value</th>
+                                <th></th>
+                            </thead>
+                            <tbody >
+                                <tr *ngFor="let serviceForm of services.controls; let i = index" [formGroupName]="i">
+                                    <td>
+                                        <input type="text" [ngClass]="{'event-none':otherServiceInData?.is_disable==true}"  formControlName="service_name"/>
+                                    </td>
+                                    <td>
+                                        $ <input type="number" onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)"  [ngClass]="{'event-none':otherServiceInData?.is_disable==true}"  formControlName="service_value"/>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-trash-o" [ngClass]="{'event-none':otherServiceInData?.is_disable==true}" (click)="removeIndex(serviceForm,i)" aria-hidden="true"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row mt-4 mb-2">
+            <div class="col-md-12 text-center">
+                <button  class="btn add-floor-btn" [ngClass]="{'event-none':otherServiceInData?.is_disable==true}" [disabled]="!servicesForm.valid"
+                    (click)="submitServiceForm()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Freight Charges Other Services popup -->
+
+
+<!-- company popup -->
+
+
+<div *ngIf="companyInData?.dialogType=='company'">
+    <div class="modal-header">
+        <h6 class="modal-title">{{companyInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        <form [formGroup]="companyForm">
+            <div class="company_form">
+                <label for="optRef" class="control-label pl-2">Company Name:</label>
+                <input type="text" class="form-control" formControlName='company_name' />
+            </div>
+            <div class="company_form">
+                <label for="optRef" class="control-label pl-2">Business Segment:</label>
+                <select formControlName="segment_type_id" class="form-control">
+                    <option hidden value="">Please Select Business Segment</option>
+                    <option *ngFor='let segment of companyInData?.segmentData' [value]="segment.sgid">
+                        {{segment.design_type}}
+                    </option>
+                </select>
+            </div>
+            <div class="row mt-4 mb-2">
+                <div class="col-md-12 text-center">
+                    <button class="btn add-floor-btn" [disabled]="!companyForm.valid"
+                        (click)="sumbitCompany()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- company popup -->
+
+
+
+<!-- project popup -->
+
+<div *ngIf="companyInData?.dialogType=='project'">
+    <div class="modal-header">
+        <h6 class="modal-title">{{companyInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        <form [formGroup]="projectForm">
+            <div class="company_form">
+                <label for="optRef" class="control-label pl-2">Project Name:</label>
+                <input type="text" class="form-control" formControlName='project_name'/>
+            </div>
+            <div class="company_form">
+                <label for="optRef" class="control-label pl-2">Order Type:</label>
+                <select formControlName="project_type" class="form-control">
+                    <option hidden value="">Please Select Order Typet</option>
+                    <option *ngFor='let order of companyInData?.orderData' [value]="order.value">
+                        {{order.type}}
+                    </option>
+                </select>
+            </div>
+            <div class="mt-4">
+                <table class="project_table">
+                    <thead>
+                        <th></th>
+                        <th>Projected Revenue ($)</th>
+                        <th>Budgeted Cost ($)</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Product & Tariff</td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='product_tariff_projected_revenue'/></span></td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='product_tariff_budgeted_cost'/></span></td>
+                        </tr>
+                        <tr>
+                            <td>Freight</td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='freight_projected_revenue'/></span></td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='freight_budgeted_cost'/></span></td>
+                        </tr>
+                        <tr>
+                            <td>Delivery & Install</td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='delivery_install_projected_revenue'/></span></td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='delivery_install_budgeted_cost'/></span></td>
+                        </tr>
+                        <tr>
+                            <td>Sales Tax</td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='sales_tax_projected_revenue'/></span></td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='sales_tax_budgeted_cost'/></span></td>
+                        </tr>
+                        <tr>
+                            <td>Other Services</td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='other_services_projected_revenue'/></span></td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='other_services_budgeted_cost'/></span></td>
+                        </tr>
+                        <tr>
+                            <td class="weight">TOTAL Booking Revenue</td>
+                            <td class="weight">${{projected_revenue}}</td>
+                            <td class="weight">${{budgeted_cost}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+           
+            <div class="row mt-4 mb-2">
+                <div class="col-md-12 text-center">
+                    <button  class="btn add-floor-btn" [disabled]="!projectForm.valid"
+                    (click)="sumbitProject()" >Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- project popup -->
+
+<!-- advance amount popup -->
+<div *ngIf="advanceAmountInData?.dialogType=='item' || advanceAmountInData?.dialogType=='service'">
+    <div class="modal-header">
+        <h6 class="modal-title text-capitalize">{{advanceAmountInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body" [ngClass]="{'event-none':advanceAmountInData?.data?.is_disable==true}">
+        <div>
+            <ul class="advance_amount_list">
+                <li><input type="radio"   [checked]="advanceAmountInData?.installment_type=='Percentage' ? true :false" 
+                    name="amount" (change)="paymentType('Percentage')">Percentage (%) </li>
+                <li><input type="radio"  name="amount" [checked]="advanceAmountInData?.installment_type=='Amount' ? true :false"  (change)="paymentType('Amount')">Amount ($)</li>
+            </ul>
+            <form class="service_form" [formGroup]="advanceAmountForm">
+                <div formArrayName="installment_datas">
+                    <div >
+                        <div>
+                            <table class="other_service_table advance_amount table">
+                                <thead>
+                                    <th></th>
+                                    <th>Invoice Description</th>
+                                    <th>Value</th>
+                                    <th>Amount</th>
+                                </thead>
+                                <tbody >
+                                    <tr *ngFor="let installmentDataForm of installmentDates.controls; let i = index" [formGroupName]="i">
+                                        <td style="width: 30%;">
+                                            <span class="justify-content-start">{{weekDaysMap.get(installmentDataForm?.get('installment_number')?.value)}} Advance Installment</span>
+                                        </td>
+                                        <td>
+                                            <textarea  type="text" class="invoice_width"  formControlName="invoice_description"></textarea>
+                                        </td>
+                                        <td style="width: 20%;">
+                                            <span>
+                                                <span *ngIf="advanceAmountInData?.installment_type=='Amount'" class="mr-2">$</span>
+                                                <input type="number" [ngClass]="{'event-none':advanceAmountInData?.data?.is_disable==true}" (change)="advanceType(advanceAmountInData?.installment_type,$event)" 
+                                                 onchange="(function(el){el.value=parseFloat(el.value)?.toFixed(2);})(this)" 
+                                                 formControlName="installment_value"/>
+                                                <span *ngIf="advanceAmountInData?.installment_type=='Percentage'" class="ml-2">%</span>
+                                            </span>
+                                        </td>
+                                        <td *ngIf="advanceAmountInData?.dialogType=='item'">
+                                            <span *ngIf="advanceAmountInData?.installment_type=='Amount'" class="mr-2">$ {{installmentDataForm?.get('installment_value')?.value}}</span>
+                                            <span *ngIf="advanceAmountInData?.installment_type=='Percentage'" class="ml-2">$ {{((installmentDataForm?.get('installment_value')?.value * advanceAmountInData.tax_befor_order_amt) / 100)?.toFixed(2)}}</span>
+                                        </td>
+                                        <td *ngIf="advanceAmountInData?.dialogType=='service'">
+                                            <span *ngIf="advanceAmountInData?.installment_type=='Amount'" class="mr-2">$ {{installmentDataForm?.get('installment_value')?.value}}</span>
+                                            <span *ngIf="advanceAmountInData?.installment_type=='Percentage'" class="ml-2">$ {{((installmentDataForm?.get('installment_value')?.value * advanceAmountInData.service_before_amt) / 100)?.toFixed(2)}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" class="text-right">Total Installment Amount</td>
+                                        <td>${{total_due | number : '1.2-2'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" class="text-right">Total Installment Amount After Taxes({{advanceAmountInData?.data?.tax_percentage}}%)</td>
+                                        <td>${{total_after_tax_due + total_due | number : '1.2-2'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" class="text-right">
+                                            <span class="justify-content-end" *ngIf="advanceAmountInData?.dialogType=='item' && advanceAmountInData?.button_type=='0'">Total Rent Order Amount After Taxes</span>
+                                            <span class="justify-content-end" *ngIf="advanceAmountInData?.dialogType=='item' && advanceAmountInData?.button_type=='1'">Total Buy Order Amount After Taxes</span>
+                                            <span class="justify-content-end" *ngIf="advanceAmountInData?.dialogType=='service'">Total Services Order Amount</span>
+                                        </td>
+                                        <td>
+                                            <span *ngIf="advanceAmountInData?.dialogType=='item'">${{advanceAmountInData.order_amt | number : '1.2-2'}}</span>
+                                            <span *ngIf="advanceAmountInData?.dialogType=='service'">${{advanceAmountInData.data.total_services_order_amount | number : '1.2-2'}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" class="text-right">Total Amount Due</td>
+                                        <td>
+                                            <span *ngIf="advanceAmountInData?.dialogType=='item'">${{((advanceAmountInData.order_amt)-(total_due)-(total_after_tax_due)) | number : '1.2-2'}}</span>
+                                            <span *ngIf="advanceAmountInData?.dialogType=='service'">${{((advanceAmountInData.data.total_services_order_amount)-(total_due)-(total_after_tax_due)) | number : '1.2-2'}}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row mt-4 mb-2">
+            <div class="col-md-12 text-center">
+                <button class="btn add-floor-btn"  (click)="submitAdvanceForm()">Save</button>
+            </div>
+        </div>
+</div>
+
+
+<!-- advance amount popup -->

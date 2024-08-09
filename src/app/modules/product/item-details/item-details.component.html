@@ -1,0 +1,348 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<section class="product-detials-section">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <nav aria-label="breadcrumb " class="nav-breadcrumb">
+                    <ol class="breadcrumb bg-transparent p-0">
+                        <li class="breadcrumb-item"><a routerlink="/admin/dashboard"
+                                href="/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a routerlink="/admin/products/list"
+                                href="/admin/products/list">Products</a></li>
+                        <li class="breadcrumb-item"><a>{{selectedProduct?.name}}</a></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-lg-12 position-relative">
+                        <div class="card card_details">
+                            <div class="card-header" (click)="imgUploadPopup()">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </div>
+                            <div class="card-image">
+                                <img src="{{selectedProduct?.default_image}}"/>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="letside-variation-img-view" #scrollDiv>
+                                        <img *ngFor="let image of selectedProduct?.other_variations;let i =index" 
+                                        src="{{image?.default_images[0]?.image_url?.large}}"
+                                        [ngClass]="{'img-active':leftImgId===image?.sgid}" class="img-thumbnail"
+                                        (click)="variationReuslt(image)"/>
+                                    </div>
+                                    <ul class="arrow_view" *ngIf="selectedProduct?.other_variations?.length > 4">
+                                        <li (click)="scroll(-120,'scroll')"><img src="assets/images/mb_img/left_arrow.svg"></li>
+                                        <li (click)="scroll(120,'scroll')"><img src="assets/images/mb_img/right_arrow.svg"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="bg-white card_details">
+                            <div class="letside-variation-img-view" #colorDiv>
+                                <ul class="color_variation_list">
+                                    <li *ngFor="let image of selectedProduct?.default_images;let i = index">
+                                        <span class="latest-table-tooltip1" *ngIf="image !==selectedProduct?.default_image">
+                                            <i aria-hidden="true" class="fa fa-pencil-square-o" (click)="setDefalutImg(image)"></i>
+                                            <span class="latest-table-tooltiptext1">
+                                                Set as Default
+                                            </span>
+                                        </span>
+                                        <img [ngClass]="{'img-active':image===selectedProduct?.default_image}" src="{{image}}"
+                                        (click)="variationImage(image)" class="img-thumbnail cursor-pointer" />
+                                    </li>
+                                </ul>
+                            </div>
+                            <ul class="arrow_view" *ngIf="selectedProduct?.default_images?.length > 4">
+                                <li (click)="scroll(-120,'color')"><img src="assets/images/mb_img/left_arrow.svg"></li>
+                                <li (click)="scroll(120,'color')"><img src="assets/images/mb_img/right_arrow.svg"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="tab-content tab-space">
+                            <div class="tab-pane active" id="dashboard-1">
+                                <div id="accordion1" class="faq_question">
+                                    <div class="card mt-2 custom-request-card">
+                                        <div class="card-header accordion-custom-header" id="headingOne" *ngIf="selectedProduct?.description !==null">
+                                            <a class="mb-0" data-toggle="collapse" href="#collapseOne"
+                                                aria-expanded="false" aria-controls="collapseOne"> <span class="request">Description</span>
+                                            </a>
+                                        </div>
+                                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                                            data-parent="#accordion1">
+                                            <div class="card-body text-justify">
+                                                <p>
+                                                    {{selectedProduct?.description}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-2  custom-request-card" *ngIf="selectedProduct?.features !==''">
+                                        <div class="card-header accordion-custom-header" id="headingTwo">
+                                            <a class="mb-0" data-toggle="collapse" href="#collapseTwo"
+                                                aria-expanded="false" aria-controls="collapseTwo"> <span class="request"> Features</span>
+                                            </a>
+                                        </div>
+                                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                                            data-parent="#accordion1">
+                                            <div class="card-body text-justify" >
+                                                <p class="feature_list" [innerHtml]="selectedProduct?.features"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-2 custom-request-card" *ngIf="selectedProduct?.dimension !==null">
+                                        <div class="card-header accordion-custom-header" id="headingThree">
+                                            <a class="mb-0" data-toggle="collapse" href="#collapseThree"
+                                                aria-expanded="false" aria-controls="collapseThree"> <span class="request">Dimensions</span>
+                                            </a>
+                                        </div>
+                                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                                            data-parent="#accordion1">
+                                            <div class="card-body text-justify">
+                                                <p>{{selectedProduct?.dimension}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+
+                <div class="card product_details_card">
+                    <div class="card-body custom-card">
+                        <div class="pt-3">
+                            <table class="price-table">
+                                <tr>
+                                    <td><i aria-hidden="true" (click)="updatePopup('product')" class="fa fa-pencil-square-o editIcon"></i> Product Name:</td>
+                                    <td> <span>{{selectedProduct?.name}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i aria-hidden="true" (click)="attributePopUp()" class="fa fa-pencil-square-o editIcon"></i> Attributes:</td>
+                                    <td><span>{{selectedProduct?.attributes}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Supplier Name:</td>
+                                    <td>{{ selectedProduct?.supplier_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td><i aria-hidden="true" class="fa fa-pencil-square-o editIcon" (click)="categoryPopup()"></i> Categories:</td>
+                                    <td>{{ selectedProduct?.category_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Room Builder:</td>
+                                    <td>
+                                        <input type="checkbox" name="builder" [checked]="true" [disabled]="!selectedProduct?.enableCheckbox" (change)="builderDetails('main')"/> Main Check
+                                        <input type="checkbox" name="builder1" [disabled]="!selectedProduct?.enableCheckbox" (change)="builderDetails('optional')" /> Optional Category
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><i aria-hidden="true" (click)="updatePopup('assetPrice')" class="fa fa-pencil-square-o editIcon"></i> Asset Price:</td>
+                                    <td> 
+                                         $<span>{{selectedProduct?.asset_value}}</span>
+                                      
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <button type="submit" class="btn" (click)="imageLens()">Check Price Updates</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td *ngIf="priceDestails?.glens_min_price || priceDestails?.glens_max_price" style="font-size:12px;font-weight:400;">
+                                        <span class="pr-1"><span>Min Price: </span>${{priceDestails?.glens_min_price}}</span>-
+                                        <span class="pl-1"><span>Max Price: </span>${{priceDestails?.glens_max_price}}</span><br>
+                                        <span>Note : This price is from " {{countOfMatch}} " similar Products</span><br>
+                                        <span>Last Updated on : {{priceDestails?.updated_date |date}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <p class="m-0 cursor-pointer history p-0" (click)="getHistory()"><a>Asset Price History</a></p>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td>
+                                        <span  class="latest-table-tooltip">
+                                            <i aria-hidden="true" class="fa fa-info-circle editIcon"></i> 
+                                            <span  class="latest-table-tooltiptext">Multiplier = {{selectedProduct?.buy_new_multiplier}}</span>
+                                        </span>
+                                       
+                                        Buy Price:</td>
+                                    <td>  $<span>{{selectedProduct?.buyPrice}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span  class="latest-table-tooltip">
+                                            <i aria-hidden="true" class="fa fa-info-circle editIcon"></i> 
+                                            <span  class="latest-table-tooltiptext">Multiplier = {{selectedProduct?.buy_used_multiplier}}</span>
+                                        </span>
+                                        Buy Used Price:
+                                    </td>
+                                    <td>  $<span>{{selectedProduct?.buy_used_price}}</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card product_details_card padding_view">
+                    <ul class="price_list">
+                        <li (click)="priceOpt('rent')" [ngClass]="{'price_active':button_type==0}">
+                            <p>${{selectedProduct?.rental_price?.rental_price ?
+                                selectedProduct?.rental_price?.rental_price : 0}}
+                            <small>/mo</small></p>
+                            <p>Rental Price</p>
+                            <p>({{monthNums}} Months)</p>
+                        </li>
+                        <li (click)="priceOpt('buy')" [ngClass]="{'price_active':button_type==1}">
+                            <p> $<span>{{selectedProduct?.buyPrice}}</span></p>
+                            <p>Purchase Price</p>
+                        </li>
+                    </ul>
+                    <div class="pt-4">
+                        <table class="price-table">
+                            <tbody>
+                                <tr>
+                                    <td>Rent Duration:</td>
+                                    <td> <input class="range-slider-range" type="range" value="{{ monthNums }}" min="1"
+                                            max="36" (change)="updateRent($event)">
+                                        <span class="range-slider-value">{{monthNums}}</span>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="selectedProduct?.bed_size?.length">
+                                    <td>Size:</td>
+                                    <td>
+                                        <select class="custom-selection"(change)="sizeVariation($event)" [(ngModel)]="variation_id">
+                                            <option selected disabled>Choose Options</option>
+                                            <option value="{{size?.sku_variation_id}}"
+                                                *ngFor="let size of selectedProduct?.bed_size">{{size?.attribute_value}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="selectedProduct?.mattress_size?.length">
+                                    <td>Size:</td>
+                                    <td>
+                                        <select class="custom-selection"(change)="sizeVariation($event)" [(ngModel)]="variation_id">
+                                            <option selected disabled>Choose Options</option>
+                                            <option value="{{size?.sku_variation_id}}"
+                                                *ngFor="let size of selectedProduct?.mattress_size">{{size?.attribute_value}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="selectedProduct?.color?.length">
+                                    <td>Color:</td>
+                                    <td>
+                                        <select class="custom-selection" (change)="sizeVariation($event)" [(ngModel)]="variation_id">
+                                            <option selected disabled>Choose Options</option>
+                                            <option value="{{color?.sku_variation_id}}"
+                                                *ngFor="let color of selectedProduct?.color">{{color?.attribute_value}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Quantity:</td>
+                                    <td>
+                                        <div class="quantity-view">
+                                            <span (click)="quanity('minus','-')"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                            <input type="number"  value="1" min="1" [(ngModel)]="commonQty" />
+                                            <span (click)="quanity('plus','+')"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pt-4 text-center">
+                        <button class="btn-view btn" type="submit" (click)="openMbDialog()">
+                            Add to Moodboard</button>
+                        <button class="btn-view btn" type="submit" (click)="quoteDialog()">
+                           Add to Quote</button>
+                    </div>
+                   
+                </div>
+                <div class="card product_details_card padding_view">
+                    <table class="WarehouseTable" border="1">
+                        <thead>
+                            <tr>
+                                <th><span>Warehouse</span></th>
+                                <th style="white-space: nowrap;">Inventory</th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            *ngFor="let prod of selectedProduct?.warehouseLocations;let i = index">
+                            <tr *ngIf="prod.is_inhabitr_warehouse==='Y'">
+                                <td style="white-space: nowrap;"><span>
+                                        <span
+                                            *ngIf="prod.is_inhabitr_warehouse==='Y'">{{prod.warehouse_name
+                                            | titlecase}}</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div><span><u style="cursor: pointer;">{{prod.non_assigned_inv ?
+                                                prod.non_assigned_inv : 0}}</u></span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngIf="prod.is_inhabitr_warehouse==='N'">
+                                <td><span style="white-space: nowrap;">
+                                        <span
+                                            *ngIf="prod.is_inhabitr_warehouse==='N'">{{prod.warehouse_name
+                                            | titlecase}}</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>{{prod.supplier_quantity ? prod.supplier_quantity :
+                                        0}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tr>
+                            <td> <b>Total</b> </td>
+                            <td> {{ totalQtyOfSku }} </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr style="text-align: left;padding-top: 4px;display: block;">
+                            <td>Source Type :</td>
+                            <td> {{selectedProduct?.source }}</td>
+                        </tr>
+                        <tr style="text-align: left;padding-top: 4px;display: block;">
+                            <td>Supplier SKU :</td>
+                            <td> {{selectedProduct?.supplier_sku | uppercase }}</td>
+                        </tr>
+                        <tr style="text-align: left;padding-top: 4px;display: block;" *ngIf="selectedProduct?.is_ops_db">
+                            <td>Inhabitr SKU : </td>
+                            <td> {{selectedProduct?.inhabitr_sku | uppercase }}</td>
+                        </tr>
+                    </table>
+                    <div class="pt-4">
+                        <button class="btn-view btn" type="submit" *ngIf="!selectedProduct?.is_ops_db" (click)="registerInOps()">
+                            Register with Ops</button>
+                        <button class="btn-view btn" type="submit" (click)="registerInOps()">
+                            Sync in Ops</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

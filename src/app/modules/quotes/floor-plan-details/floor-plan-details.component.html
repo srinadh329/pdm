@@ -1,0 +1,337 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<section >
+  <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-11 m-auto back_quote">
+          <a class="cursor-pointer " (click)="backToQuote()"><i class="fa fa-angle-left"></i> Back to Quote  </a>
+          / <span>Floor Plan</span> 
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-11 m-auto">
+          <div class="units-assigned-view">
+            <div class="row px-4 py-3">
+              <div class="col-lg-6">
+                <div class="floor-plan-view">
+                  <label class="m-0">Floor Plan Name</label>
+                   <input type="text" disabled value="{{floorSummaryInfo?.floorplan?.floorname}}" class="form-control" />
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <ul class="floor-plan-view-list">
+                  <li>#unit:{{floorSummaryInfo?.floorplan?.total_unit}}</li>
+                  <li>#Moodboard: {{floorSummaryInfo.moodboards?.length}}</li>
+                  <li>Floor Plan Type:{{floorSummaryInfo?.floorplan?.floorplan_type_name}}</li>
+                </ul>
+              </div>
+            </div>
+            <!-- units -->
+            <div class="row" [ngClass]="{'event-none':order_status==true}">
+              <div class="col-md-12">
+                <div class="moodboard-flex">
+                  <ul class="unit-list">
+                    <li *ngFor="let floor of floorSummaryInfo.floor_units">
+                      <span>
+                        <span (click)="removeUnits(floor)" class="cursor-pointer cancel cancel-view">
+                          <i class="fa fa-times" aria-hidden="true"></i></span>
+                        <a>{{floor?.name}}</a>
+                        
+                      </span>
+                    </li>
+                    <li class="last_view">
+                      <a (click)="addFloorUnitDialog()">+ Unit</a> 
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div> 
+            <!-- units -->
+            <div class="row">
+              <div class="col-md-12 text-right">
+                <a class="cursor-pointer back-quote" (click)="backToQuote()"><i class="fa fa-angle-left"></i>Back to Quote</a>
+              </div>
+            </div>
+            <!-- moodboard details -->
+            <div class="row" [ngClass]="{'event-none':order_status==true}">
+              <div class="col-md-12">
+                <div class="moodboard-flex-view">
+                  <div *ngFor="let moodboard of floorSummaryInfo.moodboards">
+                      <div class="img_view">
+                        <span (click)="deleteMoodboard(moodboard)"><i class="fa fa-times" aria-hidden="true"></i></span>
+                        <img src="{{moodboard?.is_moodboard_images?.small}}">
+                        <p>{{moodboard.moodboard_name}}</p>
+                      </div>
+                      
+                  </div>
+                  <div class="add-mb-view" (click)="getMoodboards('floor')">
+                    + Moodboard
+                  </div>
+                 
+                </div>
+              </div>
+            </div> 
+            <!-- moodboard details -->
+            <!-- Moodboards and Units -->
+            <div class="row">
+              <div class="col-md-12">
+                <h5 class="heading_view">Moodboards and Units</h5>
+  
+                <table class="mb_unit_table_view">
+                      <thead>
+                        <tr>
+                            <th></th>
+                            <th *ngFor="let mb_unit of floorSummaryInfo?.units[0]?.moodboards">{{mb_unit?.moodboard_name}} ({{mb_unit?.moodboard_add_counter}})</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let mb_unit of floorSummaryInfo.units">
+                              <th>{{mb_unit?.name}}</th>
+                              <td *ngFor="let mb of mb_unit?.moodboards">
+                                <i class="fa fa-check" [ngClass]="{
+                                  'd-none': mb.isactive === 0 ? true : false
+                                }"></i>
+                              </td>
+                          </tr>
+                      </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- Moodboards and Units -->
+            <!-- Floor Plan Summary -->
+            <div class="row" >
+              <div class="col-md-12">
+                <h5 class="heading_view">Floor Plan Summary</h5>
+                <div class="floor_summary_view">
+                    <ul>
+                        <li [ngClass]="{'unit_active':floorSummaryInfo.indv_unit?.unit==fl_unit?.unit}"
+                         *ngFor="let fl_unit of floorSummaryInfo.floor_units" (click)="floorunit(fl_unit)">{{fl_unit?.name}}</li>
+                    </ul>
+                    <p class="d-flex align-items-center" [ngClass]="{'event-none':order_status==true}">
+                      Unit Name: <input type="text" class="form-control" style="width: 160px;margin-left: 10px;" [(ngModel)]="floorSummaryInfo.indv_unit.name">
+                    </p>
+                    <table class="table floor-unit-table table-responsive">
+                      <thead>
+                          <th scope="col" style="vertical-align: middle"></th>
+                          <th scope="col" style="vertical-align: middle">SKU</th>
+                          <th scope="col" style="vertical-align: middle">Image</th>
+                          <th scope="col" style="vertical-align: middle">Product Name</th>
+                          <th scope="col" style="vertical-align: middle">Type</th>
+                          <th scope="col" style="vertical-align: middle">
+                            Supplier Name
+                          </th>
+                          <th scope="col" style="vertical-align: middle">
+                            Warehouse Location
+                          </th>
+                          <th scope="col" style="vertical-align: middle">
+                            Inventory Level
+                          </th>
+                          <th scope="col" style="vertical-align: middle">
+                            Moodboard Name
+                          </th>
+                          <th scope="col" style="vertical-align: middle">
+                            Moodboard Item Qty
+                          </th>
+                          <th scope="col" style="vertical-align: middle">Asset Value</th>
+                          <th scope="col" style="vertical-align: middle">
+                            $&nbsp;Sale Price&nbsp;/ Month
+                          </th>
+                          <th scope="col" style="vertical-align: middle">
+                            $&nbsp;Buy Price 
+                          </th>
+                          <th scope="col" style="vertical-align: middle">
+                            $&nbsp;Discount&nbsp;/ Month
+                          </th>
+                          <th scope="col" style="vertical-align: middle">Total</th>
+                      </thead>
+                      <tbody [ngClass]="{'event-none':order_status==true}">
+                          <tr *ngFor="let quote of floorSummaryInfo.items;let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{quote?.sku}}</td>
+                            <td>
+                              <img src="{{quote?.product_images?.large}}"/></td>
+                            <td>{{quote?.name}}</td>
+                            <td>
+                              <span *ngIf="button_type=='0'" class="text-warning">Rent</span>
+                              <span *ngIf="button_type=='1'" class="text-primary">Buy</span>
+                            </td>
+                            <td>{{quote?.supplier_name}}</td>
+                            <td>{{quote?.warehouse_name ? quote?.warehouse_name :'NA'}}</td>
+                            <td>{{quote?.inventory_level}}</td>
+                            <td>{{quote?.moodboard_name}}</td>
+                            <td>
+                              <span>
+                                <span class="fa fa-minus pointer" (click)="qty(quote.is_qty,quote,'-')"></span>
+                                <span class="inc">{{quote.is_qty }}</span>
+                                <span class="fa fa-plus pointer" (click)="qty(quote.is_qty,quote,'+')"></span>
+                              </span>
+                            </td>
+                            <td>${{quote?.asset_value | number : '1.2-2'}}</td>
+                            <td>
+                              <span *ngIf="button_type=='0'"> $ <input class="table-input" (keyup)="floorItemCal($event,quote,'price')" type="text" value="{{quote?.price}}" /> </span>
+                              <span *ngIf="button_type=='1'" class="text-danger">NA</span>
+                              
+                            </td>
+                            <td>
+                              <span *ngIf="button_type=='1'">$ <input type="text" class="table-input" (keyup)="floorItemCal($event,quote,'buy_price')" value="{{quote?.buy_price}}" /> </span>
+                              <span *ngIf="button_type=='0'" class="text-danger">NA</span>
+                            </td>
+                            <td>
+                              $<input type="text" class="table-input" (keyup)="floorItemCal($event,quote,'discount')" value="{{quote?.discount}}" />
+                             </td>
+                            <td>
+                              ${{quote?.is_total | number : '1.2-2'}}
+                            </td>
+                            <td *ngIf="show_delete=='delete'">
+                              <i class="fa fa-trash" (click)="deleteItem(quote)"></i>
+                            </td>
+                          </tr>
+                            <tr *ngIf="button_type=='0'">
+                              <td colspan="14" class="text-right border-0 weight">Number of Months</td>
+                              <td>
+                                <span>
+                                  <span class="fa fa-minus pointer" (click)="month(floorSummaryInfo.indv_unit,'-')"></span>
+                                  <span class="inc">{{floorSummaryInfo.indv_unit?.months }}</span>
+                                  <span class="fa fa-plus pointer" (click)="month(floorSummaryInfo.indv_unit,'+')"></span>
+                                </span>
+                              </td>
+                            </tr>
+                            <tr *ngIf="button_type=='0'">
+                                <td colspan="14" class="text-right border-0 weight">Monthly Rent</td>
+                                <td>${{floorSummaryInfo.indv_unit?.monthly_rent | number : '1.2-2'}}</td>
+                            </tr>
+                            <tr *ngIf="button_type=='0'">
+                              <td colspan="14" class="text-right border-0 weight">
+                                <a class="fa fa-pencil pointer edit-icon" (click)="amountAdjustPopup('rent_adjument_amount','')"></a> Monthly Rent Adjustment Amount  </td>
+                              <td>
+                                {{floorSummaryInfo?.rent_adjument_value < 0 ? '-':''}} ${{((floorSummaryInfo?.rent_adjument_value+'').replace('-',''))}}
+                                
+                              </td>
+                            </tr>
+                            <tr *ngIf="button_type=='0'">
+                              <td colspan="14" class="text-right border-0 weight">Monthly Rent After Adjustment</td>
+                              <td>
+                                ${{floorSummaryInfo.indv_unit?.rent_net_total ? floorSummaryInfo.indv_unit?.rent_net_total : '0' | number : '1.2-2'}}
+                              </td>
+                            </tr>
+                            <tr *ngIf="button_type=='1'">
+                                <td colspan="14" class="text-right border-0 weight">Buy Price</td>
+                                <td>${{floorSummaryInfo.indv_unit?.buy_price | number : '1.2-2'}}</td>
+                            </tr>
+                            <tr *ngIf="button_type=='1'">
+                              <td colspan="14" class="text-right border-0 weight">
+                                <a class="fa fa-pencil pointer edit-icon" (click)="amountAdjustPopup('buy_discount_amount','')"></a>
+                                Buy Discount
+                              </td>
+                              <td>
+                                  $ {{floorSummaryInfo.indv_unit?.buy_discount ? floorSummaryInfo.indv_unit?.buy_discount : '0'}}
+                              </td>
+                            </tr>
+                            <tr *ngIf="button_type=='1'">
+                              <td colspan="14" class="text-right border-0 weight">Buy Total After Discount</td>
+                              <td>
+                                {{floorSummaryInfo.indv_unit?.buy_net_total < 0 ? '-':''}} ${{(floorSummaryInfo.indv_unit?.buy_net_total+'').replace('-','') | number : '1.2-2'}}
+                              </td>
+                            </tr>
+                          <tr>
+                            <td colspan="14" class="text-right border-0 weight">Delivery Fee</td>
+                            <td>
+                                <span>$<input type="text" (keyup)="onInput($event)" [(ngModel)]="floorSummaryInfo.indv_unit.delivery_fee"  class="table-input"/></span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="14" class="text-right border-0 weight">Taxes ({{tax_details}} %)</td>
+                            <td>
+                                ${{floorSummaryInfo.indv_unit?.tax_amount | number : '1.2-2'}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="14" class="text-right border-0 weight">Total Amount</td>
+                            <td>
+                                ${{floorSummaryInfo.indv_unit?.net_total | number : '1.2-2'}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="14" class="text-right border-0 weight">Pickup Fee(Charged at the end of the lease)</td>
+                            <td>
+                                $<input  value="{{ floorSummaryInfo.indv_unit?.pickup_fee }}" type="text" class="table-input"/>
+                            </td>
+                          </tr>
+                         
+                      </tbody>
+                    </table>  
+                    <div class="update_floor" [ngClass]="{'event-none':order_status==true}">
+                      <button type="submit"  class="btn" (click)="updateUnit()">Update Unit</button>
+                      <button type="submit" class="btn" *ngIf="show_delete=='cancel'" (click)="removeItem('delete')">Remove Unit</button>
+                      <button type="submit" class="btn" *ngIf="show_delete=='delete'" (click)="removeItem('cancel')">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Floor Plan Summary -->
+            <!-- Total Floor Plan Summary -->
+            <div class="row">
+              <div class="col-md-12">
+                <h5 class="heading_view">Total Floor Plan Summary</h5>
+                <div>
+                    <table class="table table-bordered floor_summary_table">
+                      <tbody class="float-right">
+                          <tr *ngIf="button_type=='0'">
+                            <td colspan="14" class="text-right border-0 weight">Total Monthly Rent</td>
+                            <td>
+                                ${{floorSummaryInfo.floorplan?.monthly_rent | number : '1.2-2'}}
+                            </td>
+                          </tr>
+                          <tr *ngIf="button_type=='1'">
+                            <td colspan="14" class="text-right border-0 weight">Total Buy Price</td>
+                            <td>
+                                ${{floorSummaryInfo.floorplan?.sub_total | number : '1.2-2'}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="14" class="text-right border-0 weight">Delivery Fee</td>
+                            <td>
+                                ${{floorSummaryInfo.floorplan?.delivery_fee | number : '1.2-2'}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="14" class="text-right border-0 weight">Taxes ({{tax_details}} %)</td>
+                            <td>
+                                ${{floorSummaryInfo.floorplan?.tax_amount | number : '1.2-2'}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="14" class="text-right border-0 weight">Total Amount</td>
+                            <td>
+                                ${{floorSummaryInfo.floorplan?.net_total | number : '1.2-2'}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="14" class="text-right border-0 weight">Pickup Fee(Charged at the end of the lease)</td>
+                            <td>
+                                ${{floorSummaryInfo.floorplan?.pickup_fee | number : '1.2-2'}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="14" class="text-right border-0 weight">Total Asset Value</td>
+                            <td>
+                                ${{floorSummaryInfo.floorplan?.asset_value | number : '1.2-2'}}
+                            </td>
+                          </tr>
+                      </tbody>
+                    </table>  
+                </div>
+              </div>
+            </div>
+            <!-- Total Floor Plan Summary -->
+            <div class="row">
+              <div class="col-md-12">
+                <a class="cursor-pointer back-quote" (click)="backToQuote()"><i class="fa fa-angle-left"></i>Back to Quote</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+         
+    </div>    
+</section>

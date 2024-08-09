@@ -1,0 +1,45 @@
+<section class="mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="request_heading">Inspiration Requests Log </h4>
+                <form [formGroup]="inspirationFilter">
+                    <ul class="filter-view">
+                        <li>
+                            <label for="birthday">From Date:</label>
+                            <input max="{{today}}"  (change)="FilterDateEvent($event,'from_date')" type="date" formControlName="from_date" 
+                                class="form-control" />
+                        </li>
+                        <li>
+                            <label for="birthday">To Date:</label>
+                            <input max="{{today}}"  (change)="FilterDateEvent($event,'to_date')" type="date" formControlName="to_date" 
+                                class="form-control" />
+                        </li>
+                        <li>
+                            <button (click)="filterResult()" class="btn" [disabled]="!inspirationFilter.valid">Search</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 position-relative custom_card_view" *ngFor="let inspiration of inspirationList">
+                <h6 class="date" *ngIf="inspiration?.created_at">{{inspiration?.created_at | date :'d MMMM y, h:mm a'}}</h6>
+                <div class="card mb-4 w-100 cursor-pointer">
+                    <div class="product-image" (click)="itemsDetails(inspiration)">
+                        <a>
+                            <img class="img-fluid" src="{{inspiration?.image_url}}">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 text-center" *ngIf="!inspirationList.length">No Data Found</div>
+        </div>
+    </div>
+</section>

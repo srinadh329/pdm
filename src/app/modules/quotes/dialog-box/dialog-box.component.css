@@ -1,0 +1,241 @@
+.pdf-scroll{
+    height: 620px;
+    overflow-y: scroll;
+    padding: 0 40px 0 40px;
+}
+.button-view button{
+    width: 120px;
+}
+
+.configuremoodboard-popup{
+    background-color: #484848;
+    color: #fff;
+    margin-top: -1px;
+}
+.delete-popup{
+    text-align: center;
+}
+.delete-popup button{
+    background-color: #ffc000;
+    padding: 8px 0 8px 10px;
+    width: 120px;
+    margin: 23px 0px 9px 10px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    text-align: center;
+    border: none;
+    font-size: 14px !important;
+    font-weight: 400;
+}
+.delete-popup .no{
+    background-color: #000 !important;
+    color: #fff !important;
+}
+.delete-popup h5{
+    font-weight: 400;
+}
+.custom-toggle{
+    width: 300px;
+    background: #fff !important;
+    color: #000 !important;
+    border: 1px solid #dee2e6!important;  
+    font-size: 15px;
+}
+.custom-toggle::after{
+    position: absolute;
+    top: 15px;
+    right: 10px;
+}
+.scroll{
+    height: 188px;
+    width: 300px;
+    overflow-y: scroll;
+    background-color: #fff;
+    font-weight: 400;
+}
+.add-unit-mb{
+    height: 40px;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 6px 0px 0;
+}
+.add-unit-mb span{
+    position: absolute;
+    right: 5px;
+    top: 1px;
+    cursor: pointer;
+    z-index: 100;
+    font-size: 10px;
+}
+.add-floor-btn{
+      width: 120px;
+  }
+  .close{
+    cursor: pointer;
+  }
+
+.floor-plan-row label{
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 23px;
+    color: #343a40!important;
+    padding-bottom: 5px;
+}
+
+/* delivery fee css */
+
+.delivery_fee_view{
+    list-style: none;
+    display: flex;
+    padding: 0;
+    justify-content: space-around;
+}
+.delivery_fee_view li{
+    padding: 0 10px 0 0;
+}
+.delivery_fee_view li input{
+    margin: 0 6px 0 0;
+}
+.details_view{
+    list-style: none;
+    padding: 10px 0 0 18px;
+}
+.details_view li:nth-child(1){
+font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+
+/* delivery fee css */
+
+
+.buttonPlus{
+    padding: 0;
+    background: rgba(2,2,2,.1);
+    border-radius: 10px 0 0 10px;
+    border: 1px solid rgba(0,0,0,.2);
+    width: 20px;
+    height: 30px;
+}
+.adjust_view input{
+    border: 1px solid rgba(0,0,0,.2);
+    padding: 0px 0 0 8px;
+    height: 30px;
+    /* margin: 0 0 0 8px; */
+    background-color: #fff;
+    border-radius: 0.25rem;
+}
+#increase_counter{
+    transform: rotate(180deg);
+}
+.adjust_view{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.adjust_view span{
+    padding: 0 13px 0 0;
+}
+.other_service_table th{
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
+    padding: 4px 0 4px 0;
+    font-weight: 400;
+}
+.other_service_table tr td{
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+.other_service_table{
+    text-align: center;
+}
+.other_service_table i{
+    cursor: pointer;
+}
+.other_service_table span{
+    display: flex;
+    justify-content: center;
+}
+.advance_amount input{
+    width: 100%;
+}
+.invoice_width{
+    width: 100% !important;
+    height: 40px;
+    resize: none;
+}
+.service_form{
+    margin-top: 36px;
+}
+.add_more_button{
+    width: 100px;
+    text-align: left;
+}
+.add_more_button i{
+    margin-right: 7px;
+}
+.service_table{
+    height: 300px;
+    overflow-y: auto;
+}
+.company_form{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 26px;
+    align-items: center;
+}
+.company_form label{
+    margin: 0;
+}
+.company_form input{
+    width: 50%;
+}
+.company_form select{
+    width: 50%;
+}
+.project_table{
+    width: 100%;
+    text-align: center;
+}
+.project_table th{
+    border: 1px solid #dee2e6;
+    padding: 11px 8px;
+}
+.project_table tr td{
+    border: 1px solid #dee2e6;
+    padding: 11px 8px;
+}
+.project_table tr td input{
+    width: 60%;
+    margin-left: 7px;
+}
+.project_table tr td span{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.weight{
+    font-weight: 600;
+}
+.advance_amount_list{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+.advance_amount_list li{
+    padding: 0 22px 0 0px;
+}
+.advance_amount_list li input{
+    margin: 0 4px 0 0;
+}
+input:focus-within{
+    outline: none;
+}
+.event-none{
+    pointer-events: none;
+}

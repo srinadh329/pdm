@@ -1,0 +1,332 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+    <!-- product view -->
+  <section>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left side filter option -->
+            <div class="col-lg-2">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="input-group align-content-center search_input_view">
+                            <input type="text" class="form-control" style="    text-transform: none;"
+                                placeholder="Search Products" aria-label="Recipient's username" [(ngModel)]="searchproduct"
+                                (keyup.enter)="getSearchItems()" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                
+                                <button (click)="getSearchItems()" [disabled]="!searchproduct" class="btn btn-outline-secondary" type="button">
+                                    <i class="fa fa-search" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                        <ul class="filter_view d-flex flex-wrap">
+                            <li *ngFor="let filter of appliedResult" class="badge badge-secondary p-2 pointer mr-2">
+                            <span *ngIf="filter?.type=='categories' || filter?.type=='suppliers'
+                             || filter?.type=='city'  || filter?.type=='warehouse' 
+                             || filter?.type=='publish_status'">
+                            <span *ngIf="filter?.name">{{filter?.name }}</span>
+                            <span *ngIf="filter?.warehouse_name">{{filter?.warehouse_name }}</span>
+                            <span (click)="getSelectedCategory(filter)" class="custom-close cursor-pointer"><i class="fa fa-close"></i></span>
+                            </span>
+                            <span *ngIf="filter?.type=='assetPrice'">
+                                <span class="">${{filter?.min_value }} - ${{filter?.max_value}}</span>
+                                <span  class="custom-close cursor-pointer" (click)="assetPriceRemove(filter)"><i class="fa fa-close"></i></span>
+                            </span>
+                            <span *ngIf="filter?.type=='inventory'">
+                                <span class="">inv{{filter?.inv_min_value}}</span>
+                                <span  class="custom-close cursor-pointer" (click)="invRemove(filter)"><i class="fa fa-close"></i></span>
+                            </span>
+                            <span *ngIf="filter?.type=='attribute'">
+                                <span>{{filter?.name}}:{{filter?.value}}</span>
+                                <span  class="custom-close cursor-pointer" (click)="attributeRemove(filter)"><i class="fa fa-close"></i></span>
+                            </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <button class="clearButton" *ngIf="appliedResult?.length" (click)="filterClear()">Clear</button>
+                    </div>
+                </div>
+
+
+                <!-- city list -->
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="filter-inner">
+                            <div class="filter-label">
+                                <img src="assets/images/filter_icons/suppliers.svg" class="filter-img" alt="Cities" />
+                                <p class="ml-1 filterBorder">Cities</p>
+                            </div>
+                            <div class="leftside-list" *ngIf="filter_show_info?.city">
+                                <ul class="list-unstyled">
+                                    <li *ngFor="let city of cityList;let i=index">
+                                        <label class="custom-checkbox" *ngIf="i<3">
+                                            <input type="checkbox" (click)="getSelectedCategory(city)"
+                                                [attr.checked]="city.selected ? 'checked' : null">
+                                            <span>{{city?.warehouse_name | titlecase }}</span>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <div class="view-more">
+                                    <a (click)="cityPopup()">+ 55 More</a>
+                                </div>
+                            </div>
+                            <div *ngIf="!filter_show_info?.city">
+                                <button class="hidebutton">If Warehouse is selected "Can not select City"</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- city list -->
+                <div class="border_line"></div>
+                <!-- warehouse -->
+
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="filter-inner">
+                            <div class="filter-label">
+                                <img src="assets/images/filter_icons/suppliers.svg" class="filter-img" alt="Cities" />
+                                <p class="ml-1 filterBorder">Warehouse</p>
+                            </div>
+                            <div class="leftside-list" *ngIf="filter_show_info?.warehouse">
+                                <p>Delivery Partner Warehouse</p>
+                                <ul class="list-unstyled">
+                                    <li *ngFor="let ware of warehouseInfo?.delivery_warehouse;let i=index">
+                                        <label class="custom-checkbox" *ngIf="i<3">
+                                            <input type="checkbox" (click)="getSelectedCategory(ware)"
+                                                [attr.checked]="ware.selected ? 'checked' : null">
+                                            <span>{{ware?.warehouse_name | titlecase }}</span>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                </ul>
+                                
+                                <p>Supplier Partner Warehouses</p>
+                                <ul class="list-unstyled">
+                                    <li *ngFor="let supply of warehouseInfo?.suppliery_warehouse;let i=index">
+                                        <label class="custom-checkbox" *ngIf="i<3">
+                                            <input type="checkbox" (click)="getSelectedCategory(supply)"
+                                                [attr.checked]="supply.selected ? 'checked' : null">
+                                            <span>{{supply?.warehouse_name | titlecase }}</span>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <div class="view-more">
+                                    <a (click)="warehousePopup()">+ 100 More</a>
+                                </div>
+                            </div>
+                            <div *ngIf="!filter_show_info?.warehouse">
+                                <button class="hidebutton">If City is selected "Can not select Warehouse"</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- warehouse -->
+                <div class="border_line"></div>
+
+                
+                <!-- supplier list -->
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="filter-inner">
+                            <div class="filter-label">
+                                <img src="assets/images/filter_icons/suppliers.svg" class="filter-img" alt="Cities" />
+                                <p class="ml-1 filterBorder">Suppliers</p>
+                            </div>
+                            <div class="leftside-list">
+                                <ul class="list-unstyled">
+                                    <li *ngFor="let supplier of supplierList;let i=index">
+                                        <label class="custom-checkbox" *ngIf="i<3">
+                                            <input type="checkbox" (click)="getSelectedCategory(supplier)"
+                                                [attr.checked]="supplier.selected ? 'checked' : null">
+                                            <span>{{supplier?.name ? supplier?.name : supplier?.supplier_name  | titlecase }}</span>
+                                            <span class="checkmark"></span>
+                                            <span>&nbsp;&nbsp; ({{supplier?.count ? supplier?.count : supplier?.total_product}})</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <div class="view-more">
+                                    <a (click)="supplierPopup()">+ 200 More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- supplier list -->
+                <div class="border_line"></div>
+                <!-- categoryList -->
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div class="filter-inner">
+                            <div class="filter-label">
+                                <img src="assets/images/filter_icons/categories.svg" class="filter-img" alt="Cities" />
+                                <p class="ml-1 filterBorder">Categories</p>
+                            </div>
+                            <div class="leftside-list">
+                                <ul class="list-unstyled">
+                                    <li *ngFor="let category of categoryList | orderBy:'name':false;let i=index">
+                                        <label class="custom-checkbox" *ngIf="i<3">
+                                            <input type="checkbox" (click)="getSelectedCategory(category)"
+                                                [attr.checked]="category.selected ? 'checked' : null">
+                                            <span>{{category?.name | titlecase }}</span>
+                                            <span class="checkmark"></span>
+                                            <span>&nbsp;&nbsp; ({{category?.count}})</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <div class="view-more">
+                                    <a (click)="categoryPopup()">+ 500 More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- categoryList -->
+
+                <!-- attributes -->
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div class="filter-inner">
+                            <div class="filter-label">
+                                <img src="assets/images/filter_icons/categories.svg" class="filter-img" alt="Cities" />
+                                <p class="ml-1 filterBorder">Attributes</p>
+                            </div>
+                            <div class="leftside-list">
+                                <button class="btn attribute_btn"  (click)="attributePopup()">
+                                    {{atttributeList?.length ? 'Attributes' : 'Please Select Categories'}}
+                                    </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- attributes -->
+                <!-- Assest price -->
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="filter-inner">
+                            <div class="filter-label">
+                                <img src="assets/images/filter_icons/buy_price.svg" class="filter-img" alt="Cities" />
+                                <p class="ml-1 filterBorder">Asset Price</p>
+                            </div>
+                            <div class="leftside-list">
+                                <select class="assetPrice" onfocus='this.size=6;' onblur='this.size=1;'
+                                    onchange='this.size=1; this.blur();' (change)="assetPrice($event)" [(ngModel)]="assetLable">
+                                    <option value='' hidden selected>Please Select Price </option>
+                                <option value='none'>None</option>
+                                <option *ngFor=" let assetPrice of budget?.res" [selected]="assetPrice?.selected==true"
+                                    [(value)]="assetPrice.label">
+                                    {{assetPrice?.label}}
+                                </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Assest price -->
+                <!-- inventory price -->
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div class="filter-inner">
+                            <div class="filter-label">
+                                <img src="assets/images/filter_icons/inventory.svg" class="filter-img" alt="Cities" />
+                            <p class="ml-1 filterBorder">Inventory</p>
+                            </div>
+                            <div class="leftside-list inventory-list">
+                                <div>
+                                    <label>Minimum Quantity</label>
+                                    <div>
+                                        <input  type="number" min="0" class="form-control custom-control" 
+                                        oninput="validity.valid||(value='');" [(ngModel)]="invValue"/>
+                                    </div>
+                                    <ul class="inventory_list">
+                                        <li *ngFor="let inventoryAttrs of inventoryAttr">
+                                          <input matInput type="radio" placeholder="Min Value" class="custom-radio-button"
+                                            [checked]="inventoryAttrs.checked ? 'checked' : null" name="name" (change)="inventoryFormFormData(inventoryAttrs,$event)"
+                                            [value]="inventoryAttrs?.name"/> {{inventoryAttrs?.DisplayName}}
+                                        </li>
+                                      </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- inventory price -->
+
+                <!-- publish status -->
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="filter-inner">
+                            <div class="filter-label">
+                                <img src="assets/images/filter_icons/buy_price.svg" class="filter-img" alt="Cities" />
+                                <p class="ml-1 filterBorder">Publish Status</p>
+                            </div>
+                            <div class="leftside-list">
+                                <select class="assetPrice" (change)="publishStatus($event)" [(ngModel)]="publish_flag">
+                                    <option value='' hidden selected>Select Status </option>
+                                    <option *ngFor=" let publish of publisheValue" [selected]="publish?.selected==true"
+                                        [(value)]="publish.flag">
+                                        {{publish?.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- publish status -->
+            </div>
+            <!-- left side filter option -->
+    
+            <!-- right side filter result -->
+            <div class="col-lg-10 border_left">
+                <!-- <div class="row gigia_view">
+                    <div class="col-lg-12 text-right">
+                        <label class="m-0">All </label>
+                        <label class="switch">
+                            <input type="checkbox" [(ngModel)]="gigaValue" (click)="giga($event)">
+                            <span class="slider round"></span>
+                        </label>
+                        <label class="m-0">Giga</label>
+                    </div>
+                </div> -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-body products-max-height">
+                            <div class="form-row">
+                                <div class="col-2 mb-2" *ngFor="let prod of productdata">
+                                    <div class="md-img-view">
+                                        <span class="inv_count_view">
+                                            <span>{{prod.total_inv_count}}</span>
+                                        </span>
+                                        <div class="p-0 m-auto">
+                                            <img class="images-item" (click)="productDetails(prod)" src="{{ prod.image.large}}" />
+                                            <p>{{prod.supplier_name}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class='align' *ngIf="!productdata?.length && !isLoading">
+                    No Data Found
+                </div>
+            </div>
+            <!-- right side filter result -->
+  
+        </div>
+    </div>
+  </section>
+  
+  
+  
+  
+  
+  <!-- product view -->

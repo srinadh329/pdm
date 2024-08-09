@@ -1,0 +1,110 @@
+<section class="login-section">
+    <div class="container-fluid">
+      
+      <div class="row position-relative">
+        <div class="col-lg-7">
+          <div class="login_img_one">
+            <img src="assets/images/login_img/login_img_1.png" />
+          </div>
+          <div class="login_img_two">
+            <img src="assets/images/login_img/login_img_2.png" />
+          </div>
+        </div>
+        <div class="col-lg-5">
+         
+          <div class="card login_card">
+            <div class="card-body">
+              <p class="heading">Sign up to your Inhabitr account</p>
+              <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="font14">
+                    <div class="form-group login_label mt-4">
+                        <input type="text" class="form-control" placeholder="First Name*" formControlName="first_name" (keypress)="notAllowmultiplespaces($event,'firstName')">
+                        <div class="error-view" *ngIf="!signUpForm.controls['first_name'].valid  && isSubmitted">
+                            Enter first name
+                        </div>
+                    </div>
+                    <div class="form-group login_label mt-4">
+                        <input type="text" class="form-control" placeholder="Last Name*" formControlName="last_name" (keypress)="notAllowmultiplespaces($event,'lastName')">
+                        <div  class="error-view" *ngIf="!signUpForm.controls['last_name'].valid   && isSubmitted">
+                            Enter last name
+                        </div>
+                    </div>
+                    <div class="form-group login_label mt-4">
+                        <input type="email"  [pattern]='emailPattern' class="form-control" placeholder="Email*" formControlName="email">
+                        <div class="error-view" *ngIf="signUpForm.get('email').hasError('pattern')">
+                            Invalid Email
+                        </div>
+                        <div class="error-view" *ngIf="signUpForm.controls['email'].invalid  && isSubmitted">
+
+                            <div *ngIf="signUpForm.controls['email'].errors.required">
+                                Enter email
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group login_label mt-4">
+                        <input type="password" class="form-control" placeholder="Password*" formControlName="password">
+                        <div class="error-view" *ngIf="signUpForm.controls['password'].invalid  && isSubmitted">
+                            <div *ngIf="signUpForm.controls['password'].errors.required">
+                                Enter password
+                            </div>
+                            <div *ngIf="signUpForm.controls['password'].errors.minlength">
+                                password must be minimum 6 character length
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group login_label mt-4">
+                        <input type="password" class="form-control" placeholder="Confirm Password*" formControlName="confirm_password">
+                        <div class="error-view" *ngIf="signUpForm.controls['confirm_password'].invalid && isSubmitted">
+                            <div *ngIf="signUpForm.controls['confirm_password'].errors.required">
+                                Confirm password required
+                            </div>
+                            <div  *ngIf="signUpForm.get('confirm_password').errors && 
+                                signUpForm.get('confirm_password').errors.ConfirmPassword && isSubmitted || signUpForm.get('confirm_password').errors && 
+                                signUpForm.get('confirm_password').errors.ConfirmPassword && (signUpForm.controls['confirm_password'].dirty && isSubmitted || signUpForm.controls['confirm_password'].touched)">
+                                Password does not match
+                            </div>
+                        </div>
+                    </div>
+                    <div class="forgot_view">
+                        <a  class="forgot" routerLink='/login'>Back to Login</a>
+                    </div>
+                    <div class="row mt-4 justify-content-center">
+                        <div class="col-md-12">
+                          <div class="form-group m-0">
+                            <button type="submit" class="btn btn-dark btn-block "> Sign Up </button>
+                          </div>
+                        </div>
+                    </div>
+                </form> 
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="login_content">
+        <li>Welcome to</li>
+        <li>Inhabitr Furniture Data Cloud </li>
+      </ul>
+    </div>
+  </section>
+  
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary d-none" data-toggle="modal" id="create_dailog" data-target="#staticBackdrop">
+    Launch static backdrop modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content create_dialog_view">
+        <div class="modal-body">
+            <div class="thank-you-pop">
+                <img src="http://goactionstations.co.uk/wp-content/uploads/2017/03/Green-Round-Tick.png" alt="">
+                <h1>Thank You!</h1>
+                <p>Your Account was Created.</p>
+                <button type="button" class="btn btn-primary" 
+                (click)="navigateToShop()" data-dismiss="modal" aria-label=""><span>Go To Dashboard</span></button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+

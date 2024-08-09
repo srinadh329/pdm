@@ -1,0 +1,1182 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+
+<section class="mb_list_section">
+  <div class="container-fluid">
+      <div class="row justify-content-between align-items-center">
+          <div class="col-md-4">
+              <ul class="new_mb_list">
+                  <li>
+                    <div class="input-group">
+                      <input type="text" class="form-control font12" name="keywords"  [(ngModel)]="search"
+                        placeholder="Search products" aria-label="Search" aria-describedby="basic-addon2">
+                      <div class="input-group-append">
+                        <button class="btn search_btn" [disabled]="!search" (click)="searchResult()" type="submit">Search</button>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="radio" name="food" [checked]="search_type=='prod_name' ? true : false" (change)="serchType($event)" value="prod_name"  name="checkbox">&nbsp;&nbsp;Products Name
+                      &nbsp;&nbsp;
+                    </label>
+                    <label>
+                      <input type="radio"  name="food"  (change)="serchType($event)" value="supplier_sku"  name="checkbox">&nbsp;&nbsp;Supplier SKU
+                      &nbsp;&nbsp;
+                    </label>
+                    <label>
+                      <input type="radio"  name="food"  (change)="serchType($event)" value="inhabitr_sku"  name="checkbox">&nbsp;&nbsp;Inhabitr SKU
+                      &nbsp;&nbsp;
+                    </label>
+              
+                  </li>
+              </ul>
+             
+          </div> 
+          <div class="col-md-3 create-product-column">
+            <ul class="create-product">
+              <li>
+                <a routerLink="/admin/products/createProduct">Create Product</a>
+              </li>
+              <li>
+                <a (click)="bulkPopup()">Bulk Upload</a>
+              </li>
+            </ul>
+           
+          </div>
+      </div>
+     
+  </div>
+</section>
+
+<div class="container-fluid" [ngClass]="{'container':!enableSearch==false}">
+  <div class="col-md-12">
+  <ng-template #productModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title font14" id="modal-basic-title" *ngFor="let filterLists of filterList">
+        <span *ngIf="filterLists.type == modalVal">{{filterLists?.name}}</span>
+      </h4>
+      <span class="close pointer" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </span>
+    </div>
+   
+    <div class="modal-body">
+      <!-- city popup list -->
+      <div class="row dialogContent viewfilter-scroll" *ngIf="modalVal === 'City'">
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let cityLocationLists of cityLocationList | orderBy:'warehouse_name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i<catCount">
+                <input type="checkbox" (click)="getSelectedCategory(cityLocationLists,null)"
+                  [attr.checked]="cityLocationLists.selected ? 'checked' : null">
+                {{cityLocationLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let cityLocationLists of cityLocationList | orderBy:'warehouse_name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=catCount && i<catCount*2">
+                <input type="checkbox" (click)="getSelectedCategory(cityLocationLists,null)"
+                  [attr.checked]="cityLocationLists.selected ? 'checked' : null">
+                {{cityLocationLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let cityLocationLists of cityLocationList | orderBy:'warehouse_name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=catCount*2">
+                <input type="checkbox" (click)="getSelectedCategory(cityLocationLists,null)"
+                  [attr.checked]="cityLocationLists.selected ? 'checked' : null">
+                {{cityLocationLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="loadingData" class="loading">loading...</div>
+      </div>
+    
+      <div class="dialogContent text-center" *ngIf="modalVal === 'cityContent'">
+        <h5>If Warehouse is selected "Can not select City"</h5>
+      </div>
+      <!-- city popup list -->
+      <!-- warehouse popup list -->
+      <div class="dialogContent text-center" *ngIf="modalVal === 'warehouseContent'">
+        <h5>If City is selected "Can not select Warehouse"</h5>
+      </div>
+      <div class="dialogContent" *ngIf="modalVal === 'Warehouse'">
+        <ul class="delivery-supplier">
+          <li (click)="deliverySupplierWarehouseList('delivery')" [ngClass]="{'active':deliverySupplier==='delivery'}">
+            Delivery Partner Warehouse</li>
+          <li (click)="deliverySupplierWarehouseList('supplier')" [ngClass]="{'active':deliverySupplier==='supplier'}">
+            Supplier Partner Warehouses</li>
+        </ul>
+        <div class="row viewfilter-scroll">
+          <div class="col-lg-4">
+            <ul class="list-unstyled" *ngIf="deliverySupplier==='delivery'">
+              <li *ngFor="let warehouseLists of warehouseList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i<deliWareCount">
+                  <input type="checkbox" (click)="getSelectedCategory(warehouseLists,null)"
+                    [attr.checked]="warehouseLists.selected ? 'checked' : null">
+                  {{warehouseLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-4">
+            <ul class="list-unstyled" *ngIf="deliverySupplier==='delivery'">
+              <li *ngFor="let warehouseLists of warehouseList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i>=deliWareCount && i<deliWareCount*2">
+                  <input type="checkbox" (click)="getSelectedCategory(warehouseLists,null)"
+                    [attr.checked]="warehouseLists.selected ? 'checked' : null">
+                  {{warehouseLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-4">
+            <ul class="list-unstyled" *ngIf="deliverySupplier==='delivery'">
+              <li *ngFor="let warehouseLists of warehouseList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i>=deliWareCount*2">
+                  <input type="checkbox" (click)="getSelectedCategory(warehouseLists,null)"
+                    [attr.checked]="warehouseLists.selected ? 'checked' : null">
+                  {{warehouseLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div *ngIf="loadingData" class="loading">loading...</div>
+        
+  
+          <div class="col-lg-4">
+            <ul class="list-unstyled" *ngIf="deliverySupplier==='supplier'">
+              <li *ngFor="let SupplierPartnerLists of SupplierPartnerList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i<16">
+                  <input type="checkbox" (click)="getSelectedCategory(SupplierPartnerLists,null)"
+                    [attr.checked]="SupplierPartnerLists.selected ? 'checked' : null">
+                  {{SupplierPartnerLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-4">
+            <ul class="list-unstyled" *ngIf="deliverySupplier==='supplier'">
+              <li *ngFor="let SupplierPartnerLists of SupplierPartnerList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i>=16 && i<32">
+                  <input type="checkbox" (click)="getSelectedCategory(SupplierPartnerLists,null)"
+                    [attr.checked]="SupplierPartnerLists.selected ? 'checked' : null">
+                  {{SupplierPartnerLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-4">
+            <ul class="list-unstyled" *ngIf="deliverySupplier==='supplier'">
+              <li *ngFor="let SupplierPartnerLists of SupplierPartnerList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i>=32">
+                  <input type="checkbox" (click)="getSelectedCategory(SupplierPartnerLists,null)"
+                    [attr.checked]="SupplierPartnerLists.selected ? 'checked' : null">
+                  {{SupplierPartnerLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div *ngIf="loadingData" class="loading">loading...</div>
+        </div>
+        
+      </div>
+      <!-- warehouse popup list -->
+      <!-- supplier popup list -->
+      <div class="row dialogContent viewfilter-scroll" *ngIf="modalVal === 'Suppliers'">
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <ng-container *ngIf="!countOfCategorys?.length">
+              <li *ngFor="let supplierLists of supplierList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i<49">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.name ? supplierLists?.name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.count}})
+                </label>
+              </li>
+            </ng-container>
+            <ng-container *ngIf="countOfCategorys?.length">
+              <li *ngFor="let supplierLists of countOfCategorys | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i<18">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.supplier_name? supplierLists?.supplier_name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.total_product }})
+                </label>
+              </li>
+            </ng-container>
+            
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <!-- <li *ngFor="let supplierLists of supplierList | orderBy:'warehouse_name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=18 && i<36">
+                <input type="checkbox" (click)="getSelectedCategory(supplierLists,null)"
+                  [attr.checked]="supplierLists.selected ? 'checked' : null">
+                {{supplierLists?.name ? supplierLists?.name :supplierLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+              </label>
+            </li> -->
+            <ng-container *ngIf="!countOfCategorys?.length">
+              <li *ngFor="let supplierLists of supplierList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i>=49 && i<98">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.name ? supplierLists?.name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.count}})
+                </label>
+              </li>
+            </ng-container>
+            <ng-container *ngIf="countOfCategorys?.length">
+              <li *ngFor="let supplierLists of countOfCategorys | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i>=18 && i<36">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.supplier_name? supplierLists?.supplier_name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.total_product }})
+                </label>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <!-- <li *ngFor="let supplierLists of supplierList | orderBy:'warehouse_name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=36">
+                <input type="checkbox" (click)="getSelectedCategory(supplierLists,null)"
+                  [attr.checked]="supplierLists.selected ? 'checked' : null">
+                {{supplierLists?.name ? supplierLists?.name :supplierLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+              </label>
+            </li> -->
+            <ng-container *ngIf="!countOfCategorys?.length">
+              <li *ngFor="let supplierLists of supplierList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox"*ngIf="i>=98">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.name ? supplierLists?.name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.count}})
+                </label>
+              </li>
+            </ng-container>
+            <ng-container *ngIf="countOfCategorys?.length">
+              <li *ngFor="let supplierLists of countOfCategorys | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i>=36">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.supplier_name? supplierLists?.supplier_name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.total_product }})
+                </label>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+        <div *ngIf="loadingData" class="loading">loading...</div>
+      </div>
+      <!-- supplier popup list -->
+      <!-- categories popup list -->
+      <div class="row dialogContent viewfilter-scroll" *ngIf="modalVal === 'Categories'">
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let categoryLists of categoryList | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i<51">
+                <input type="checkbox" (click)="getSelectedCategory(categoryLists,null)"
+                  [attr.checked]="categoryLists.selected ? 'checked' : null">
+                <span>{{categoryLists?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{categoryLists?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let categoryLists of categoryList | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=51 && i<102">
+                <input type="checkbox" (click)="getSelectedCategory(categoryLists,null)"
+                  [attr.checked]="categoryLists.selected ? 'checked' : null">
+                <span>{{categoryLists?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{categoryLists?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let categoryLists of categoryList | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=102">
+                <input type="checkbox" (click)="getSelectedCategory(categoryLists,null)"
+                  [attr.checked]="categoryLists.selected ? 'checked' : null">
+                <span>{{categoryLists?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{categoryLists?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="loadingData" class="loading">loading...</div>
+      </div>
+      <!-- categories popup list -->
+      <!-- attributes popup list -->
+      <div class="dialogContent" *ngIf="modalVal === 'Attributes'">
+        <div *ngFor="let atttributeLists of atttributeList" class="attribute">
+          <h6>{{atttributeLists?.name}} :</h6>
+          <select (change)="getSelectedAttribute($event,atttributeLists)" placeholder="Please Select Options" class="attribute-selection">
+            <option disabled>Please Select Options</option>
+            <option *ngFor=" let attrList of atttributeLists?.attribute_list" [selected]="attrList?.selected==true"
+              value="{{attrList?.sgid}}">
+              {{attrList?.attribute_value}}
+            </option>
+          </select>
+        </div>
+      </div>
+      <!-- attributes popup list -->
+    </div>
+  </ng-template>
+
+<!-- modal popup list -->
+
+<div class="row">
+
+  <!-- letside menu -->
+  <div class="col-lg-3" *ngIf="!enableSearch">
+    <div class="row mt-3">
+      <div class="col-lg-6">
+        <button class="view-all-filter" (click)="viewFilter(viewFilterList)">View All Filter</button>
+      </div>
+      <div class="col-lg-6 text-right">
+        <button (click)="removeFilter()" class="clearButton">Clear</button>
+      </div>
+    </div>
+    <div class="applied-filter-label mt-4">
+      <label class="ml-2">Applied Filter</label>
+    </div>
+
+   
+    <!-- badge button list -->
+    <div class="row" *ngIf="selectedProductFilters?.length!=0 || attributeSelected?.length!=0 || 
+      selectedPriceRangeList?.length!=0 || invType?.length!=0 || publish?.length!=0">
+    <div class="col-lg-12">
+      <div class="d-flex">
+        <ul class="p-0">
+            <li *ngFor="let filters of selectedProductFilters" class="badge badge-secondary p-2 pointer mr-2 mb-2">
+              {{filters?.warehouse_name ? filters?.warehouse_name : filters?.name }}{{filters?.supplier_name }}
+              <span (click)="getSelectedCategory(filters,filters.type)"><i class="fa fa-close"></i></span>
+            </li>
+        </ul>
+        <ul *ngIf="attributeSelected?.length!=0" class="p-0">
+          <li *ngFor="let attributeSelect of attributeSelected" class="badge badge-secondary p-2 pointer mr-2 mb-2">
+            {{attributeSelect?.name}}:{{attributeSelect?.value}}
+            <span (click)="attributeRemove(attributeSelect)"><i class="fa fa-close"></i></span>
+          </li>
+        </ul>
+        <ul class="p-0">
+          <li *ngFor="let selectedPriceRangeLists of selectedPriceRangeList" class="badge badge-secondary p-2 pointer mr-2 mb-2"> 
+            <span>${{selectedPriceRangeLists.minValue}} -</span>
+             <span *ngIf="selectedPriceRangeLists.maxValue"> ${{selectedPriceRangeLists.maxValue}}</span>
+            <span (click)="priceRemove(selectedPriceRangeLists)"><i class="fa fa-close"></i></span>
+          </li>
+        </ul>
+        <ul class="p-0">
+          <li *ngFor="let invTypes of invType" class="badge badge-secondary p-2 pointer mr-2 mb-2">inv{{invTypes?.minInvValue}}
+            <span (click)="priceRemove(invTypes)"><i class="fa fa-close"></i></span>
+          </li>
+        </ul>
+        <ul class="p-0">
+          <li *ngFor="let publishes of publish" class="badge badge-secondary p-2 pointer mr-2 mb-2">{{publishes?.name}}
+            <span (click)="priceRemove(publishes)"><i class="fa fa-close"></i></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+   
+    </div>
+  <!-- badge button list -->
+  <!-- city list -->
+    <div class="filter-inner">
+      <div class="filter-label">
+        <img src="assets/img/fliterIcons/Icons_City_copy.svg" class="filter-img" alt="Cities" />
+        <p class="ml-1 filterBorder">Cities</p>
+      </div>
+      <div class="leftside-list" *ngIf="!hideCityList">
+        <ul class="list-unstyled">
+          <li *ngFor="let cityLocationLists of cityLocationList; let i = index">
+            <label class="custom-checkbox" *ngIf="i < 3" >
+              <input type="checkbox" (click)="getSelectedCategory(cityLocationLists,cityLocationLists.type)"
+                [attr.checked]="cityLocationLists.selected ? 'checked' : null">
+              {{cityLocationLists?.warehouse_name | titlecase }}
+              <span class="checkmark"></span>
+            </label>
+          </li>
+          <li *ngIf="loadingData" class="loading">loading...</li>
+        </ul>
+        <div class="view-more" (click)="open(productModal,'City')">
+          <a>View More</a>
+        </div>
+      </div>
+      <div *ngIf="hideCityList">
+        <button class="hidebutton">If Warehouse is selected "Can not select City"</button>
+      </div>
+    </div>
+     <!-- city list -->
+    <!-- warehouse list -->
+    <div class="filter-inner">
+      <div class="filter-label">
+        <img src="assets/img/fliterIcons//Icons_Warehouse_copy.svg" class="filter-img" alt="Cities" />
+        <p class="ml-1 filterBorder">Warehouse</p>
+      </div>
+      <div *ngIf="!hideWareHouseList">
+        <div class="leftside-list">
+          <ul class="list-unstyled leftview_warehouse">
+            <h6>Delivery Partner Warehouse</h6>
+            <li *ngFor="let warehouseLists of warehouseList;let i=index">
+              <label class="custom-checkbox" *ngIf="i < 2">
+              <input type="checkbox" (click)="getSelectedCategory(warehouseLists,warehouseLists.type)" [attr.checked]="warehouseLists.selected ? 'checked' : null">
+              {{warehouseLists?.warehouse_name | titlecase }}
+              <span class="checkmark"></span>
+            </label>
+            </li>
+            <li *ngIf="loadingData" class="loading">loading...</li>
+          </ul>
+        </div>
+        <div class="leftside-list pt-3">
+          <ul class="list-unstyled leftview_warehouse">
+            <h6>Supplier Partner Warehouses</h6>
+            <li *ngFor="let SupplierPartnerLists of SupplierPartnerList;let i=index">
+              <label class="custom-checkbox" *ngIf="i < 2">
+              <input type="checkbox" (click)="getSelectedCategory(SupplierPartnerLists,SupplierPartnerLists?.type)" [attr.checked]="SupplierPartnerLists.selected ? 'checked' : null">
+              {{SupplierPartnerLists?.warehouse_name | titlecase }}
+              <span class="checkmark"></span>
+            </label>
+            </li>
+            <li *ngIf="loadingData" class="loading">loading...</li>
+          </ul>
+          <div class="view-more" (click)="open(productModal,'Warehouse')">
+            <a>View More</a>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="hideWareHouseList">
+        <button class="hidebutton">If City is selected "Can not select Warehouse"</button>
+      </div>
+    </div>
+    <!-- warehouse list -->
+    <!-- supplier list -->
+    <div class="filter-inner">
+      <div class="filter-label">
+        <img src="assets/img/fliterIcons/Icons_Supplier_copy.svg" class="filter-img" alt="Cities" />
+        <p class="ml-1 filterBorder">Suppliers</p>
+      </div>
+      <div class="leftside-list">
+        <ul class="list-unstyled">
+          <ng-container *ngIf="!countOfCategorys?.length">
+            <li *ngFor="let supplierLists of supplierList;let i=index">
+              <label class="custom-checkbox" *ngIf="i<3">
+                <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                  [attr.checked]="supplierLists.selected ? 'checked' : null">
+                {{supplierLists?.name ? supplierLists?.name :supplierLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+                ({{supplierLists.count }})
+              </label>
+            </li>
+          </ng-container>
+          <ng-container *ngIf="countOfCategorys?.length">
+            <li *ngFor="let supplierLists of countOfCategorys; let i = index">
+              <label class="custom-checkbox" *ngIf="i<3">
+                <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                  [attr.checked]="supplierLists.selected ? 'checked' : null">
+                {{supplierLists?.supplier_name? supplierLists?.supplier_name :supplierLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+                ({{supplierLists.total_product }})
+              </label>
+            </li>
+          </ng-container>
+          <li *ngIf="loadingData" class="loading">loading...</li>
+        </ul>
+        <div class="view-more" (click)="open(productModal,'Suppliers')">
+          <a>View More</a>
+        </div>
+      </div>
+    </div>
+     <!-- supplier list -->
+    <!-- categoryList -->
+    <div class="filter-inner">
+      <div class="filter-label">
+        <img src="assets/img/fliterIcons/Icons_Category_copy.svg" class="filter-img" alt="Cities" />
+        <p class="ml-1 filterBorder">Categories</p>
+      </div>
+      <div class="leftside-list">
+        <ul class="list-unstyled">
+          <li  *ngFor="let categoryLists of categoryList;let i=index">
+            <label class="custom-checkbox" *ngIf="i<3">
+            <input type="checkbox" (click)="getSelectedCategory(categoryLists,categoryLists.type)" [attr.checked]="categoryLists.selected ? 'checked' : null">
+            <span >{{categoryLists?.name | titlecase }}</span>
+            <span class="checkmark"></span>
+            <span>&nbsp;&nbsp; ({{categoryLists?.count}})</span>
+           </label>
+          </li>
+          <li *ngIf="loadingData" class="loading">loading...</li>
+        </ul>
+        <div class="view-more" (click)="open(productModal,'Categories')">
+          <a>View More</a>
+        </div>
+      </div>
+    </div>
+      <!-- categoryList -->
+      <!-- Attributes -->
+      <div class="filter-inner">
+        <div class="filter-label">
+          <img src="assets/img/fliterIcons/Icons_Category_copy.svg" class="filter-img" alt="Cities" />
+          <p class="ml-1 filterBorder">Attributes</p>
+        </div>
+        <div class="leftside-list attribute-leftside">
+          <button class="errorButton" (click)="open(productModal,'Attributes')">
+            <span *ngIf="!attributeView?.length">&nbsp; &nbsp; Please Select Categories</span>
+            <span *ngIf="attributeView?.length">Attributes</span> 
+          </button>
+        </div>
+      </div>
+
+      <!-- Attributes -->
+      <!-- Assest price -->
+      <div class="filter-inner">
+        <div class="filter-label">
+          <img src="assets/img/fliterIcons/Icons_Asset_Price_copy.svg" class="filter-img" alt="Cities" />
+          <p class="ml-1 filterBorder">Asset Price</p>
+        </div>
+        <div class="leftside-list">
+          <form [formGroup]="assetPriceForm">
+
+            <select class="assetPrice" (change)="onChange($event)" onfocus='this.size=6;' onblur='this.size=1;'
+              onchange='this.size=1; this.blur();'>
+              <option value='none' hidden selected>Please Select Asset Price </option>
+              <option value='none'>None</option>
+              <option *ngFor=" let assetPrice of assetPriceFilter" [selected]="assetPrice?.selected==true"
+                [(value)]="assetPrice.label">
+                {{assetPrice?.label}}
+              </option>
+            </select>
+            <div class="assetsButton">
+              <button type="submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Assest price -->
+      <!-- inventory price -->
+      <div class="filter-inner">
+        <div class="filter-label">
+          <img src="assets/img/fliterIcons/Icons_Inventory_copy.svg" class="filter-img" alt="Cities" />
+          <p class="ml-1 filterBorder">Inventory</p>
+        </div>
+        <div class="leftside-list inventory-list">
+          <form [formGroup]="inventoryForm" (ngSubmit)="inventoryFormFormData()">
+            <div>
+              <label>Minimum Quantity</label>
+              <p>
+                <input matInput type="number" min="0" class="form-control custom-control" 
+                  formControlName="minInvValue" oninput="validity.valid||(value='');" />
+              </p>
+            </div>
+            <ul class="inventory_list">
+              <li *ngFor="let inventoryAttrs of inventoryAttr">
+                <input matInput type="radio" placeholder="Min Value" class="custom-radio-button"
+                  [attr.checked]="inventoryAttrs.checked" (change)="inventoryFormFormData()" name="name"
+                  [value]="inventoryAttrs?.name" formControlName="name" /> {{inventoryAttrs?.DisplayName}}
+              </li>
+            </ul>
+            <div class="assetsButton">
+              <button type="submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- inventory price -->
+      <!-- Publish Status -->
+      <div class="filter-inner">
+        <div class="filter-label">
+          <img src="assets/img/fliterIcons/Icons_Publish_Status_copy.svg" class="filter-img" alt="Cities" />
+          <p class="ml-1 filterBorder">Publish Status</p>
+        </div>
+        <div class="leftside-list">
+          <button id="publishDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-white border position-relative text-left publishDropDown">
+            <span>{{publishStatusView ? publishStatusView :'Select Status'}} </span>
+          </button>
+          <div aria-labelledby="publishDropdown" class="dropdown-menu publishDrop">
+            <div class="col dropdown-item" *ngFor="let publisheValues of publisheValue">
+              <span (click)="getPublishStatusFilter(publisheValues)">{{publisheValues?.name}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Publish Status -->
+
+      <!-- lead time -->
+      <div class="filter-inner">
+        <div class="filter-label">
+          <img src="assets/img/fliterIcons/Icons_Inventory_copy.svg" class="filter-img" alt="Cities" />
+          <p class="ml-1 filterBorder">Lead Time</p>
+        </div>
+        <div class="leftside-list">
+          <button id="publishDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-white border position-relative text-left publishDropDown">
+            <span>{{leadInfo.name ? leadInfo.name :'Select lead time'}} </span>
+          </button>
+          <div aria-labelledby="publishDropdown" class="dropdown-menu leadDrop">
+            <div class="col dropdown-item" [ngClass]="{'item-active':lead?.lead_time==leadInfo.name }" (click)="selectLead(lead)" *ngFor="let lead of leadInfo.result">
+              <span>{{lead?.lead_time}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- lead time -->
+
+
+  </div>
+  <!-- letside menu -->
+
+  <!-- right side product list -->
+  <div class="col-lg-9" [ngClass]="{'col-lg-12':!enableSearch==false}">
+    <div *ngIf="enableSearch" class="sear-view">
+      <a  class="back-link" (click)="backProduct()">Back to Products</a>
+      <span>
+        <span class="control-label ml-4">search Keywords:</span>
+        <span class="control-span ml-2">{{search}}</span>
+      </span>
+    </div>
+    <!-- <div class="new_filter_options" *ngIf="!enableSearch">
+      <ul>
+        <li routerLink="/admin/moodboard/create" [queryParams]="{step:1}">Start your design</li>
+      </ul>
+  </div> -->
+    <div class="mt-2 ml-2" *ngIf="resultOneErrorMsg"><h6>{{resultOneErrorMsg}}</h6></div>
+    <div class="row">
+      <div class="col-lg-3 d-flex" *ngFor="let productList of productdata; index as i" infiniteScroll
+        [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" [scrollWindow]="true">
+        <div class="card mt-5">
+          <div class="product-image">
+            <a [routerLink]="['/admin/products/view/'+productList?.product_id]"
+              [queryParams]="{attribute:this.attribute,skuid:productList?.sku_variation_id}">
+              <img class="img-fluid" src="{{productList?.image?.large ? productList?.image?.large :'https://inhabitr-furniture-prod.s3.amazonaws.com/noimage.jpg'}}"
+                 title="{{productList?.product_name}}"
+                prod-image>
+            </a>
+          </div>
+          <div class="product-content">
+            <h6 class="text-center m-0">{{productList?.product_name}}</h6>
+            <ul class="product-details">
+              <li>Asset Price:<b> {{productList?.asset_value | currency }}</b></li>
+              <li>Buy Price: <b>{{productList?.buy_new_price | currency}}</b></li>
+              <li>Buy Used Price: <b>{{productList?.buy_used_price | currency }}</b></li>
+              <li>Rental Price (12mo): <b>{{productList?.rent_price | currency
+                  }}</b></li>
+               <li>Supplier: <b>{{productList?.supplier | titlecase}}</b></li>
+               <li>Inhabitr Inv Qty:
+                  {{invQty(productList.warehouse_location_new,productList.warehouse_id,productList.searched_warehouse_id)}}
+                </li>
+                <li>Supplier Inv Qty:
+                  {{suppQty(productList.warehouse_location_new,productList.warehouse_id,productList.searched_warehouse_id)}}
+                </li>
+              <li>Warehouse: <b>{{productList?.warehouse_name}}</b></li>
+              <li>Published to Inhabitr Ops: <strong class="font12" *ngIf="productList.is_publish_ops ==1">
+                  YES
+                </strong>
+                <strong class="font12" *ngIf="productList.is_publish_ops ==0">
+                  NO
+                </strong>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- right side product list -->
+
+</div>
+  <div *ngIf="productdata?.length==0" class="align">No Data Found</div>
+</div>
+
+<ng-template #viewFilterList let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title title-font">
+      <span *ngIf="filterIndexView !='startView'&& filterIndexView !='assetprice' && filterIndexView !='publishStatus'">{{filterIndexView | titlecase }}</span>
+      <span *ngIf="filterIndexView =='assetprice'">Asset Price</span>
+      <span *ngIf="filterIndexView =='publishStatus'">Publish Status</span>
+    </h4>
+     <div class="col-lg-2" *ngIf="selectedProductFilters != '' && filterIndexView =='startView'">
+        <button (click)="removeFilter()" class="clearButton">Clear</button>
+      </div>
+    <span  class="close pointer" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </span>
+  </div>
+  <div class="modal-body viewFilterHeading">
+    <!--view filter start view -->
+    <div *ngIf="filterIndexView =='startView'">
+      <h3>WANT TO FURNISH YOUR PROPERTY?</h3>
+      <h4>Let's get started</h4>
+      <div>
+        <ul class="view_filter_list">
+          <li (click)="filterShow('location')">
+            <img src="assets/img/fliterIcons/Icons_City_copy.svg" alt="Cities" class="filter-img">
+            <p>Location</p>
+          </li>
+          <li (click)="filterShow('suppliers')">
+            <img src="assets/img/fliterIcons/Icons_Supplier_copy.svg" alt="Cities" class="filter-img">
+            <p>Suppliers</p>
+          </li>
+          <li (click)="filterShow('categories')">
+            <img src="assets/img/fliterIcons/Icons_Category_copy.svg" alt="Cities" class="filter-img">
+            <p>Categories</p>
+          </li>
+          <li (click)="filterShow('assetprice')">
+            <img src="assets/img/fliterIcons/Icons_Asset_Price_copy.svg" alt="Cities" class="filter-img">
+            <p>Asset Price</p>
+          </li>
+          <li (click)="filterShow('inventory')">
+            <img src="assets/img/fliterIcons/Icons_Inventory_copy.svg" alt="Cities" class="filter-img">
+            <p>Inventory</p>
+          </li>
+          <!-- <li (click)="filterShow('publishStatus')">
+            <img src="assets/img/fliterIcons/Icons_Publish_Status_copy.svg" alt="Cities" class="filter-img">
+            <p>Publish Status</p>
+          </li> -->
+        </ul>
+        <div class="viewFilter_start_button text-center">
+          <button type="submit" (click)="filterShow('location')">Start</button>
+        </div>
+      </div>
+    </div>
+    <!--view filter start view -->
+    <!--view filter location list -->
+    <div *ngIf="filterIndexView=='location'" class="tab-view">
+      <div class="viewFilter-radioButton">
+          <span *ngIf="!hideCityList"><input type="radio" name="city" [checked]="cityChecked"  (click)="listShow('locationList')"> City</span>
+          <span  *ngIf="hideCityList"><input type="radio" name="city" disabled>If Warehouse is selected "Can not select City"</span>
+          <span  *ngIf="!hideWareHouseList"><input type="radio" name="city" [checked]="warehouseChecked" (click)="listShow('Warehouse')"> Warehouse</span>
+          <span *ngIf="hideWareHouseList"><input type="radio" name="city"  disabled> If City is selected "Can not select Warehouse"</span>
+      </div>
+      <div class="row viewfilter-scroll" *ngIf="filterIndexListView!='Warehouse'">
+        <div class="col-lg-4">
+          <ul class="list-unstyled" *ngIf="filterIndexListView=='locationList'">
+            <li *ngFor="let cityLocationLists of cityLocationList | orderBy:'warehouse_name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i<catCount">
+                <input type="checkbox" (click)="getSelectedCategory(cityLocationLists,cityLocationLists?.type)"
+                  [attr.checked]="cityLocationLists.selected ? 'checked' : null">
+                {{cityLocationLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled" *ngIf="filterIndexListView=='locationList'">
+            <li *ngFor="let cityLocationLists of cityLocationList | orderBy:'warehouse_name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=catCount && i<catCount*2">
+                <input type="checkbox" (click)="getSelectedCategory(cityLocationLists,cityLocationLists?.type)"
+                  [attr.checked]="cityLocationLists.selected ? 'checked' : null">
+                {{cityLocationLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled" *ngIf="filterIndexListView=='locationList'">
+            <li *ngFor="let cityLocationLists of cityLocationList | orderBy:'warehouse_name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=catCount*2">
+                <input type="checkbox" (click)="getSelectedCategory(cityLocationLists,cityLocationLists?.type)"
+                  [attr.checked]="cityLocationLists.selected ? 'checked' : null">
+                {{cityLocationLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <!-- <div *ngIf="loadingData" class="loading">loading...</div> -->
+      </div>
+      <div class="dialogContent" *ngIf="filterIndexListView=='Warehouse'">
+        <ul class="delivery-supplier viewfilter-delivery-supplier">
+          <li (click)="deliverySupplierWarehouseList('delivery')" [ngClass]="{'active':deliverySupplier==='delivery'}">
+            Delivery Partner Warehouse</li>
+          <li (click)="deliverySupplierWarehouseList('supplier')" [ngClass]="{'active':deliverySupplier==='supplier'}" style="margin-left: 20px;">
+            Supplier Partner Warehouses</li>
+        </ul>
+        <div class="row viewfilter-scroll">
+            <div class="col-lg-4">
+              <ul class="list-unstyled" *ngIf="deliverySupplier==='delivery'">
+                <li *ngFor="let warehouseLists of warehouseList | orderBy:'warehouse_name':false; let i = index">
+                  <label class="custom-checkbox" *ngIf="i<deliWareCount">
+                    <input type="checkbox" (click)="getSelectedCategory(warehouseLists,warehouseLists?.type)"
+                      [attr.checked]="warehouseLists.selected ? 'checked' : null">
+                    {{warehouseLists?.warehouse_name | titlecase }}
+                    <span class="checkmark"></span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-4">
+              <ul class="list-unstyled" *ngIf="deliverySupplier==='delivery'">
+                <li *ngFor="let warehouseLists of warehouseList | orderBy:'warehouse_name':false; let i = index">
+                  <label class="custom-checkbox" *ngIf="i>=deliWareCount && i<deliWareCount*2">
+                    <input type="checkbox" (click)="getSelectedCategory(warehouseLists,warehouseLists?.type)"
+                      [attr.checked]="warehouseLists.selected ? 'checked' : null">
+                    {{warehouseLists?.warehouse_name | titlecase }}
+                    <span class="checkmark"></span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-4">
+              <ul class="list-unstyled" *ngIf="deliverySupplier==='delivery'">
+                <li *ngFor="let warehouseLists of warehouseList | orderBy:'warehouse_name':false; let i = index">
+                  <label class="custom-checkbox" *ngIf="i>=deliWareCount*2">
+                    <input type="checkbox" (click)="getSelectedCategory(warehouseLists,warehouseLists?.type)"
+                      [attr.checked]="warehouseLists.selected ? 'checked' : null">
+                    {{warehouseLists?.warehouse_name | titlecase }}
+                    <span class="checkmark"></span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+      <!--supplier partner warehouse-->
+            <div class="col-lg-4">
+              <ul class="list-unstyled" *ngIf="deliverySupplier==='supplier'">
+                <li *ngFor="let SupplierPartnerLists of SupplierPartnerList | orderBy:'warehouse_name':false; let i = index">
+                  <label class="custom-checkbox" *ngIf="i<16">
+                    <input type="checkbox" (click)="getSelectedCategory(SupplierPartnerLists,'Warehouse')"
+                      [attr.checked]="SupplierPartnerLists.selected ? 'checked' : null">
+                    {{SupplierPartnerLists?.warehouse_name | titlecase }}
+                    <span class="checkmark"></span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-4">
+              <ul class="list-unstyled" *ngIf="deliverySupplier==='supplier'">
+                <li *ngFor="let SupplierPartnerLists of SupplierPartnerList | orderBy:'warehouse_name':false; let i = index">
+                  <label class="custom-checkbox" *ngIf="i>=16 && i<32">
+                    <input type="checkbox" (click)="getSelectedCategory(SupplierPartnerLists,'Warehouse')"
+                      [attr.checked]="SupplierPartnerLists.selected ? 'checked' : null">
+                    {{SupplierPartnerLists?.warehouse_name | titlecase }}
+                    <span class="checkmark"></span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-4">
+              <ul class="list-unstyled" *ngIf="deliverySupplier==='supplier'">
+                <li *ngFor="let SupplierPartnerLists of SupplierPartnerList | orderBy:'warehouse_name':false; let i = index">
+                  <label class="custom-checkbox" *ngIf="i>=32">
+                    <input type="checkbox" (click)="getSelectedCategory(SupplierPartnerLists,'Warehouse')"
+                      [attr.checked]="SupplierPartnerLists.selected ? 'checked' : null">
+                    {{SupplierPartnerLists?.warehouse_name | titlecase }}
+                    <span class="checkmark"></span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+            <div *ngIf="loadingData" class="loading">loading...</div>
+        </div>
+      
+      </div>
+      <div>
+        <ul class="pre_next_button">
+          <li><button (click)="filterShow('startView')">Previous</button></li>
+          <li><button (click)="filterShow('suppliers')">Next</button></li>
+        </ul>
+      </div>
+    </div>
+    <!--view filter location list -->
+    <!-- view filter supplier list -->
+    <div *ngIf="filterIndexView=='suppliers'" class="tab-view">
+      <div class="row viewfilter-scroll">
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <ng-container *ngIf="!countOfCategorys?.length">
+              <li *ngFor="let supplierLists of supplierList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i<49">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.name ? supplierLists?.name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.count }})
+                </label>
+              </li>
+            </ng-container>
+            <ng-container *ngIf="countOfCategorys?.length">
+              <li *ngFor="let supplierLists of countOfCategorys | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i<18">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.supplier_name? supplierLists?.supplier_name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.total_product }})
+                </label>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <!-- <li *ngFor="let supplierLists of supplierList | orderBy:'warehouse_name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=18 && i<36">
+                <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                  [attr.checked]="supplierLists.selected ? 'checked' : null">
+                {{supplierLists?.name ? supplierLists?.name :supplierLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+              </label>
+            </li> -->
+            <ng-container *ngIf="!countOfCategorys?.length">
+              <li *ngFor="let supplierLists of supplierList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i>=49 && i<98">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.name ? supplierLists?.name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.count }})
+                </label>
+              </li>
+            </ng-container>
+            <ng-container *ngIf="countOfCategorys?.length">
+              <li *ngFor="let supplierLists of countOfCategorys | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i>=18 && i<36">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.supplier_name? supplierLists?.supplier_name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.total_product }})
+                </label>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <!-- <li *ngFor="let supplierLists of supplierList | orderBy:'warehouse_name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=36">
+                <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                  [attr.checked]="supplierLists.selected ? 'checked' : null">
+                {{supplierLists?.name ? supplierLists?.name :supplierLists?.warehouse_name | titlecase }}
+                <span class="checkmark"></span>
+              </label>
+            </li> -->
+            <ng-container *ngIf="!countOfCategorys?.length">
+              <li *ngFor="let supplierLists of supplierList | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i>=98">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.name ? supplierLists?.name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.count }})
+                </label>
+              </li>
+            </ng-container>
+            <ng-container *ngIf="countOfCategorys?.length">
+              <li *ngFor="let supplierLists of countOfCategorys | orderBy:'warehouse_name':false; let i = index">
+                <label class="custom-checkbox" *ngIf="i>=36">
+                  <input type="checkbox" (click)="getSelectedCategory(supplierLists,supplierLists?.type)"
+                    [attr.checked]="supplierLists.selected ? 'checked' : null">
+                  {{supplierLists?.supplier_name? supplierLists?.supplier_name :supplierLists?.warehouse_name | titlecase }}
+                  <span class="checkmark"></span>
+                  ({{supplierLists.total_product }})
+                </label>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+        <div *ngIf="loadingData" class="loading">loading...</div>
+      </div>
+      <div>
+        <ul class="pre_next_button">
+          <li><button (click)="filterShow('location')">Previous</button></li>
+          <li><button (click)="filterShow('categories')">Next</button></li>
+        </ul>
+      </div>
+    </div>
+    <!-- view filter supplier list -->
+    <!-- view filter categories list -->
+    <div *ngIf="filterIndexView=='categories'" class="tab-view">
+      <div class="row viewfilter-scroll">
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let categoryLists of categoryList | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i<51">
+                <input type="checkbox" (click)="getSelectedCategory(categoryLists,categoryLists?.type)"
+                  [attr.checked]="categoryLists.selected ? 'checked' : null">
+                <span>{{categoryLists?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{categoryLists?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let categoryLists of categoryList | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=51 && i<102">
+                <input type="checkbox" (click)="getSelectedCategory(categoryLists,categoryLists?.type)"
+                  [attr.checked]="categoryLists.selected ? 'checked' : null">
+                <span>{{categoryLists?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{categoryLists?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let categoryLists of categoryList | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=102">
+                <input type="checkbox" (click)="getSelectedCategory(categoryLists,categoryLists?.type)"
+                  [attr.checked]="categoryLists.selected ? 'checked' : null">
+                <span>{{categoryLists?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{categoryLists?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="loadingData" class="loading">loading...</div>
+      </div>
+      <div>
+        <ul class="pre_next_button">
+          <li><button (click)="filterShow('suppliers')">Previous</button></li>
+          <li *ngIf="attributeView"><button (click)="filterShow('attributes')">Next</button></li>
+          <li *ngIf="!attributeView"><button (click)="filterShow('assetprice')">Next</button></li>
+        </ul>
+      </div>
+    </div>
+    <!-- view filter categories list -->
+    <!-- view filter attribute list -->
+    <div *ngIf="filterIndexView=='attributes'" class="tab-view">
+      <div *ngFor="let atttributeLists of atttributeList">
+        <div class="col-6 attribute">
+        <h6>{{atttributeLists?.name}} :</h6>
+        <select (change)="getSelectedAttribute($event,atttributeLists)" class="attribute-selection">
+          <option *ngFor=" let attrList of atttributeLists?.attribute_list" [selected]="attrList?.selected==true"
+            value="{{attrList?.sgid}}">
+            {{attrList?.attribute_value}}
+          </option>
+        </select>
+      </div>
+      </div>
+      <div>
+        <ul class="pre_next_button">
+          <li><button (click)="filterShow('categories')">Previous</button></li>
+          <li><button (click)="filterShow('assetprice')">Next</button></li>
+        </ul>
+      </div>
+    </div>
+    <!-- view filter attribute list -->
+    <!-- view filter assest price list -->
+    <div *ngIf="filterIndexView=='assetprice'" class="tab-view" style="
+    margin-left: -36px;
+">
+      <form [formGroup]="assetPriceForm"  style="margin-left: 228px;">
+        <h5 class="mb-4 ml-1">Is there a Budget Range you are working with?</h5>
+        <select class="assetPriceFilter" (change)="onChange($event)"
+        onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+        <option value='' hidden selected class="changeColor" >Please Select Asset Price </option>
+                <option value="none">None</option>
+                <option class="p-1" *ngFor=" let assetPrice of assetPriceFilter" [selected]="assetPrice?.selected==true"
+          [(value)]="assetPrice.label">
+                  {{assetPrice?.label}}
+                </option>
+              </select>
+      </form>
+      <div>
+        <ul class="pre_next_button">
+          <li><button (click)="assetpricePrevious()">Previous</button></li>
+          <li><button (click)="assetPriceNext()">Next</button></li>
+          <!-- <li *ngIf="attributeView"><button (click)="filterShow('attributes')">Previous</button></li>
+          <li *ngIf="!attributeView"><button (click)="filterShow('categories')">Previous</button></li>
+          <li><button (click)="filterShow('inventory')">Next</button></li> -->
+        </ul>
+      </div>
+    </div>
+    <!-- view filter assest price list -->
+    <!-- view filter inventroy list -->
+    <div *ngIf="filterIndexView=='inventory'" class="tab-view">
+      <div class="col-5 publish-status">
+      <form [formGroup]="inventoryForm" (ngSubmit)="inventoryFormFormData()">
+        <div>
+          <label>Minimum Quantity</label>
+          <p>
+            <input matInput type="number" min="0" class="form-control custom-control1" 
+              formControlName="minInvValue" oninput="validity.valid||(value='');" />
+          </p>
+        </div>
+        <ul class="inventory_list">
+          <li *ngFor="let inventoryAttrs of inventoryAttr">
+            <input matInput type="radio" placeholder="Min Value" class="custom-radio-button"
+              [attr.checked]="inventoryAttrs.checked" (change)="inventoryFormFormData()" name="name"
+              [value]="inventoryAttrs?.name" formControlName="name" /> {{inventoryAttrs?.DisplayName}}
+          </li>
+        </ul>
+        <!-- <div class="assetsButton viewfilter-assetsButton">
+          <button type="submit" data-dismiss="modal">Submit</button>
+        </div> -->
+      </form>
+    </div>
+      <div>
+        <ul class="pre_next_button">
+          <li><button (click)="filterShow('assetprice')">Previous</button></li>
+          <li><button (click)="modal.dismiss('Cross click')">Finish</button></li>
+        </ul>
+      </div>
+    </div>
+    <!-- view filter inventroy list -->
+    <!-- view filter publish status -->
+    <!-- <div *ngIf="filterIndexView=='publishStatus'" class="tab-view" style="margin-left: -46px;">
+      <div class="col-6 publish-status">
+      <p> Publish Status</p>
+      <button id="publishDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-white border position-relative text-left publishDropDown">
+        <span>{{publishStatusView ? publishStatusView :'Select Status'}} </span>
+      </button>
+      <div aria-labelledby="publishDropdown" class="dropdown-menu publishDrop">
+        <div class="col dropdown-item" *ngFor="let publisheValues of publisheValue">
+          <span (click)="getPublishStatusFilter(publisheValues)">{{publisheValues?.name}}</span>
+        </div>
+      </div>
+      </div>
+      <div>
+        <ul class="pre_next_button">
+          <li><button (click)="filterShow('inventory')">Previous</button></li>
+          <li><button (click)="modal.dismiss('Cross click')">Finish</button></li>
+        </ul>
+      </div>
+    </div> -->
+   <!-- view filter publish status -->
+
+  </div>
+</ng-template>
+</div>

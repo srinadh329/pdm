@@ -1,0 +1,80 @@
+.custom-card .insp-img img{
+    width: 100%;
+    height: 500px;
+    object-fit: fill;
+}
+.item-details{
+    padding: 40px 0;
+}
+.custom-card h4{
+    margin: 0;
+    padding: 13px 24px 0 22px;
+    font-size: 17px;
+}
+.custom-card .card-body{
+    padding: 10px 23px 30px 23px;
+}
+.package-list{
+    list-style: none;
+    padding: 0;
+    display: flex;
+}
+.package-list li{
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    margin-right: 25px;
+    padding: 10px 10px 0 10px;
+    width: 200px;
+}
+.package-list li .lable-view{
+    padding: 8px 0;
+}
+.package-list li .lable-view p{
+    padding: 2px 0;
+}
+.package-list li img{
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+}
+.font-size{
+    font-size: 17px;
+}
+.custom-warehouse-card{
+    background-color: #F4F4F4!important;
+}
+.accordion-custom-header a{
+    width: 100%;
+    display: block;
+    padding: 20px;
+    background-color: #F4F4F4!important;
+}
+.accordion-custom-header a:hover{
+    color: #000;
+    text-decoration: none;
+}
+.accordion-custom-header {
+    background-color: #fff;
+    padding: 0;
+    cursor: pointer;
+    border-bottom: none;
+  }
+  
+  .accordion-custom-header .request {
+    padding: 20px;
+  }
+  
+  .accordion-custom-header .mb-0:after {
+    content: "\f054 ";
+    font-family: 'FontAwesome';
+    position: absolute;
+    right: 14px;
+    font-size: 14px;
+    top: 25px;
+    font-weight: 500;
+  }
+  
+  .accordion-custom-header .mb-0[aria-expanded="true"]:after {
+    content: "\f078";
+  }

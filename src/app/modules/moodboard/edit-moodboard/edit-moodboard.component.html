@@ -1,0 +1,164 @@
+<section>
+        <div class="container">
+            
+            <div class="row">
+                <div class="col-lg-9 form-view">
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                            Note : (<span class="text-danger">*</span>) Mandatory Fields
+                        </div>
+                        
+                    </div>
+                    <form [formGroup]="moodboardForm" (ngSubmit)="updateMbForm()">
+                        <div class="row d-flex mt-3">
+                            <div class="form-group mb-2 col-12 col-md-6">
+                                <label for="mbName" class="control-label pl-2">Moodboard Name<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control ml-2" required formControlName="moodboard_name"
+                                    placeholder="Required" />
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6">
+                                <label for="mbName" class="control-label pl-2">Business Segment</label>
+                                <select (change)="selectDesign($event)" formControlName="design_type" class="form-control">
+                                    <option selected disabled value="">Business Segment</option>
+                                    <option *ngFor="let design of designList" value={{design.sgid}}>
+                                        {{ design?.design_type }}
+                                      </option>
+                                </select>
+                            </div>           
+                            <div class="form-group mb-2 col-12 col-md-6 mt-4" *ngIf="editMbData?.moodboard_wizard?.lable_type">
+                                <label for="mbName" class="control-label pl-2">{{editMbData?.moodboard_wizard?.lable_type}}</label>
+                                <select (change)="selectRoom($event)" formControlName="room_type" class="form-control">
+                                    <option selected disabled value="">Select room type</option>
+                                    <option *ngFor="let room of designRoomType" value={{room.sgid}}>
+                                        {{ room?.room_type_name }}
+                                      </option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 mt-4" *ngIf="editMbData?.moodboard_wizard?.showUnitRoom==='rooms' 
+                            || editMbData?.moodboard_wizard?.showUnitRoom ==='both'">
+                                <label for="mbType" class="control-label pl-2">Total Number of Rooms</label>
+                                <input type="text" min="1" maxlength="3" placeholder="Number of Rooms" pattern="[1-9]\d*"
+                                (keypress)="($event.charCode >= 48 && $event.charCode < 58)" required class="form-control add_info_input"
+                                formControlName="no_of_rooms" />
+                            </div>        
+                            <div class="form-group mb-2 col-12 col-md-6 mt-4" *ngIf="editMbData?.moodboard_wizard?.showUnitRoom==='units' 
+                            || editMbData?.moodboard_wizard?.showUnitRoom ==='both'">
+                                <label for="mbType" class="control-label pl-2">Total Number of Units</label>
+                                <input type="text" min="1" maxlength="3" placeholder="Number of Units" pattern="[1-9]\d*"
+                                (keypress)="($event.charCode >= 48 && $event.charCode < 58)" required class="form-control add_info_input"
+                                formControlName="no_of_units" />
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 mt-4" *ngIf="editMbData?.moodboard_wizard?.showUnitRoom ==='both'">
+                                <label for="mbType" class="control-label pl-2">Total Number of Beds</label>
+                                <input type="text" min="1" maxlength="3" placeholder="Number of Beds" pattern="[1-9]\d*"
+                                    (keypress)="($event.charCode >= 48 && $event.charCode < 58)" required class="form-control add_info_input"
+                                    formControlName="no_of_beds" />
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 mt-4" *ngIf="editMbData?.moodboard_wizard?.showUnitRoom ==='square_feet'">
+                                <label for="mbType" class="control-label pl-2">Total Square Feet Area</label>
+                                <input type="text" min="1" maxlength="3" placeholder="Square Feet Area" pattern="[1-9]\d*"
+                                (keypress)="($event.charCode >= 48 && $event.charCode < 58)" required class="form-control add_info_input"
+                                formControlName="square_feet" />
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 mt-4" *ngIf="editMbData?.moodboard_wizard?.showUnitRoom ==='rooms' 
+                            || editMbData?.moodboard_wizard?.showUnitRoom ==='units' || editMbData?.moodboard_wizard?.showUnitRoom ==='square_feet'">
+                                <label for="mbName" class="control-label pl-2">Buy Budget  
+                                    <span *ngIf="editMbData?.moodboard_wizard?.showUnitRoom ==='rooms'">per Room</span>
+                                    <span *ngIf="editMbData?.moodboard_wizard?.showUnitRoom ==='units'">per Unit</span>
+                                </label>
+                                <select (change)="selectBuget($event)" formControlName="budget" class="form-control">
+                                    <option selected disabled value="">Select room type</option>
+                                    <option *ngFor="let bgt of buget" value={{bgt.budget}}>
+                                        {{ bgt?.budget }}
+                                      </option>
+                                </select>
+                            </div> 
+                            <div class="form-group mb-2 col-12 col-md-6 mt-4" *ngIf="editMbData?.moodboard_wizard?.showMoodboard">
+                                <div>
+                                  <div class="form-block">
+                                    <label for="mbName" class="control-label pl-2">Moodboard Type
+                                    </label>
+                                    <select formControlName="moodboard_type_id" (change)="mbType($event)"
+                                    class="form-control custom-form-control">
+                                    <option selected hidden value="">Moodboard Type</option>
+                                    <option *ngFor="let moodboard of moodboardType" value="{{moodboard?.type_id}}">{{moodboard?.typename}}</option>
+                                  </select>
+                                  </div>
+                               </div>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 mt-4" *ngIf="editMbData?.moodboard_wizard?.showMoodboard">
+                                <div>
+                                  <div class="form-block">
+                                    <label for="mbName" class="control-label pl-2">Design Type
+                                    </label>
+                                    <select formControlName="design_type_id" (change)="designValue($event)"
+                                    class="form-control custom-form-control">
+                                    <option selected hidden value="">Design Type</option>
+                                    <option *ngFor="let design of designType" value="{{design?.sgid}}">{{design?.type_name}}</option>
+                                  </select>
+                                  </div>
+                               </div>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 mt-4">
+                                <div class="add-button">
+                                    <div>
+                                        <label for="mbType" class="control-label pl-2">Company Name (Optional)</label>
+
+                                    </div>
+                                    <a *ngIf="editMbData?.moodboard_wizard?.mbForm==='edit'" class="cursor-pointer" (click)="toggle('company')"><small><i class="fa fa-plus-circle pr-1"></i>Create New
+                                            Company</small></a>
+                                </div>
+                                <div  *ngIf="!companyOptions">
+                                   
+                                    <select (change)="selectCompany($event)" formControlName="company_id" class="form-control">
+                                        <option selected disabled value="">Select Company</option>
+                                        <option *ngFor="let company of companyList" value={{company.sgid}}>
+                                            {{ company.company }}
+                                          </option>
+                                    </select>
+                                </div>
+                                <div *ngIf="companyOptions" >
+                                    <input type="text" class="form-control" formControlName="company_name"
+                                        placeholder="Enter Company Name" />
+                                </div>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 mt-4">
+                                <div class="add-button">
+                                    <div>
+                                        <label for="mbName" class="control-label pl-2">Project Name (Optional) </label>
+
+                                    </div>
+                                    <a *ngIf="editMbData?.moodboard_wizard?.mbForm ==='edit'" class="cursor-pointer" (click)="toggle('project')"><small><i class="fa fa-plus-circle pr-1"></i>Create New
+                                            Project</small></a>
+                                </div>
+                                <div *ngIf="!projectOptions">
+                                    <select  (change)="selectProject($event)" formControlName="project_id" class="form-control">
+                                        <option selected disabled value="">Select Project</option>
+                                        <option *ngFor='let project of projectList' [value]="project.sgid">{{project.project}}</option>
+                                    </select>
+                                </div>
+                                <div *ngIf="projectOptions">
+                                    <input type="text" class="form-control" id="mbName"
+                                        formControlName="project_name" placeholder="Enter Project Name" />
+                                </div>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 mt-4">
+                                <label for="mbType" class="control-label pl-2">Estimated Delivery date</label>
+                                <input type="date" class="form-control ml-2" formControlName="delivery_date" />
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-12 text-center edit_button">
+                                <button type="submit" class="btn mr-3" [disabled]="!moodboardForm.valid">
+                                    <span *ngIf="editMbData?.moodboard_wizard?.mbForm ==='edit'">Update</span>
+                                    <span *ngIf="editMbData?.moodboard_wizard?.mbForm ==='copy'">Create</span>
+                                </button>
+                                <button type="submit"  class="btn ml-3" (click)="navigateMbList()">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section> 

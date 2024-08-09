@@ -1,0 +1,54 @@
+<header class="section-header auth-header shadow-sm">
+    <div class="container">
+      <div class="row justify-content-center  ">
+        <div class="col-xs-12  d-flex flex-wrap align-content-center " id="header">
+            <div  class="header-left d-flex align-items-center">
+                <a class="navbar-brand" routerLink="/">
+                    <em><img src="/assets/img/inhabitr-logo.jpg" width="162px"/>
+                  </em>
+                    <em style="padding: 4px 0px 0 0;letter-spacing: 1px;">FURNITURE DATA CLOUD</em>
+                  </a>
+            </div>
+        </div>
+      </div>
+    </div>
+</header>
+
+<section class="img-lens-view">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="card custom-card-image">
+                    <div class="row mb-4">
+                        <div class="col-lg-4 price"><b>Min Price:</b> ${{google_lens_info?.minPrice}}</div>
+                        <div class="col-lg-4 price ml-1"><b>Max Price:</b> ${{google_lens_info?.maxPrice}}</div>
+                        <div class="count">Note : This price is from "{{countOfMatch}} similar Products</div>
+                    </div>
+                    <img class="img-thumbnail" [src]="otherAttributes?.pro_image"/>
+                </div>
+            </div>
+            <div class="col-lg-7 overflow-view">
+                <div class="row mb-4">
+                    <div class="col-3 d-flex mt-4" *ngFor="let product of similarProducts">
+                        <div class="card lens-card">
+                            <img class="subImg" [src]="product.thumbnail" [alt]="product.title">
+                            <div class="card-body" style="padding:7px;margin-bottom: 19px;">
+                                <p class="card-title">{{product?.price?.value}}</p>
+                                <span><img style="width:7px;" src="{{product?.source_icon}}" alt="">&nbsp;<span
+                                    style="font-size: 14px;">{{product?.source}}</span></span>
+                                <span class="text" style="font-size: 15px;">{{product?.title}}</span>
+                              </div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<ngx-spinner
+  bdColor="rgba(51,51,51,0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-scale-multiple">
+  <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>

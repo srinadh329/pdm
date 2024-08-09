@@ -1,0 +1,180 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<section class="create_mb_section">
+  <div class="container-fluid">
+     <!-- design type -->
+    <div class="row" *ngIf="design?.res && design?.is_show">
+      <div class="col-md-5 flex_view">
+        <div class="heading_view">
+          <p>What do you want to<br> design Moodboard for?</p>
+        </div>
+        <div class="button_view">
+            <button class="btn" [disabled]="!designInfo.id" (click)="navigation('designRoomType')">Next</button>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="design_view">
+            <div class="row">
+              <div class="col-md-4" [ngClass]="{' mb-5':!isLast}" *ngFor="let design of design?.res;last as isLast">
+                <div class="mb-options" (click)="selectDesign(design)" [ngClass]="{'active':designInfo.id==design?.sgid}">
+                  <img *ngIf="designInfo?.id !=design?.sgid" src="{{design?.img}}"/>
+                  <img *ngIf="design?.url && designInfo.id==design?.sgid" src="{{design?.url}}"/>
+                  <p>{{design?.design_type}}</p>
+                </div>
+              </div>
+            </div>
+        
+        </div>
+      </div>
+    </div>
+    <!-- design type -->
+    <!-- room type -->
+      <div *ngIf="designRoomType?.res && designRoomType?.is_show">
+        <div class="row">
+          <div class="col-md-6 flex_view">
+            <div class="heading_view">
+              <p>{{designRoomType?.title}}</p>
+              <p>{{designRoomType?.title2}}</p>
+              <p>Please indicate your floor room type from the options provided</p>
+            </div>
+            <div class="button_view">
+                <button type="submit" class="btn back_button" (click)="navigation('')">Back</button>
+                <button type="submit" class="btn" [ngClass]="{'disable':!roomInfo.sub_id}" [disabled]="!roomInfo.sub_id"  (click)="navigation('additionalInfo')">Next</button>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="design_view">
+              <div class="row">
+                <p>{{designInfo.type}} <span *ngIf="roomInfo?.sub_type">: {{roomInfo?.sub_type}}</span></p>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mt-4 pb-4" *ngFor="let room of designRoomType?.res">
+                  <div class="mb-options" (click)="selectRoom(room)" [ngClass]="{'active':roomInfo?.sub_id==room?.sgid}">
+                    <img *ngIf="roomInfo?.sub_id !=room?.sgid" src="{{room?.img}}"/>
+                    <img *ngIf="room?.url && roomInfo?.sub_id==room?.sgid" src="{{room?.url}}"/>
+                    <p>{{room?.room_type_name}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- room type -->
+    <!-- additional form -->
+      <div *ngIf="addInfo?.is_show">
+        <div class="row">
+          <div class="col-md-5 flex_view">
+            <div class="heading_view">
+              <p>Please provide some<br> additional information</p>
+            </div>
+             <div class="button_view">
+                  <button type="submit" class="btn back_button" (click)="navigation('designRoomType')">Back</button>
+                  <button type="submit" class="btn" [disabled]="!moodboardInfo?.valid" 
+                  (click)="createMB()">Next</button>
+              </div>
+          </div>
+          <div class="col-md-6">
+            <div class="design_view">
+              <div class="row">
+                <p>{{designInfo.type}} <span *ngIf="showUnitRoom !=='both'">: {{roomInfo?.sub_type}}</span></p>
+              </div>
+              <form [formGroup]="moodboardInfo" class="form_view">
+                <div class="row">
+                  <div class="form-group col-md-6" *ngIf="showUnitRoom==='units' || showUnitRoom ==='both'">
+                    <label for="units">Total Number of Units (<span class="text-danger">*</span>)</label>
+                    <input type="text" min="1" maxlength="3" placeholder="Number of Units" pattern="[1-9]\d*"
+                      (keypress)="($event.charCode >= 48 && $event.charCode < 58)" required class="form-control add_info_input"
+                      formControlName="no_of_units" />
+                    <div class="error-view" *ngIf="moodboardInfo.get('no_of_units').hasError('pattern')">
+                      Please Enter Valid Number
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6" *ngIf="showUnitRoom ==='rooms' || showUnitRoom ==='both'">
+                    <label for="units">Total Number of Rooms (<span class="text-danger">*</span>)</label>
+                    <input type="text" min="1" maxlength="3" placeholder="Number of Rooms" pattern="[1-9]\d*"
+                      (keypress)="($event.charCode >= 48 && $event.charCode < 58)" required class="form-control add_info_input"
+                      formControlName="no_of_rooms" />
+                    <div class="error-view" *ngIf="moodboardInfo.get('no_of_rooms').hasError('pattern')">
+                      Please Enter Valid Number
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6" *ngIf="showUnitRoom ==='square_feet'">
+                    <label for="units">Total Square Feet Area (<span class="text-danger">*</span>)</label>
+                    <input type="text" min="1"  placeholder="Square Feet Area" pattern="[1-9]\d*"
+                      (keypress)="($event.charCode >= 48 && $event.charCode < 58)" required class="form-control add_info_input"
+                      formControlName="square_feet" />
+                    <div class="error-view" *ngIf="moodboardInfo.get('square_feet').hasError('pattern')">
+                      Please Enter Valid Number
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6" *ngIf="showMoodboard">
+                    <label for="units">Select Moodboard Type (<span class="text-danger">*</span>)</label>
+                    <div class="dropdown select_dropdown_view form-control add_info_input">
+                      <a style="text-decoration: none" class="dropdown-toggle" data-toggle="dropdown">
+                        {{mb_type_name ? mb_type_name : 'Moodboard Type'}}
+                        <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li *ngFor="let moodboard of moodboardType" value="{{moodboard?.type_id}}"
+                        (click)="mbType(moodboard)" [ngClass]="{'list_acitve':moodboardInfo?.value?.moodboard_type_id ===moodboard?.type_id}">{{moodboard?.typename}} 
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6"
+                    *ngIf="showUnitRoom ==='rooms' || showUnitRoom ==='units' ||  showUnitRoom ==='square_feet'">
+                    <label for="units">Select Buy Budget per Unit (<span class="text-danger">*</span>)</label>
+                    <div class="dropdown select_dropdown_view form-control add_info_input">
+                      <a style="text-decoration: none" class="dropdown-toggle" data-toggle="dropdown">
+                        {{moodboardInfo?.value?.budget ? moodboardInfo?.value?.budget : 'Select Budget'}}
+              
+                        <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li *ngFor="let bug of addInfo?.budget" value="{{bug?.budget}}"
+                         (click)="budgetOpt(bug)" [ngClass]="{'list_acitve':moodboardInfo?.value?.budget ===bug?.budget}">{{bug?.budget}}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6" *ngIf="showUnitRoom ==='both'">
+                    <label for="units">Total Number of Beds per Room (<span class="text-danger">*</span>)</label>
+                    <input type="text" min="1" maxlength="3" placeholder="Number of Beds" pattern="[1-9]\d*"
+                      (keypress)="($event.charCode >= 48 && $event.charCode < 58)" required class="form-control add_info_input"
+                      formControlName="no_of_beds" />
+                    <div class="error-view" *ngIf="moodboardInfo.get('no_of_beds').hasError('pattern')">
+                      Please Enter Valid Number
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6" *ngIf="showMoodboard">
+                    <label for="units">Select Design Type </label>
+                    <div class="dropdown select_dropdown_view form-control add_info_input">
+                      <a style="text-decoration: none" class="dropdown-toggle" data-toggle="dropdown">
+                        {{design_type_value?.type_name ? design_type_value?.type_name : 'Design Type'}}
+                        <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li *ngFor="let design of designType" value="{{design?.type_name}}"
+                        (click)="designValue(design)" [ngClass]="{'list_acitve':moodboardInfo?.value?.design_type_id ===design?.sgid}">{{design?.type_name}} 
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="units">Select Estimated Delivery Date</label>
+                    <div class="input-group date">
+                      <input type="date" min="{{today |  date: 'yyy-MM-dd'}}" placeholder="Delivery Date (Optional)"
+                        class="form-control add_info_input" formControlName="delivery_date" />
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- additional form -->
+   
+  </div>
+</section>
+

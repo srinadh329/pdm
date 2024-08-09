@@ -1,0 +1,94 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<div *ngIf="projectEditInData?.dialogType=='project_edit'">
+    <div class="modal-header">
+        <h6 class="modal-title">{{projectEditInData?.title}}</h6>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        <form [formGroup]="projectForm">
+            <div class="company_form" *ngIf="projectEditInData?.type=='edit'">
+                <label for="optRef" class="control-label pl-2">Company Name:</label>
+                <input type="text" class="form-control" formControlName="company_name" readonly />
+            </div>
+           
+            <div class="company_form" *ngIf="projectEditInData?.type=='create'">
+                <label for="optRef" class="control-label pl-2">Company Name:</label>
+                <div class="dropdown select_dropdown_view form-control">
+                    <a type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">
+                        {{company?.company ? company?.company :'Select Company Name'}}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li (click)="selectCompany(list)"  [ngClass]="{'project_list_active':list?.sgid==this.company?.sgid}" 
+                         *ngFor='let list of projectEditInData?.companyData' [value]="list.sgid"> {{list.company}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="company_form">
+                <label for="optRef" class="control-label pl-2">Project Name:</label>
+                <input type="text" class="form-control" placeholder="Enter Project" [ngClass]="{'event-pointer':projectEditInData?.type=='edit'}" formControlName='project_name'/>
+            </div>
+            <div class="company_form">
+                <label for="optRef" class="control-label pl-2">Order Type:</label>
+                <select formControlName="project_type" class="form-control">
+                    <option hidden value="">Please Select Order Type</option>
+                    <option *ngFor='let order of projectEditInData?.orderData' [value]="order.value">
+                        {{order.type}}
+                    </option>
+                </select>
+            </div>
+            <div class="mt-4">
+                <table class="project_table">
+                    <thead>
+                        <th></th>
+                        <th>Projected Revenue ($)</th>
+                        <th>Budgeted Cost ($)</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Product & Tariff</td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='product_tariff_projected_revenue'/></span></td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='product_tariff_budgeted_cost'/></span></td>
+                        </tr>
+                        <tr>
+                            <td>Freight</td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='freight_projected_revenue'/></span></td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='freight_budgeted_cost'/></span></td>
+                        </tr>
+                        <tr>
+                            <td>Delivery & Install</td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='delivery_install_projected_revenue'/></span></td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='delivery_install_budgeted_cost'/></span></td>
+                        </tr>
+                        <tr>
+                            <td>Sales Tax</td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='sales_tax_projected_revenue'/></span></td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='sales_tax_budgeted_cost'/></span></td>
+                        </tr>
+                        <tr>
+                            <td>Other Services</td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='other_services_projected_revenue'/></span></td>
+                            <td><span>$<input type="text" (keyup)="count()" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control" formControlName='other_services_budgeted_cost'/></span></td>
+                        </tr>
+                        <tr>
+                            <td class="weight">TOTAL Booking Revenue</td>
+                            <td class="weight">${{projected_revenue ? projected_revenue :'0'}}</td>
+                            <td class="weight">${{budgeted_cost ? budgeted_cost : 0}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+           
+            <div class="row mt-4 mb-2">
+                <div class="col-md-12 text-center">
+                    <button  class="btn add-floor-btn" [disabled]="!projectForm.valid"
+                    (click)="sumbitProject()" >
+                    <span *ngIf="projectEditInData?.type=='edit'">Update</span>
+                    <span *ngIf="projectEditInData?.type=='create'">Create</span>
+                </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

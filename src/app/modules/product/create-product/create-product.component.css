@@ -1,0 +1,258 @@
+.create-product-section {
+    padding: 30px 0;
+}
+
+.create_form_view {
+    border: 1px solid #dee2e6;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    padding: 1.5rem;
+}
+
+.form-row-view {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 16px 0;
+    margin: 8px 0;
+    box-shadow: 1px 1px 10px #0000001a;
+    border: 1px solid rgba(0, 0, 0, .125);
+    position: relative;
+}
+
+.upload-url-view {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+    align-items: center;
+    opacity: .4;
+    pointer-events: none;
+}
+
+.upload-url-view li input {
+    width: 100%;
+}
+
+.upload-url-view li:nth-child(1) {
+    font-size: 12px;
+}
+
+.form-control {
+    border-radius: 5px;
+    font-size: 12px;
+    border: 1px solid #dee2e6;
+    width: 100%;
+}
+
+.add-button {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-group {
+    height: 89px;
+}
+
+.upload-img-view {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+}
+
+.upload-img-view i {
+    font-size: 30px;
+}
+
+.add-btn {
+    height: 40px;
+    font-size: 13px;
+    width: 140px;
+    margin-left: 18px;
+    background-color: #393e46;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.custom-textarea {
+    height: 100px;
+}
+
+.select_dropdown_view {
+    height: auto;
+}
+
+.select_dropdown_view .dropdown-menu {
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 13px;
+}
+
+.search-input {
+    width: 95%;
+    margin: 7px auto;
+}
+
+.item-active {
+    background: #EAEAF7;
+    color: #393E46;
+}
+
+.preview {
+    width: 124px;
+    height: 100px;
+    padding: 10px;
+    margin: 0 4px 0 0;
+}
+
+.flex-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-flex {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 5px;
+    background-color: #fff;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.upload-arrows {
+    width: 100%;
+}
+
+.upload-arrows ul {
+    position: relative;
+    list-style: none;
+    padding: 0;
+}
+
+.upload-arrows ul li:nth-child(1) {
+    background-color: #393e46;
+    padding: 3px;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -88px;
+    left: 25%;
+}
+
+.upload-arrows ul li:nth-child(2) {
+    background-color: #393e46;
+    padding: 3px;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -88px;
+    right: 15px;
+}
+
+.inventory-add a {
+    display: flex;
+    align-items: center;
+    background-color: #000;
+    border-radius: 50px;
+    color: #fff;
+    padding: 3px 11px;
+    cursor: pointer;
+}
+
+.inventory-add a i {
+    padding-right: 4px;
+}
+
+.inventory-add {
+    position: absolute;
+    right: 5px;
+    top: 7px;
+    z-index: 9;
+}
+
+.inventory-delete {
+    position: absolute;
+    right: 8px;
+    top: 3px;
+}
+
+.inventory-delete a {
+    background-color: #000;
+    border-radius: 16px;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.error-line {
+    border: 1px solid #dc3545;
+}
+
+.latest-table-tooltip{
+    position: relative;
+    display: inline-block;
+    right: 0px;
+    top: 1px;
+}
+.latest-table-tooltip i {
+    font-size: 15px;
+    color: #000;
+}
+.latest-table-tooltip .latest-table-tooltiptext{
+    width: 205px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 7px 1px;
+    position: absolute;
+    z-index: 1;
+    bottom: 123%;
+    left: -33px;
+    margin-left: -63px;
+    font-size: 12px;
+    font-weight: 400;
+    font-weight: initial;
+    visibility: hidden;
+    cursor: pointer;
+    text-transform: none;
+    text-transform: initial;
+}
+.latest-table-tooltip:hover .latest-table-tooltiptext{
+    visibility: visible;
+}
+.latest-table-tooltip .latest-table-tooltiptext:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}

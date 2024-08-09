@@ -1,0 +1,38 @@
+.unit_table tr td{
+  padding: 15px 20px 0 0px;
+}
+.fa-trash{
+  background-color: #393e46;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0em;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.floor-unit-table span{
+  display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.event-none{
+  pointer-events: none;
+}
+.event-none button{
+  background-color: #e9ecef !important;
+  color: #000 !important;
+}
+.event-none input{
+  background-color: #e9ecef !important;
+}
+
+
+.event-none.checkbox-click-target{
+  background-color: transparent !important;
+}
+

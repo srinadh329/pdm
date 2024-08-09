@@ -1,0 +1,1138 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<div *ngIf="mbIn?.dialogType=='add-moodboard'">
+  <div class="modal-header">
+    <h4 class="modal-title title-font w-100 color">
+      {{mbIn?.content}}
+    </h4>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">
+        <img src="/assets/img/project/cross.png">
+      </span>
+    </span>
+  </div>
+  <div class="modal-body viewFilterHeading">
+    <div class="row">
+      <div class="col-12 column-flex">
+        <div class="dropdown">
+          <div class="col-md-12  padding-view">
+            <a class="cursor-pointer" (click)="createNewMoodboardPopUp('createDailog');">
+              <img src="/assets/img/addButton.svg" alt="" width="32px" height="38px" style="margin: 0 8px 0 0;"></a>
+            <button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false" class="btn btn-white dropdown-toggle" #scrollMe>
+              {{moodboardTypeId}}<span *ngIf="moodboardTypeId">-</span>{{moodbTypeName}}
+
+            </button>
+            <div class="dropdown-menu add w-100" aria-labelledby="dropdownMenuButton" (scroll)="onScroll()">
+              <a class="dropdown-item" [ngClass]="{'mb-active':moodboardTypeId==mbdType.sgid}"
+                *ngFor="let mbdType of mbIn?.res"
+                (click)="selectMoodbType(mbdType)">{{mbdType.sgid}}-{{mbdType.boardname}}</a>
+            </div>
+          </div>
+          <div class="col-md-12 button-move">
+            <button type="button" class="border btn" [disabled]="!moodboardTypeId" (click)="addtoMoodboard()">Add to
+              Moodboard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- variation popup -->
+<div *ngIf="variationInData?.dialogType=='variationpopup'">
+  <div class="modal-header">
+    <h4 class="modal-title product-content  w-100 color"></h4>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </span>
+  </div>
+  <div class="modal-body text-center">
+    <div class="variation-msg">
+      <p>{{variationInData?.res?.message}}</p>
+    </div>
+    <div class="force-button">
+      <button type="submit" class="btn" (click)="forceAddMb(variationInData)">Yes</button>
+      <button type="submit" class="btn" (click)="activeModal.close('Close click')">No</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- variation popup -->
+
+
+
+
+<!-- category popup  -->
+
+<div *ngIf="categoryIn?.dialogType=='category-popup'">
+  <div class="modal-header">
+    <h4 class="modal-title title-font color">
+      {{categoryIn?.content}}
+    </h4>
+    <div class="search-input">
+      <input type="text" class="form-control" (keyup.enter)="searchfilter(valueIn,'categories')"
+        [(ngModel)]='valueIn' />
+      <i class="fa fa-times close" aria-hidden="true" *ngIf="valueIn !==''" (click)="searchfilter('','categories')"></i>
+      <i class="fa fa-search" aria-hidden="true" (click)="searchfilter(valueIn,'categories')"></i>
+    </div>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">
+        <img src="/assets/img/project/cross.png">
+      </span>
+    </span>
+  </div>
+  <div class="modal-body viewFilterHeading">
+    <!-- categories popup list -->
+    <div class="row dialogContent category-scroll">
+      <div class="col-lg-4">
+        <ul class="list-unstyled">
+          <li *ngFor="let category of categoryIn?.res | orderBy:'name':false; let i = index">
+            <label class="custom-checkbox" *ngIf="i< categoryIn?.res?.length/3">
+              <input type="checkbox" (click)="getSelectedCategory(category)"
+                [attr.checked]="category.selected ? 'checked' : null">
+              <span>{{category?.name | titlecase }}</span>
+              <span class="checkmark"></span>
+              <span>&nbsp;&nbsp; ({{category?.count}})</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <ul class="list-unstyled">
+          <li *ngFor="let category of categoryIn?.res | orderBy:'name':false; let i = index">
+            <label class="custom-checkbox" *ngIf="i>=categoryIn?.res?.length/3 && i<categoryIn?.res?.length/3*2">
+              <input type="checkbox" (click)="getSelectedCategory(category)"
+                [attr.checked]="category.selected ? 'checked' : null">
+              <span>{{category?.name | titlecase }}</span>
+              <span class="checkmark"></span>
+              <span>&nbsp;&nbsp; ({{category?.count}})</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <ul class="list-unstyled">
+          <li *ngFor="let category of categoryIn?.res | orderBy:'name':false; let i = index">
+            <label class="custom-checkbox" *ngIf="i>=categoryIn?.res?.length/3*2">
+              <input type="checkbox" (click)="getSelectedCategory(category)"
+                [attr.checked]="category.selected ? 'checked' : null">
+              <span>{{category?.name | titlecase }}</span>
+              <span class="checkmark"></span>
+              <span>&nbsp;&nbsp; ({{category?.count}})</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- categories popup list -->
+  </div>
+</div>
+
+<!-- category popup  -->
+
+
+<!-- supplier popup -->
+
+<div *ngIf="supplierIn?.dialogType=='supplier-popup'">
+  <div class="modal-header">
+    <h4 class="modal-title title-font color">
+      {{supplierIn?.content}}
+    </h4>
+    <div class="search-input">
+      <input type="text" class="form-control" (keyup.enter)="searchfilter(valueIn,'suppliers')" [(ngModel)]='valueIn' />
+      <i class="fa fa-times close" aria-hidden="true" *ngIf="valueIn !==''" (click)="searchfilter('','suppliers')"></i>
+      <i class="fa fa-search" aria-hidden="true" (click)="searchfilter(valueIn,'suppliers')"></i>
+    </div>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">
+        <img src="/assets/img/project/cross.png">
+      </span>
+    </span>
+  </div>
+  <div class="modal-body viewFilterHeading">
+    <!-- categories popup list -->
+    <div class="row dialogContent category-scroll">
+      <div class="col-lg-4">
+        <ul class="list-unstyled">
+          <li *ngFor="let supplier of supplierIn?.res | orderBy:'name':false; let i = index">
+            <label class="custom-checkbox" *ngIf="i< supplierIn?.res?.length/3">
+              <input type="checkbox" (click)="getSelectedCategory(supplier)"
+                [attr.checked]="supplier.selected ? 'checked' : null">
+              <span>{{supplier?.name | titlecase }}</span>
+              <span class="checkmark"></span>
+              <span>&nbsp;&nbsp; ({{supplier?.count}})</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <ul class="list-unstyled">
+          <li *ngFor="let supplier of supplierIn?.res | orderBy:'name':false; let i = index">
+            <label class="custom-checkbox" *ngIf="i>=supplierIn?.res?.length/3 && i<supplierIn?.res?.length/3*2">
+              <input type="checkbox" (click)="getSelectedCategory(supplier)"
+                [attr.checked]="supplier.selected ? 'checked' : null">
+              <span>{{supplier?.name | titlecase }}</span>
+              <span class="checkmark"></span>
+              <span>&nbsp;&nbsp; ({{supplier?.count}})</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <ul class="list-unstyled">
+          <li *ngFor="let supplier of supplierIn?.res | orderBy:'name':false; let i = index">
+            <label class="custom-checkbox" *ngIf="i>=supplierIn?.res?.length/3*2">
+              <input type="checkbox" (click)="getSelectedCategory(supplier)"
+                [attr.checked]="supplier.selected ? 'checked' : null">
+              <span>{{supplier?.name | titlecase }}</span>
+              <span class="checkmark"></span>
+              <span>&nbsp;&nbsp; ({{supplier?.count}})</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- categories popup list -->
+  </div>
+</div>
+
+<!-- supplier popup -->
+
+
+
+<!-- view filter popup -->
+<div *ngIf="viewFilterIn?.dialogType=='view-filter-popup'">
+  <div class="modal-header">
+    <h4 class="modal-title title-font w-100 color">
+      <span *ngIf="filterIndexView !='startView' && filterIndexView !=='assetprice'">{{filterIndexView | titlecase
+        }}</span>
+      <span *ngIf="filterIndexView =='assetprice'">{{viewFilterIn?.buyLabel | titlecase }}</span>
+    </h4>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">
+        <img src="/assets/img/project/cross.png">
+      </span>
+    </span>
+  </div>
+  <div class="modal-body viewFilterHeading">
+    <!--view filter start view -->
+    <div *ngIf="filterIndexView =='startView'">
+      <h3>WANT TO FURNISH YOUR PROPERTY?</h3>
+      <h4>Let's get started</h4>
+      <div>
+        <ul class="view_filter_list">
+          <li (click)="filterShow('categories')">
+            <img src="assets/img/fliterIcons/Icons_Category_copy.png" alt="Cities" class="filter-img">
+            <p>Categories</p>
+          </li>
+          <li (click)="filterShow('suppliers')">
+            <img src="assets/img/fliterIcons/Icons_Category_copy.png" alt="Cities" class="filter-img">
+            <p>Suppliers</p>
+          </li>
+          <li (click)="filterShow('assetprice')">
+            <img src="assets/img/fliterIcons/Icons_Asset_Price_copy.png" alt="Cities" class="filter-img">
+            <p>{{viewFilterIn?.buyLabel | titlecase }}</p>
+          </li>
+          <li (click)="filterShow('inventory')">
+            <img src="assets/img/fliterIcons/Icons_Inventory_copy.png" alt="Cities" class="filter-img">
+            <p>Inventory</p>
+          </li>
+        </ul>
+        <div class="viewFilter_start_button text-center">
+          <button type="submit" (click)="filterShow('categories')">Start</button>
+        </div>
+      </div>
+    </div>
+    <!--view filter start view -->
+    <!-- view filter categories list -->
+    <div *ngIf="filterIndexView=='categories'" class="tab-view">
+      <div class="row viewfilter-scroll">
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let category of viewFilterIn?.category | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i<viewFilterIn?.category?.length/3">
+                <input type="checkbox" (click)="viewFilterSelectCategory(category)"
+                  [attr.checked]="category.selected ? 'checked' : null">
+                <span>{{category?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{category?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let category of viewFilterIn?.category | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox"
+                *ngIf="i>=viewFilterIn?.category?.length/3 && i<viewFilterIn?.category?.length/3*2">
+                <input type="checkbox" (click)="viewFilterSelectCategory(category)"
+                  [attr.checked]="category.selected ? 'checked' : null">
+                <span>{{category?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{category?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let category of viewFilterIn?.category | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=viewFilterIn?.category?.length/3*2">
+                <input type="checkbox" (click)="viewFilterSelectCategory(category)"
+                  [attr.checked]="category.selected ? 'checked' : null">
+                <span>{{category?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{category?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <ul class="pre_next_button">
+          <li><button (click)="filterShow('startView')">Previous</button></li>
+          <li><button (click)="filterShow('suppliers')">Next</button></li>
+        </ul>
+      </div>
+    </div>
+    <!-- view filter categories list -->
+
+    <!-- view filter supplier list -->
+    <div *ngIf="filterIndexView=='suppliers'" class="tab-view">
+      <div class="row viewfilter-scroll">
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let supplier of viewFilterIn?.supplier | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i<viewFilterIn?.supplier?.length/3">
+                <input type="checkbox" (click)="viewFilterSelectCategory(supplier)"
+                  [attr.checked]="supplier.selected ? 'checked' : null"
+                  [attr.checked]="supplier.selected ? 'checked' : null">
+                <span>{{supplier?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{supplier?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let supplier of viewFilterIn?.supplier | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox"
+                *ngIf="i>=viewFilterIn?.supplier?.length/3 && i<viewFilterIn?.supplier?.length/3*2">
+                <input type="checkbox" (click)="viewFilterSelectCategory(supplier)"
+                  [attr.checked]="supplier.selected ? 'checked' : null"
+                  [attr.checked]="supplier.selected ? 'checked' : null">
+                <span>{{supplier?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{supplier?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <ul class="list-unstyled">
+            <li *ngFor="let supplier of viewFilterIn?.supplier | orderBy:'name':false; let i = index">
+              <label class="custom-checkbox" *ngIf="i>=viewFilterIn?.supplier?.length/3*2">
+                <input type="checkbox" (click)="viewFilterSelectCategory(supplier)"
+                  [attr.checked]="supplier.selected ? 'checked' : null"
+                  [attr.checked]="supplier.selected ? 'checked' : null">
+                <span>{{supplier?.name | titlecase }}</span>
+                <span class="checkmark"></span>
+                <span>&nbsp;&nbsp; ({{supplier?.count}})</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <!-- <div *ngIf="loadingData" class="loading">loading...</div> -->
+      </div>
+      <div>
+        <ul class="pre_next_button">
+          <li><button (click)="filterShow('categories')">Previous</button></li>
+          <li><button (click)="filterShow('assetprice')">Next</button></li>
+        </ul>
+      </div>
+    </div>
+    <!-- view filter supplier list -->
+
+    <!-- view filter assest price list -->
+    <div *ngIf="filterIndexView=='assetprice'" class="tab-view" style="margin-left: -36px;">
+      <form style="margin-left: 228px;">
+        <h5 class="mb-4 ml-1">Is there a Budget Range you are working with?</h5>
+        <select class="assetPriceFilter" onfocus='this.size=5;' onblur='this.size=1;'
+          onchange='this.size=1; this.blur();' (change)="assetPrice($event)" [(ngModel)]="viewFilterIn.assetLabel">
+          <option value='' hidden selected class="changeColor">Please Select Price </option>
+          <option value="none">None</option>
+          <option class="p-1" *ngFor=" let assetPrice of viewFilterIn?.budget" [(value)]="assetPrice.budget">
+            {{assetPrice?.budget}}
+          </option>
+        </select>
+      </form>
+      <div>
+        <ul class="pre_next_button">
+          <li><button (click)="filterShow('categories')">Previous</button></li>
+          <li><button (click)="filterShow('inventory')">Next</button></li>
+        </ul>
+      </div>
+    </div>
+    <!-- view filter assest price list -->
+    <!-- view filter inventroy list -->
+    <div *ngIf="filterIndexView=='inventory'" class="tab-view">
+      <div class="col-5 publish-status">
+        <div>
+          <label>Minimum Quantity</label>
+          <p>
+            <input type="number" min="0" [(ngModel)]="viewFilterIn.inv" class="form-control custom-control"
+              oninput="validity.valid||(value='');" (change)="inventory(viewFilterIn.inv)" />
+          </p>
+        </div>
+      </div>
+      <div>
+        <ul class="pre_next_button">
+          <li><button (click)="filterShow('assetprice')">Previous</button></li>
+          <li><button (click)="activeModal.close('Close click')">Finish</button></li>
+        </ul>
+      </div>
+    </div>
+    <!-- view filter inventroy list -->
+  </div>
+</div>
+
+
+
+
+<!-- view filter popup -->
+
+
+
+
+<!-- segment popup -->
+<div *ngIf="segmentIn?.dialogType=='segment-view'" class="segment_img_view">
+  <div class="modal-header">
+    <h4 class="modal-title product-content  w-100 color"></h4>
+    <span aria-label="Close" (click)="activeModal.close('Close click')">
+      <i class="fa fa-times-circle" aria-hidden="true"></i></span>
+  </div>
+  <div class="modal-body text-center">
+    <div>
+      <img src="{{segmentIn?.url}}" />
+    </div>
+  </div>
+</div>
+
+
+
+<!-- segment popup -->
+
+<!-- update details -->
+
+<div *ngIf="updateIn?.dialogType=='product'">
+  <div class="modal-header">
+    <h4 class="modal-title product-content  w-100 color">{{updateIn?.content}}</h4>
+    <span aria-label="Close" (click)="activeModal.close('Close click')">
+      <i class="fa fa-times-circle cursor-pointer" aria-hidden="true"></i></span>
+  </div>
+  <div class="modal-body">
+    <div class="update_details_view">
+      <label>Product Name</label>
+      <input type="text" class="form-control update-form" [(ngModel)]="updateIn.res.name">
+    </div>
+    <div class="update_button">
+      <button type="submit" class="btn" (click)="updateDetails()">Update Name</button>
+    </div>
+  </div>
+</div>
+
+<!-- update details -->
+
+
+<!-- update asset price -->
+
+<div *ngIf="updateIn?.dialogType=='assetPrice'">
+  <div class="modal-header">
+    <h4 class="modal-title product-content  w-100 color">{{updateIn?.content}}</h4>
+    <span aria-label="Close" (click)="activeModal.close('Close click')">
+      <i class="fa fa-times-circle cursor-pointer" aria-hidden="true"></i></span>
+  </div>
+  <div class="modal-body">
+    <div class="update_details_view">
+      <label>Inhabitr Asset Price</label>
+      $ <input type="text" class="form-control update-form" [(ngModel)]="updateIn.res.asset_value">
+    </div>
+    <div class="update_button">
+      <button type="submit" class="btn" (click)="updateDetails()">Update Price</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- update asset price -->
+
+
+<!-- asset price history-->
+
+<div *ngIf="assetPriceHistory?.dialogType=='asset_price_history'">
+  <div class="modal-header">
+    <h4 class="modal-title product-content  w-100 color">{{assetPriceHistory?.content}}</h4>
+    <span aria-label="Close" (click)="activeModal.close('Close click')">
+      <i class="fa fa-times-circle cursor-pointer" aria-hidden="true"></i></span>
+  </div>
+  <div class="modal-body">
+    <ul class="price_history_list">
+      <li>Old Asset Price: ${{assetPriceHistory?.data?.old_asset_price}}</li>
+      <li>Updated by: {{assetPriceHistory?.data?.old_updated_user_name}} {{assetPriceHistory?.data?.old_updated_date |
+        date:'dd-MMMM-yyy'}}</li>
+      <li>New Asset Price: ${{assetPriceHistory?.data?.new_asset_price}}</li>
+      <li>Updated by: {{assetPriceHistory?.data?.user_name}} {{assetPriceHistory?.data?.new_updated_date |
+        date:'dd-MMMM-yyy'}} </li>
+    </ul>
+  </div>
+</div>
+
+
+
+<!-- asset price history-->
+
+
+<!-- attribute popup -->
+
+<div *ngIf="attrIp?.dialogType=='attribute-popup'">
+  <div class="modal-header">
+    <h6 class="modal-title title-font  w-100 color">{{attrIp?.content}}</h6>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </span>
+  </div>
+  <div class="modal-body pt-0">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="text-right" style="height: 40px;    padding-top: 4px;">
+          <button type="submit" *ngIf="multiple_attr?.length" class="btn" (click)="deteleMultiAttr()">Delete</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+
+        <ul class="p-0 attribute-view">
+          <li *ngFor="let variation of attrIp?.attrVariation" class="badge  p-2 pointer mr-2 mb-2">
+            <input type="checkbox" (change)="attributeMulitiple(variation,$event)" class="check_box" />
+            <span class="text_view">{{variation?.type}} : {{variation?.attribute_value}}</span>
+            <span (click)="deleteVariation(variation)"><i class="fa fa-close"></i></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <div class="row align-items-end" *ngFor="let attributes of attrIp?.data; let i = index">
+      <div class="col-lg-8 m-auto">
+        <div class="control-label mt-2 text-dark"><span class="">{{attributes.name}}</span></div>
+        <div class="dropdown custom-dropdown">
+          <button class="btn btn-white border btn-focus position-relative text-left" type="button" id="whType"
+            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span>{{attributes.label_name ? attributes.label_name : 'Select'}}</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="moodboardType">
+            <div style="height: 100%;overflow-y: scroll;">
+              <input class="form-control search-input" type="text" placeholder="Search"
+                [(ngModel)]='attributes.search_value' [ngModelOptions]="{standalone: true}"
+                (keyup)="searchAttr( attributes,attributes.search_value)">
+              <ng-container *ngFor="let attrV of attributes.attribute_list">
+                <a (click)="selectAttr(attrV,attributes.name,attributes)" class="dropdown-item cursor-pointer"
+                  [ngClass]="{'color-active':attrV?.sgid==attributes.value}">{{
+                  attrV.attribute_value }}</a>
+
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div [ngClass]="{'col-md-4':attributes?.value ==='other'}">
+        <input type="text" *ngIf="attributes?.value ==='other'" class="form-control other_input"
+          [(ngModel)]="attributes.custom_value" placeholder="Enter Color" />
+      </div>
+    </div>
+    <div class="justify-content-center text-center col-md-12 mt-4">
+      <button class="btn  mt-2 px-5" (click)="saveAttr()" data-dismiss="modal" [disabled]="is_disable">Update</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- attribute popup -->
+
+
+<!-- delete popup -->
+
+<div *ngIf="deleteIp?.dialogType=='delete-popup'">
+  <div class="modal-header">
+    <h4 class="modal-title title-font text-center w-100 color"></h4>
+    <span class="close pointer" aria-label="Close" (click)="cancel('no')">
+      <span aria-hidden="true">&times;</span>
+    </span>
+  </div>
+  <div class="modal-body configuremoodboard-popup-body">
+    <div class="delete-popup">
+      <h5>Are you sure you want delete ?</h5>
+      <button class="yes" (click)="deleteAttr('yes',deleteIp?.data)">Yes</button>
+      <button class="no" (click)="cancel('no')">No</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- delete popup -->
+
+
+<!-- quote popup -->
+<div *ngIf="quoteIn?.dialogType=='product_quote'">
+  <div class="modal-header">
+    <h4 class="modal-title title-font">{{quoteIn?.content}}</h4>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </span>
+  </div>
+  <div class="modal-body">
+    <div class="mb_flex">
+      <a class="icon cursor-pointer" (click)="createNewQuotePopUp('createQuoteDailog');"><img
+          src="/assets/img/addButton.svg" alt=""></a>
+      <div class="dropdown select_dropdown_view form-control add_info_input">
+        <a data-toggle="dropdown" class="dropdown-toggle" style="text-decoration: none;" aria-expanded="false">
+          {{quote_name?.sgid}} - {{quote_name?.name}}
+        </a>
+        <ul class="dropdown-menu">
+          <li *ngFor=" let quote of quoteIn?.data" (click)="selectQuote(quote)"
+            [ngClass]="{'mb_active':quote_name?.sgid==quote.sgid}"> {{quote?.sgid}} - {{quote?.name}}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-4 text-center">
+      <button type="submit" class="btn" (click)="addToQuote()">Add to Quote</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- quote popup -->
+
+<!-- floor plan popup -->
+<div *ngIf="floorPlanInData?.dialogType=='add-floor-plan'">
+  <div class="modal-header">
+    <h6 class="m-0">{{floorPlanInData?.title}}</h6>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </span>
+  </div>
+  <div class="modal-body configuremoodboard-popup-body">
+    <form [formGroup]="floorForm">
+      <div class="row floor-plan-row">
+        <div class="col-6">
+          <label class="m-0"> Floor Plan Name*</label>
+        </div>
+        <div class="col-6">
+          <div>
+            <input formControlName="floorplan_name" type="text" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2 floor-plan-row">
+        <div class="col-6">
+          <label class="m-0">Floor Plan Types</label>
+        </div>
+        <div class="col-6">
+          <div>
+            <select class="form-control" formControlName="floorplan_type_id">
+              <option value="">Select Floor Plan Type</option>
+              <option *ngFor="let floor of floorPlanInData?.res" value="{{floor?.sgid}}">{{floor?.name}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2 floor-plan-row">
+        <div class="col-6">
+          <label class="m-0">No. of Units*</label>
+        </div>
+        <div class="col-6">
+          <div>
+            <input type="text" class="form-control" formControlName="units">
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4 mb-2">
+        <div class="col-md-12 text-center">
+          <button class="btn add-floor-btn" (click)="addFloorPlan()" [disabled]="!floorForm?.valid">Add</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- floor plan popup -->
+
+<!-- add quote -->
+<div *ngIf="addQuoteIn?.dialogType=='add_quote'">
+  <div class="modal-header">
+    <h4 class="modal-title title-font">{{addQuoteIn?.content}}</h4>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </span>
+  </div>
+  <div class="modal-body configuremoodboard-popup-body">
+    <div class="mb-2 ml-3">
+      <div class="dropdown text-center position-relative w-100">
+        <span class="mr-4">Select FloorPlan</span>
+        <a class="btn btn-white dropdown-toggle custom-toggle border position-relative text-left rounded-0 pr-4"
+          type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{quoteInfo?.floorname}}
+        </a>
+        <div class="dropdown-menu scroll" aria-labelledby="dropdownMenuButton1">
+          <a class="dropdown-item" *ngFor="let floor of addQuoteIn?.floorDetails" (click)="selectFloor(floor)"
+            href="javascript:void(0)" [ngClass]="{'md-active':floor?.sgid==quoteInfo?.sgid}">{{ floor.floorname }}</a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="row d-flex justify-content-center mb-3 mt-4">
+        <div class="form-check-inline mr-5">
+          <label class="form-check-label">
+            <input type="radio" class="form-check-input" (click)="isAllUnit('1')" [checked]="true" name="optradio" />All
+            Units
+          </label>
+        </div>
+        <div class="form-check-inline ml-5">
+          <label class="form-check-label">
+            <input type="radio" class="form-check-input" (click)="isAllUnit('0')" name="optradio" />Selected Unit
+          </label>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-center flex-wrap p-2 my-3">
+        <div *ngFor="let unit of addQuoteIn?.unitDetails" class="border position-relative add-unit-mb"
+          (click)="selectUnit(unit)">
+          {{ unit.name }}
+          <span aria-hidden="true" [ngClass]="{ 'fa-check': unit.selected ? true : false }"
+            class="px-2 pb-1 cross-close fa"></span>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4 mb-2">
+      <div class="col-md-12 text-center">
+        <button class="btn add-floor-btn" (click)="addedQuote()">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- add quote -->
+
+
+<!-- product category popup -->
+<div *ngIf="prodcutCategoryIn?.dialogType=='product-category'">
+  <div class="modal-header">
+    <h4 class="modal-title title-font color">
+      {{prodcutCategoryIn?.content}}
+    </h4>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">
+        <img src="/assets/img/project/cross.png">
+      </span>
+    </span>
+  </div>
+  <div class="modal-body viewFilterHeading">
+    <!-- categories popup list -->
+    <div class="row dialogContent category-scroll">
+      <div class="col-lg-4">
+        <ul class="list-unstyled">
+          <li *ngFor="let category of prodcutCategoryIn?.res | orderBy:'name':false; let i = index">
+            <label class="custom-checkbox" *ngIf="i< prodcutCategoryIn?.res?.length/3">
+              <input type="radio" name="checkbox" (click)="getProdcutCategory(category)"
+                [attr.checked]="category.selected ? 'checked' : null">
+              <span>{{category?.name | titlecase }}</span>
+              <span class="checkmark"></span>
+            </label>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <ul class="list-unstyled">
+          <li *ngFor="let category of prodcutCategoryIn?.res | orderBy:'name':false; let i = index">
+            <label class="custom-checkbox"
+              *ngIf="i>=prodcutCategoryIn?.res?.length/3 && i<prodcutCategoryIn?.res?.length/3*2">
+              <input type="radio" name="checkbox" (click)="getProdcutCategory(category)"
+                [attr.checked]="category.selected ? 'checked' : null">
+              <span>{{category?.name | titlecase }}</span>
+              <span class="checkmark"></span>
+            </label>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <ul class="list-unstyled">
+          <li *ngFor="let category of prodcutCategoryIn?.res | orderBy:'name':false; let i = index">
+            <label class="custom-checkbox" *ngIf="i>=prodcutCategoryIn?.res?.length/3*2">
+              <input type="radio" name="checkbox" (click)="getProdcutCategory(category)"
+                [attr.checked]="category.selected ? 'checked' : null">
+              <span>{{category?.name | titlecase }}</span>
+              <span class="checkmark"></span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row mt-4 mb-2">
+      <div class="col-md-12 text-center">
+        <button class="btn add-floor-btn" (click)="updateCategory()">Update</button>
+      </div>
+    </div>
+    <!-- categories popup list -->
+  </div>
+</div>
+
+
+
+<!-- product category popup -->
+
+
+
+<!-- create category popup -->
+<div *ngIf="createCategoryInData?.dialogType=='create-category'">
+  <div class="modal-header">
+    <h4 class="modal-title title-font color">{{createCategoryInData?.content}}</h4>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">
+        <img src="/assets/img/project/cross.png">
+      </span>
+    </span>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addCategoryForm">
+      <div class="row">
+        <div class="col-6 item-center">
+          <label class="m-0">Category Name</label>
+        </div>
+        <div class="col-6">
+          <div>
+            <input type="name" formControlName="category_name" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="row button-top-view">
+        <div class="col-md-12 text-center">
+          <button class="btn add-floor-btn" [disabled]="!addCategoryForm.valid">Add</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<!-- create category popup -->
+
+
+<!-- create supplier popup -->
+
+<div *ngIf="createSupplierInData?.dialogType=='create-supplier'">
+  <div class="modal-header">
+    <h4 class="modal-title title-font color">{{createSupplierInData?.content}}</h4>
+    <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+      <span aria-hidden="true">
+        <img src="/assets/img/project/cross.png">
+      </span>
+    </span>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addSupplierForm">
+      <div class="row">
+        <div class="col-6 item-center">
+          <label class="m-0">Supplier Name</label>
+        </div>
+        <div class="col-6 position-relative">
+          <div>
+            <input type="text" class="form-control" formControlName="name" (keyup)="searchSupplier($event)">
+          </div>
+          <div class="supplier_search" *ngIf="is_show_dropdown">
+            <ul>
+              <li (click)="selectSupplier(supplier)" *ngFor="let supplier of createSupplierInData?.supplier">
+                {{supplier?.name}}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-6 item-center">
+          <label class="m-0">Business Segment</label>
+        </div>
+        <div class="col-6">
+          <ng-multiselect-dropdown class="supplier-multiple-selection" [placeholder]="'Business Segment'"
+            [settings]="dropdownSettings" [data]="createSupplierInData?.segment" (onSelect)="onItemSelect($event)"
+            [disabled]="is_disabled_multiple" (onDeSelect)="onItemDeSelect($event)">
+          </ng-multiselect-dropdown>
+          <!-- <div class="dropdown select_dropdown_view form-control supplier_dropdown">
+            <a style="text-decoration: none" class="dropdown-toggle" data-toggle="dropdown">
+              {{addSupplierForm?.value?.segment_name ? addSupplierForm?.value?.segment_name : 'Selected Segment'}}
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li *ngFor="let segment of createSupplierInData?.segment" (click)="selectSuppSegment(segment)">{{segment?.design_type}}</li>
+            </ul>
+          </div> -->
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-6 item-center">
+          <label class="m-0">Email</label>
+        </div>
+        <div class="col-6">
+          <div>
+            <input type="email" [pattern]='emailPattern' class="form-control" formControlName="email">
+            <div class="text-danger error-view" *ngIf="addSupplierForm.get('email').hasError('pattern')">
+              Invalid Email
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-6 item-center">
+          <label class="m-0">Contact Person</label>
+        </div>
+        <div class="col-6">
+          <div>
+            <input type="text" class="form-control" formControlName="contact_person_name">
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-6 item-center">
+          <label class="m-0">Phone Number</label>
+        </div>
+        <div class="col-6">
+          <div>
+            <input type="tel" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" [pattern]='phoneNoPattern'
+              maxlength="10" class="form-control" formControlName="contact_no">
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-6 item-center">
+          <label class="m-0">Buy Multiplier</label>
+        </div>
+        <div class="col-6">
+          <div>
+            <input type="number" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" maxlength="10"
+              class="form-control" formControlName="buy_new_multiplier">
+          </div>
+        </div>
+      </div>
+      <div class="row button-top-view">
+        <div class="col-md-12 text-center">
+          <button class="btn add-floor-btn" [disabled]="!addSupplierForm.valid" (click)="addSupplier()">Add</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<!-- create supplier popup -->
+
+
+
+<!-- bulk upload popup -->
+
+<div *ngIf="excelIn?.dialogType=='bulk-popup'">
+  <div class="modal-header">
+    <h4 class="modal-title title-font color"></h4>
+    <span class="close pointer" aria-label="Close" (click)="bulkuploadPopClose()">
+      <span aria-hidden="true">
+        <img src="/assets/img/project/cross.png">
+      </span>
+    </span>
+  </div>
+  <div class="modal-body">
+
+    <ul class="file-list" *ngIf="!uploadRes?.is_show && !fileuploadSuccess?.is_show">
+      <li class="cursor-pointer">
+        <input type="file" #fileupload [accept]="'.xls,.xlsx'" (change)="importExcel($event)" id="img"
+          style="display:none;" name="avatar" accept="image/png, image/jpeg">
+        <label for="img"><img src="/assets/images/file-icon.png"><span>{{this.fileName?.name ? this.fileName?.name :
+            'Browse excel format'}}</span></label>
+
+      </li>
+      <li>
+        <p><small>Support file format:xls,xlxs</small></p>
+        <p><small>Maximum Size :50Mb</small></p>
+      </li>
+      <li>
+        <button class="btn btn-dark" (click)="uploadExcelFile()" [disabled]="!fileName">Upload</button>
+      </li>
+    </ul>
+    <div class="progress_view" *ngIf="progress > 0">
+      <ul>
+        <li class="font-view">
+          <p>
+            <i class="fa fa-upload" aria-hidden="true"></i><span>{{this.fileName?.name}}</span>
+          </p>
+          <p (click)="terimateExcelFile()" class="cursor-pointer"><i class="fa fa-times-circle" aria-hidden="true"></i>
+          </p>
+        </li>
+        <li>
+          {{progress}} % left
+        </li>
+        <li>
+          <div class="progress-bar">
+            <div class="progress-bar-fill" [style.width.%]="progress"></div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="fileuploadSuccess?.is_show" class="success-message">
+      <h3>Upload Successful</h3>
+      <p><i class="fa fa-check-circle" aria-hidden="true"></i></p>
+      <p>You've successfully uploaded {{uploadRes.res.uploadedCount}} products</p>
+    </div>
+    <div *ngIf="fileuploadError?.is_show" class="error-message">
+      <p><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></p>
+      <p>{{fileuploadError?.text}}</p>
+    </div>
+  
+    <div  *ngIf="uploadRes?.is_show">
+      <div class="row gigia_view">
+        <div class="col-lg-12 text-right">
+          <label class="m-0">All </label>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="errorValue" (click)="errorData($event)">
+            <span class="slider round"></span>
+          </label>
+          <label class="m-0">Show Errors</label>
+        </div>
+      </div>
+      <div>
+        <table class="bulk-upload-table table-responsive">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Image</th>
+              <th *ngFor="let key of tableHeaders">
+              <span  *ngIf="key !=='backend_message' && key !=='backend_status'">{{ key }}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of uploadRes.res | paginate: { itemsPerPage: 5, currentPage: page }" [ngClass]="{
+                'success-color': item.backend_status == 'created',
+                'warning-color': item.backend_status == 'exists',
+                'failure-color': item.backend_status == 'failed',
+                'latest-table-tooltip': item.backend_status == 'failed' || item.backend_status == 'exists'
+              }">
+              <td>
+                <span *ngIf="item.backend_status == 'created'"><i class="fa fa-check-circle-o" aria-hidden="true"></i></span>
+                <span *ngIf="item.backend_status == 'failed'"> <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                <span *ngIf="item.backend_status == 'exists'"> <i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+               
+              </td>
+              <td>
+                <img src="{{ item.image }}" alt="Product Image" />
+              </td>
+              <td *ngFor="let key of tableHeaders">
+                <span *ngIf="key === 'Link'">
+                  <a [href]="item[key]" target="_blank">{{ item[key] }}</a>
+                </span>
+                <span *ngIf="key !== 'Link' && key !=='backend_message' && key !=='backend_status'">
+                  {{ item[key] }}
+                </span>
+              </td>
+              <span class="latest-table-tooltiptext" *ngIf="item.backend_status == 'failed' || item.backend_status == 'exists'">
+                <span>{{item.backend_message }}</span>
+              </span>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <pagination-controls (pageChange)="page = $event"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- bulk upload popup -->
+
+
+  <!-- Image upload popup -->
+
+
+  <div *ngIf="imguploadIn?.dialogType=='img-upload-popup'">
+    <div class="modal-header border-0">
+      <h4 class="modal-title title-font color"></h4>
+      <span class="close pointer" aria-label="Close" (click)="bulkuploadPopClose()">
+        <span aria-hidden="true">
+          <img src="/assets/img/project/cross.png">
+        </span>
+      </span>
+    </div>
+    <div class="modal-body">
+  
+      <ul class="file-list img-upload-view">
+        <li class="cursor-pointer">
+          <input type="file" #fileupload [accept]="'.png, .jpeg, .jpg'"  id="img" (change)="onSelectedImg($event)"
+            style="display:none;" name="avatar" accept="image/png, image/jpeg">
+          <label for="img">
+            <i class="fa fa-picture-o" aria-hidden="true"></i>
+          </label>
+  
+        </li>
+        <li>
+          <p><small>Support file format:jpg,png</small></p>
+          <p><small>Maximum Size :50Mb</small></p>
+        </li>
+        <li>
+          <button class="btn btn-dark">Upload</button>
+        </li>
+      </ul>
+      <!-- <div class="progress_view" *ngIf="progress > 0">
+        <ul>
+          <li class="font-view">
+            <p>
+              <i class="fa fa-upload" aria-hidden="true"></i><span>{{this.fileName?.name}}</span>
+            </p>
+            <p (click)="terimateExcelFile()" class="cursor-pointer"><i class="fa fa-times-circle" aria-hidden="true"></i>
+            </p>
+          </li>
+          <li>
+            {{progress}} % left
+          </li>
+          <li>
+            <div class="progress-bar">
+              <div class="progress-bar-fill" [style.width.%]="progress"></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="fileuploadSuccess?.is_show" class="success-message">
+        <h3>Upload Successful</h3>
+        <p><i class="fa fa-check-circle" aria-hidden="true"></i></p>
+        <p>You've successfully uploaded {{uploadRes.res.uploadedCount}} products</p>
+      </div>
+      <div *ngIf="fileuploadError?.is_show" class="error-message">
+        <p><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></p>
+        <p>{{fileuploadError?.text}}</p>
+      </div> -->
+    </div>
+  
+
+
+
+
+
+  <!-- Image upload popup -->
+
+
+  

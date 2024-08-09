@@ -1,0 +1,40 @@
+.header_section{
+    padding: 20px 30px 20px 33px;
+    background-color: #FCF8E9;
+}
+
+.header_options{
+    justify-content: center;
+}
+.header_options li{
+    padding: 0 5px;
+    font-size: 15px;
+}
+.header_options a:hover{
+    color: #000;
+}
+.my_account_view{
+    text-align: end;
+    font-family: 'Inter', sans-serif;
+}
+.my_account_view a{
+    background-color: transparent !important;
+    color: #000 !important;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    font-size: 15px;
+}
+.my_account_view .dropdown-menu{
+    min-width: 8rem;
+}
+.my_account_view .dropdown-menu li{
+    cursor: pointer;
+}
+.flex_view{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}

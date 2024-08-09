@@ -1,0 +1,245 @@
+/* leftside */
+.filter_view{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+}
+.badge-secondary{
+    background: #393E46;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 400;
+    margin-top: 4px;
+}
+.clearButton{
+    border-radius: 4px;
+    position: relative;
+    width: 55px;
+    padding: 6px 0;
+    margin: 0 8px 0 0;
+    background-color: #ebebeb;
+    color: #6c6c6c;
+    border: none;
+    font-size: 12px;
+    font-weight: 400;
+}
+.filter-label{
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+}
+.filter-label img{
+    width: 20px;
+    height: 20px;
+}
+.filter-label p{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19px;
+    letter-spacing: 0em;
+    margin: 0;
+    color: #000;
+}
+.view-more a{
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 400;
+    font-style: normal;
+    color: #dd803c;
+    padding: 0 10px;
+}
+.border_line{
+    border-bottom: 0.3px solid #92929269;
+    width: 100%;
+    padding: 8px 0;
+}
+.assetPrice{
+    font-size: 15px;
+    padding: 5px;
+    width: 100%;
+    margin: 0;
+    border-radius: 5px;
+    color: #393e46;
+    border: 0.3px solid #92929269;
+    font-size: 12px;
+    cursor: pointer;
+}
+.filter-inner .custom-control{
+    width: 100%;
+    height: 30px;
+    border: 0.3px solid #92929269;
+    color: #929292;
+    border-radius: 5px;
+    padding: 0 0 0 9px;
+    font-size: 12px;
+}
+.custom-close{
+    position: relative;
+    top: -6px;
+    right: -4px;
+    font-size: 8px;
+    cursor: pointer;
+}
+.search_input_view input{
+    background-color: #ededed;
+    border-radius: 50px;
+    border-top-right-radius: 50px!important;
+    border-bottom-right-radius: 50px!important;
+    font-size: 12px;
+}
+.search_input_view  button{
+    border: none;
+    color: #fff;
+    background: transparent;
+}
+.search_input_view .input-group-append{
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    background-color: #dd803c;
+    color: #fff;
+    border-radius: 100px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    z-index: 9;
+    cursor: pointer;
+}
+.search_input_view button:focus{
+    box-shadow: none !important;
+    outline: none;
+}
+.search_input_view button:active{
+    background-color: transparent;
+    border: none;
+}
+.search_input_view input:focus{
+    box-shadow: none;
+    border: none;
+}
+.filter-range{
+    list-style: none;
+    display: flex;
+    background-color: #f6f6f6;
+    padding: 11px 16px;
+    border-radius: 5px;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.search_input_view{
+    margin-top: 20px;
+}
+.gigia_view{
+    margin-top: 40px;
+    padding-right: 10px;
+}
+/* left side */
+
+
+
+/* right side css */
+
+.border_left{
+    border-left: 0.3px solid #92929269;
+}
+.products-max-height{
+    padding-top: 38px;
+    margin-top: 53px;
+}
+.md-img-view{
+    display: flex;
+    position: relative;
+    box-shadow: 4px 4px 30px #0000001c;
+    border: 0.5px solid #C7C7C7;
+    border-radius: 10px;
+    min-height: 189px;
+    overflow: hidden;
+}
+.inv_count_view{
+    font-size: 10px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    background-color: #ebebeb;
+    border: 1px solid #EBEBEB;
+    padding: 6px 10px;
+    border-radius: 0 5px;
+    color: #000;
+}
+.images-item{
+    width: 111px;
+    height: 145px;
+    cursor: pointer;
+    -o-object-fit: contain;
+    object-fit: contain;
+    padding: 10px;
+    overflow: hidden;
+}
+.md-img-view p{
+    margin: 0;
+    text-align: center;
+    font-size: 12px;
+    color: #000;
+}
+.load_more_view{
+    background: #393E46;
+    width: 100px;
+    height: 34px;
+    border-radius: 50px;
+    font-size: 12px;
+    border: none;
+    margin-top: 30px;
+}
+.load_more_view:hover{
+    background-color: #dd803c;
+}
+.leftside-list p{
+    font-size: 11px;
+    text-align: center;
+    border-bottom: 0.3px solid #92929269;
+    font-weight: 500;
+    padding-bottom: 5px;
+}
+.hidebutton{
+    background-color: #e4dfdf;
+    color: #6c757d;
+    border: none;
+    font-size: 11px;
+    border-radius: 5px;
+    padding: 4px;
+    width: 100%;
+}
+.attribute_btn{
+    width: 100%;
+    color: #fff;
+}
+.inventory_list{
+    list-style: none;
+    padding: 0;
+    font-size: 12px;
+    margin: 0;
+}
+.inventory_list li{
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+}
+.inventory_list li input{
+    margin: 0 8px 0 0;
+}
+/* right side css */
+
+
+
+
+
+
+
+
+

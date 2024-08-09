@@ -1,0 +1,161 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<div class="wrapper">
+  <div class="mb-banner" *ngIf="currentPage.includes('list')">
+      <div class="mb-banner-left" fxLayoutGap="3rem">
+          <div class="mb-banner-icon">
+              <img *ngIf=" currentPage.includes('list')" src="assets/img/quote1.svg" alt="iconAltTxt" />
+          </div>
+          <div fxLayout="column" fxFlex="30" class="textleft">
+              <span *ngIf=" currentPage.includes('list')" class="mb-banner-left-text h1">QUOTE</span><br>
+              <span *ngIf=" currentPage.includes('list')" class="margin-btw">Get an estimated cost for a particular moodboard, piece or project.</span>
+          </div>
+      </div>
+      <div class="mb-banner-right">
+          <img *ngIf=" currentPage.includes('list')" height="100%" width="100%" src="assets/img/quote_banner.jpg" alt=" altTxt " />
+      </div>
+  </div>
+  <div class="mb-banner" *ngIf="currentPage.includes('order')">
+    <div class="mb-banner-left" fxLayoutGap="3rem">
+        <div class="mb-banner-icon">
+            <img *ngIf=" currentPage.includes('order')" src="assets/img/order1.svg" alt="iconAltTxt" />
+        </div>
+        <div fxLayout="column" fxFlex="30" class="textleft">
+            <span *ngIf=" currentPage.includes('order')" class="mb-banner-left-text h1">ORDER</span><br>
+            <span *ngIf=" currentPage.includes('order')" class="margin-btw">View the status and summary of the orders.</span>
+        </div>
+    </div>
+    <div class="mb-banner-right">
+        <img *ngIf=" currentPage.includes('order')" height="100%" width="100%" src="assets/img/order-page.jpg" alt=" altTxt " />
+    </div>
+</div>
+  <ng-content [select]="footer"></ng-content>
+</div>
+
+<div id="content" class="container mt-5 ">
+  <div class="row" *ngIf="currentPage.includes('list')">
+    <div class="col-md-5 d-flex m-auto justify-content-center">
+      <a class="addButton" (click)="createQuote();">
+        <i class="fa fa-plus-circle iconDesign" aria-hidden="true"></i>
+      </a>
+      <span class="p-2 pt-4 ml-3" style="font-size: 20px; color: black;"><b>Create New Quote</b></span>
+    </div>
+
+  </div>
+
+  <div class="active col-12 mt-3  p-5 page-content">
+    <div class="col-12  pt-2" style="bottom: 10px;">
+
+      <div class="row w-100 filters d-flex justify-content-center align-content-center">
+        <div class="col text-center">
+          <span [class.menuactive]="selectedNav === 'all'" *ngIf="currentPage.includes('list')"
+            (click)='getBoards("all")'>All
+            Quotes</span>
+          <span [class.menuactive]="selectedNav === 'all'" *ngIf=" currentPage.includes('orders')"
+            (click)='getOrderBoards("all")'>All Orders</span>
+        </div>
+        <div class="col text-center">
+          <span [class.menuactive]="selectedNav === 'my'" *ngIf="currentPage.includes('list')"
+            (click)='getBoards("my")'>My
+            Quotes</span>
+          <span [class.menuactive]="selectedNav === 'my'" *ngIf="currentPage.includes('orders')"
+            (click)='getOrderBoards("my")'>My Orders</span>
+        </div>
+      </div>
+      <hr>
+      <div class="row" style="align-items: center;justify-content: center;">
+        <div class="col-xl-3 mt-3 mb-5">
+          <app-advance-search (OnItemChange)="onCompanyChnage($event)" (OnKeyUp)="advanceSearchCompany($event)"
+            [list]="companyList" displayKey="company" [placeholder]="companyPlaceholder"></app-advance-search>
+        </div>
+        <div *ngIf="selectedCompany" class="select-company col-xl-3  mt-2 mb-5 float-end">
+          <select id="dropdownMenuButton" (change)="onProjectChnage()" [(ngModel)]="selectedProject" class="form-control"
+            style="display: inline-block;border-color: black;margin-top: 0.5rem;border-radius: .25rem;">
+            <option value=''> {{'Select Project'| titlecase}} </option>
+            <option *ngFor='let attr of projectList' [selected]="attr.selected==true" [value]="attr.project_name">
+              {{attr.project_name
+              | titlecase}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row card-group container-fuild">
+          <table class="table table-bordered edit-table">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <!-- <th scope="col">Quote Number</th>
+                      <th scope="col">Order Number</th>
+                      <th scope="col">Customer Name</th>
+                      <th scope="col">Quote Created Date</th>
+                      <th scope="col">Order Created</th>
+                      <th scope="col">Order Created Date</th> -->
+                <th scope="col" *ngIf="currentPage.includes('list') || currentPage.includes('orders') "> <span
+                    *ngIf="currentPage.includes('orders')">Ref.</span> Quote Number</th>
+                <th scope="col" *ngIf="currentPage.includes('orders')">Order Number</th>
+                <th scope="col" *ngIf="currentPage.includes('list') || currentPage.includes('orders')">Customer Name</th>
+                <th scope="col">Company Name</th>
+                <th scope="col">Project Name</th>
+                <th scope="col" *ngIf="currentPage.includes('list') ">Quote Created Date</th>
+                <th scope="col" *ngIf="currentPage.includes('orders')">Order Created Date</th>
+                <th scope="col" *ngIf="currentPage.includes('orders')">Order Status</th>
+                <th scope="col" *ngIf="currentPage.includes('list')">Order Submitted</th>
+                <th scope="col" *ngIf="currentPage.includes('list')">Source</th>
+                <!-- <th scope="col"  >Lease Agreement</th> -->
+              </tr>
+            </thead>
+            <tbody>
+      
+              <tr *ngFor='let quote of quotesList ; let i = index' infiniteScroll [infiniteScrollDistance]="2"
+                [infiniteScrollThrottle]="50" [scrollWindow]="true">
+                <th scope="row" class="text-center">{{i + 1}}</th>
+                <td *ngIf="currentPage.includes('list') || currentPage.includes('orders') ">
+                  <a href="javascript:void(0)" *ngIf="currentPage.includes('list') && quote.is_order == 'YES' "
+                    routerLink="/admin/quote/order/{{quote.sgid}}" style="color: #007bff;text-decoration: underline;">
+                    {{quote.sgid}}</a>
+      
+                  <a href="javascript:void(0)" *ngIf="currentPage.includes('list') && quote.is_order == 'NO' "
+                    routerLink="/admin/quote/view/{{quote.sgid}}" style="color: #007bff;text-decoration: underline;">
+                    {{quote.sgid}}</a>
+                  <a href="javascript:void(0)" *ngIf="currentPage.includes('orders') "
+                    routerLink="/admin/quote/order/{{quote.sgid}}" style="color: #007bff;text-decoration: underline;">
+                    {{quote.sgid}}</a>
+      
+                </td>
+                <td *ngIf="currentPage.includes('orders') ">{{quote.order_reference}}</td>
+                <td *ngIf="currentPage.includes('list') || currentPage.includes('orders') ">
+                  <a href="javascript:void(0)" *ngIf="currentPage.includes('list') && quote.is_order == 'YES'"
+                    routerLink="/admin/quote/order/{{quote.sgid}}"
+                    style="color: #007bff;text-decoration: underline;">{{quote.name}}</a>
+                  <a href="javascript:void(0)" *ngIf="currentPage.includes('list') && quote.is_order == 'NO'"
+                    routerLink="/admin/quote/view/{{quote.sgid}}"
+                    style="color: #007bff;text-decoration: underline;">{{quote.name}}</a>
+                  <a href="javascript:void(0)" *ngIf="currentPage.includes('orders') "
+                    routerLink="/admin/quote/order/{{quote.sgid}}"
+                    style="color: #007bff;text-decoration: underline;">{{quote.name}}</a>
+                </td>
+                <td>{{quote.company_name}}</td>
+                <td>{{quote.project_name}}</td>
+                <td *ngIf="currentPage.includes('list')">{{quote.created_at | date : 'dd-MMM-y' }}</td>
+                <td *ngIf="currentPage.includes('orders')">{{quote.order_date | date : 'dd-MMM-y'}}</td>
+                <td *ngIf="currentPage.includes('orders')">{{ quote?.order_status}}</td>
+                <td *ngIf="currentPage.includes('list')">
+                  <a href="javascript:void(0)" style="color: #007bff;text-decoration: underline;"
+                    *ngIf="quote.is_order == 'YES' " routerLink="/admin/quote/order/{{quote.sgid}}"
+                    style="color: #007bff;text-decoration: underline;">{{quote.is_order}}</a>
+                  <span *ngIf="quote.is_order == 'NO' ">{{quote.is_order}}</span>
+                </td>
+                <td *ngIf="currentPage.includes('list')">
+                  <span *ngIf="quote.application_type == 1 ">PDM</span>
+                  <span *ngIf="quote.application_type == 2 ">Business Inhabitr</span>
+                </td>
+                <!-- <th scope="row" class="text-center"></th> -->
+              </tr>
+      
+      
+            </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+
+  
+</div>

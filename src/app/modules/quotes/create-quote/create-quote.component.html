@@ -1,0 +1,273 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<section class="quote_section_view">
+    <div class="container">
+        <div class="row d-flex justify-content-center pt-5 mb-4">
+            <div class="col-12 col-sm-8 p-0 justify-content-center" style="text-align: center;">
+                <span class="headline" *ngIf="!quote?.id">Create New Quote</span>
+            </div>
+        </div>
+        <div class="row pb-4">
+            <div class="col-md-8 m-auto create_form_view p-4">
+                <form [formGroup]="quoteInfoForm">
+                    <div [ngClass]="{'event-pointer':quote?.type=='copy'}">
+                        <div class="row shipping-address" >
+                            <div class="form-group mb-2 col-12 col-md-6" *ngIf="quote.type=='edit' || quote.type=='copy'">
+                                <label for="address" class="control-label pl-2">Quote#<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" readonly id="address" value="{{quote.id}}">
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 ">
+                                <label for="address" class="control-label pl-2">Customer Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control " id="address" value="" formControlName='name'>
+                                <div class="text-danger error-view" *ngIf="!quoteInfoForm.controls['name'].valid && isSubmitted 
+                                                            || quoteInfoForm.controls['name'].touched && quoteInfoForm.controls['name'].errors?.required
+                                                            ">
+                                    Customer Name is required*
+                                </div>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6">
+                                <label for="mbUnit" class="pl-2 control-label">Email <span
+                                        class="text-danger">*</span></label>
+                                <input [pattern]='emailPattern' type="text" class="form-control" id="mbUnit" value=""
+                                    formControlName='email'>
+                                <div class="text-danger error-view" *ngIf="quoteInfoForm.get('email').hasError('pattern')">
+                                    Invalid Email
+                                </div>
+                                <div class="text-danger error-view" *ngIf="!quoteInfoForm.controls['email'].valid && isSubmitted 
+                            || quoteInfoForm.controls['email'].touched && quoteInfoForm.controls['email'].errors?.required
+                            ">
+                                    Email is required*
+                                </div>
+                            </div>
+                        </div>    
+                        <div class="row  shipping-address">
+                            <div class="col-md-12">
+                                <h5>Shipping Address</h5>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 ">
+                                <label for="address" class="control-label pl-2">Address <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" (change)="copyOpt('shipping')" id="address" value="" formControlName='address'>
+                                <div class="text-danger error-view" *ngIf="!quoteInfoForm.controls['address'].valid && isSubmitted 
+                                                        || quoteInfoForm.controls['address'].touched && quoteInfoForm.controls['address'].errors?.required
+                                                        ">
+                                    Address is required*
+                                </div>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6">
+                                <label for="mbUnit" class="pl-2 control-label">City <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" (change)="copyOpt('shipping')" id="mbType" value="" formControlName='city'>
+                                <div class="text-danger error-view" *ngIf="!quoteInfoForm.controls['city'].valid && isSubmitted 
+                                                        || quoteInfoForm.controls['city'].touched && quoteInfoForm.controls['city'].errors?.required
+                                                        ">
+                                    City is required*
+                                </div>
+                            </div>
+                            <div class="form-group  mb-2  col-12 col-md-6 ">
+                                <label for="state" class="control-label pl-2">State <span
+                                        class="text-danger">*</span></label>
+                                <ng-select class="w-100" bindLabel="name" formControlName="state"
+                                    placeholder="Select State" (change)="copyOpt('shipping')">
+                                    <ng-option value="" selected disabled>Please Select State</ng-option>
+                                    <ng-option *ngFor="let state of states" value={{state.sgid}}>{{state?.name}}</ng-option>
+                                </ng-select>
+                                <div class="text-danger error-view" *ngIf="!quoteInfoForm.controls['state'].valid && isSubmitted 
+                                                        || quoteInfoForm.controls['state'].touched && quoteInfoForm.controls['state'].errors?.required
+                                                        ">
+                                    State is required*
+                                </div>
+                            </div>
+                           
+                            <div class="form-group mb-2 col-12 col-md-6">
+                                <label for="optRef" class="control-label pl-2">Zip Code <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" (change)="copyOpt('shipping')" maxlength="8" id="optRef" value=""
+                                    formControlName="zipcode">
+                                <div class="text-danger error-view" *ngIf="!quoteInfoForm.controls['zipcode'].valid && isSubmitted 
+                                                        || quoteInfoForm.controls['zipcode'].touched && quoteInfoForm.controls['zipcode'].errors?.required
+                                                        ">
+                                    Zip Code is required*
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row shipping-address">
+                            <div class="col-md-12 pb-3">
+                                <h5>Billing Address</h5>
+                                <input type="checkbox" (change)="copyOpt('billing')" [checked]="is_checked==true" [disabled]="is_billing_address"  (click)="billingAddress($event)"/> Same as shipping address
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 ">
+                                <label for="address" class="control-label pl-2">Address <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control " (change)="copyOpt('billing')" id="billing_address" value="" formControlName='billing_address'>
+                                <div class="text-danger error-view" *ngIf="!quoteInfoForm.controls['billing_address'].valid && isSubmitted 
+                                                        || quoteInfoForm.controls['billing_address'].touched && quoteInfoForm.controls['billing_address'].errors?.required
+                                                        ">
+                                    Address is required*
+                                </div>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6">
+                                <label for="mbUnit" class="pl-2 control-label">City <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" (change)="copyOpt('billing')" id="mbType" value="" formControlName='billing_city'>
+                                <div class="text-danger error-view" *ngIf="!quoteInfoForm.controls['billing_city'].valid && isSubmitted 
+                                                        || quoteInfoForm.controls['billing_city'].touched && quoteInfoForm.controls['billing_city'].errors?.required
+                                                        ">
+                                    City is required*
+                                </div>
+                            </div>
+                            <div class="form-group  mb-2  col-12 col-md-6 ">
+                                <label for="state" class="control-label pl-2">State <span
+                                        class="text-danger">*</span></label>
+                                <ng-select class="w-100" bindLabel="name" formControlName="billing_state"
+                                    placeholder="Select State" (change)="copyOpt('billing')">
+                                    <ng-option value="" selected disabled>Please Select State</ng-option>
+                                    <ng-option *ngFor="let state of states" value={{state.sgid}}>{{state?.name}}</ng-option>
+                                </ng-select>
+                                <div class="text-danger error-view" *ngIf="!quoteInfoForm.controls['billing_state'].valid && isSubmitted 
+                                                        || quoteInfoForm.controls['billing_state'].touched && quoteInfoForm.controls['billing_state'].errors?.required
+                                                        ">
+                                    State is required*
+                                </div>
+                            </div>
+                           
+                            <div class="form-group mb-2 col-12 col-md-6">
+                                <label for="optRef" class="control-label pl-2">Zip Code <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" (change)="copyOpt('billing')" maxlength="8" id="optRef" value=""
+                                    formControlName="billing_zip_code">
+                                <div class="text-danger error-view" *ngIf="!quoteInfoForm.controls['billing_zip_code'].valid && isSubmitted 
+                                                        || quoteInfoForm.controls['billing_zip_code'].touched && quoteInfoForm.controls['billing_zip_code'].errors?.required
+                                                        ">
+                                    Zip Code is required*
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row m-0 shipping-address">
+                            <div class="form-group mb-2 col-12 col-md-6">
+                                <div class="add-button">
+                                    <div>
+                                        <label for="mbType" class="control-label pl-2">Company Name</label>
+                                        <span class="text-danger">*</span>
+                                    </div>
+                                    <a (click)="createPopup('company','Create New Company','md')"><small><i class="fa fa-plus-circle pr-1"></i>Create New Company</small> </a>
+                                </div>
+                                <div>
+                                    <select formControlName="company_id" (change)="selectCompany($event)"
+                                        class="form-control">
+                                        <option hidden value="">Please Select Company Name</option>
+                                        <option *ngFor='let list of companyList' [value]="list.sgid">
+                                            {{list.company}}
+                                        </option>
+                                    </select>
+                                    <div class="text-danger" *ngIf="!quoteInfoForm.controls['company_id'].valid && isSubmitted 
+                                                        ">
+                                        Company Name is required*
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6">
+                                <div class="add-button">
+                                    <div>
+                                        <label for="mbType" class="control-label pl-2">Business Segment</label>
+                                        <span class="text-danger">*</span>
+                                    </div>
+                                </div>
+                                <select formControlName="segment_type_id" (change)="selectSegment($event)"
+                                    class="form-control">
+                                    <option hidden value="">Please Select Business Segment</option>
+                                    <option *ngFor='let segment of segmentList' [value]="segment.sgid">
+                                        {{segment.design_type}}
+                                    </option>
+                                </select>
+                                <div class="text-danger" *ngIf="!quoteInfoForm.controls['segment_type_id'].valid && isSubmitted 
+                                                    ">
+                                    Business Segment is required*
+                                </div>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6">
+                                <div class="add-button">
+                                    <div>
+                                        <label for="projectName" class="pl-2 control-label add-button">Project Name<span
+                                                class="text-danger bold">*</span>
+                                        </label>
+                                    </div>
+                                    <a (click)="createPopup('project','Create New Project','lg')">
+                                        <small><i class="fa fa-plus-circle pr-1"></i>Create New Project</small>
+                                    </a>
+                                </div>
+                                <div>
+                                    <select formControlName="project_id" (change)="selectProject($event)"
+                                        class="form-control">
+                                        <option hidden value="">Please Select Project Name</option>
+                                        <option *ngFor='let project of projectList' [value]="project.sgid">
+                                            {{project.project}} <span *ngIf="project?.ops_project_id">- {{project?.ops_project_id}}</span></option>
+                                    </select>
+                                </div>
+                            
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6">
+                                <label for="optRef" class="control-label pl-2">Phone <span
+                                        class="text-danger">*</span></label>
+    
+                                <input type="tel" maxlength="10" 
+                                    (keypress)="($event.charCode >= 48 && $event.charCode < 58)" class="form-control "
+                                    value="" formControlName='contact_no' placeholder="(555) 555-1234" maxlength="10"
+                                    [pattern]='phoneNoPattern'>
+                                <div class="text-danger error-view"
+                                    *ngIf="quoteInfoForm.get('contact_no').hasError('pattern')">
+                                    Invalid Phone Number
+                                </div>
+                                <div class="text-danger error-view" *ngIf="!quoteInfoForm.controls['contact_no'].valid && isSubmitted 
+                            || quoteInfoForm.controls['contact_no'].touched && quoteInfoForm.controls['contact_no'].errors?.required
+                            ">
+                                    Phone Number is required*
+                                </div>
+                            </div>
+                            <div class="form-group mb-2 col-12 col-md-6 ">
+                                <div class="add-button">
+                                    <div>
+                                        <label for="mbType" class="control-label pl-2">Order Type</label>
+                                        <span class="text-danger">*</span>
+                                    </div>
+                                </div>
+                                <select formControlName="order_type"
+                                    class="form-control">
+                                    <option hidden value="">Please Select Order Type</option>
+                                    <option *ngFor='let order of orderInfo' [value]="order.value">
+                                        {{order.type}}
+                                    </option>
+                                </select>
+                                <div class="text-danger" *ngIf="!quoteInfoForm.controls['order_type'].valid && isSubmitted 
+                                                    ">
+                                Order Type is required*
+                                </div>
+                            </div>
+                            <div class="form-group mb-1 col-12 col-md-6">
+                                <label for="optRef" class="control-label pl-2">Delivery Timeline
+                                    <small>(Optional)</small></label>
+                                <input type="date" (change)="dateMethod('first',$event)"
+                                    min="{{today |  date: 'yyy-MM-dd'}}" class="form1" data-date-format="dd/mm/yyyy"
+                                    formControlName='preferred_delivery_start_date'><span class="gap">-</span>
+                                <input type="date" (change)="dateMethod('second',$event)"
+                                    min="{{disableDate |  date: 'yyy-MM-dd'}}" class="form2" data-date-format="dd/mm/yyyy"
+                                    formControlName='preferred_delivery_end_date'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-center" style="padding-top: 20px;">
+                        <button type="submit" class="btn  px-4 add-btn" [disabled]="!this.quoteInfoForm.valid"
+                            (click)="submit()" >
+                            <span *ngIf="quote?.type!=='edit' && quote?.type !=='copy'">Submit</span>
+                            <span *ngIf="quote?.type=='edit'">Update</span>
+                            <span *ngIf="quote?.type=='copy'">Create</span>
+                        </button>
+                        <button type="button" (click)="cancleMethod()" class="btn px-4 add-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

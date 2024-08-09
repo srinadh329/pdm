@@ -1,0 +1,142 @@
+<section class="mb_list_section">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="new_mb_list">
+                    <li [class.menu_active]="selectedNav === 'all'" (click)='getBoards("all")'>All Moodboards</li>
+                    <li [class.menu_active]="selectedNav === 'my'" (click)='getBoards("my")'>My Moodboards</li>
+                    <li [class.menu_active]="selectedNav === 'disable'" (click)='getBoards("disable")'>My Disabled Moodboards</li>
+                </ul>
+            </div> 
+        </div>
+    </div>
+</section>
+
+<section class="mb_details_section">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 column-flex">
+                <div>
+                    <div>
+                        <ul class="mb_list_content">
+                            <li>Moodboards for Every </li>
+                            <li>Space: Start Your Journey</li>
+                        </ul>
+                    </div>
+                    <div class="flex-div-two">
+                        <div class="row">
+                            <div class="mb_radio_button">
+                                <ul>
+                                    <li>
+                                        <input type="radio" (change)="mbFiler('segment')" name="filter" value="segment" [checked]="filterType ==='segment' ? true : false" [(ngModel)]="filterType">Business Segment
+                                    </li>
+                                    <li>
+                                        <input type="radio" (change)="mbFiler('company')" name="filter" value="company"  [checked]="filterType ==='company' ? true : false" [(ngModel)]="filterType">Company
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <ul class="new_segment_list" *ngIf="filterType ==='segment'">
+                                <li>
+                                    <select id="dropdownMenuButton"
+                                    class="form-control select_view" (change)="selectSegement(designId)" [(ngModel)]="designId">
+                                    <option value='' selected disabled hidden> Select Segment</option>
+                                    <option *ngFor='let sgement of sgementList'
+                                        [value]="sgement.segment_id">{{sgement.segment_type | titlecase}}</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <select id="dropdownMenuButton" *ngIf="designId && roomType?.length"
+                                    class="form-control select_view" (change)="selectRoomType(roomId)" [(ngModel)]="roomId">
+                                    <option value='' selected disabled hidden> Select Room/ Floor Type</option>
+                                    <option *ngFor='let room of roomType'
+                                        [value]="room.sgid">{{room.room_type_name | titlecase}}</option>
+                                    </select>
+                                </li>
+                            </ul>
+                            <ul class="new_segment_list" *ngIf="filterType ==='company'">
+                                <li style="width: 47%;">
+                                    <select id="dropdownMenuButton"
+                                    class="form-control select_view" [(ngModel)]="companyId" (change)="selectCompany(companyId)">
+                                    <option value='' selected disabled hidden> Select Company</option>
+                                    <option *ngFor='let  company of companyResult'
+                                        [value]=" company.sgid">{{ company?.company | titlecase}}</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <select id="dropdownMenuButton" *ngIf="companyId && projectList?.length"
+                                    class="form-control select_view" [(ngModel)]="ProjectId" (change)="selectProject(ProjectId)">
+                                    <option value='' selected disabled hidden> Select Project</option>
+                                    <option *ngFor='let  project of projectList'
+                                        [value]=" project.sgid">{{ project.project | titlecase}}</option>
+                                    </select>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div  class="flex-div-three">
+                    <div class="row">
+                        <ul class="new_creation_button">
+                            <li>
+                                <a (click)="createMooodBoard()">
+                                    <img src="assets/images/mb_img/circle.svg"><span>New Moodboard</span>
+                                </a>
+                            </li>
+                        </ul>
+                    
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4 padding-view" *ngFor="let board of moodboardData">
+                        <div class="card new_mb_card_view">
+                            <div class="card-header">
+                                <div class="delete_icon_view"> 
+                                    <a class="fa fa-trash-o pointer" *ngIf="UserId===board.userid && board.isactive"
+                                    (click)='deleteProductPopup(board)'></a>
+                                    <a class="fa fa-check-circle pointer" *ngIf="UserId===board.userid && !board.isactive"
+                                    (click)='ActiveMoodboard(board.sgid,board.userid)'></a>
+                                </div>
+                                <div>
+                                    <img (click)="details(board.sgid)" class="img-responsive" 
+                                    alt="{{board.boardname}}" 
+                                    src="{{board.is_moodboard_images.large ? board.is_moodboard_images.large : 'https://inhabitr-furniture-prod.s3.amazonaws.com/noimage.jpg' }}"/>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <ul>
+                                    <li>Board Name: <span>{{board.boardname}}</span></li>
+                                    <li  *ngIf="selectedNav === 'all'">Created By: <span> {{board.user?.first_name | titlecase }}
+                                        {{board.user?.last_name | titlecase}}</span></li>
+                                    <li *ngIf="board.segment_type">Segment Type: {{board.segment_type}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='align' *ngIf="!moodboardData?.length && !isLoading">
+                    No Moodboard Available for the selected Business Segment
+                </div>
+                <div class='align' *ngIf="isLoading">
+                    loading...
+                  </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5"></div>
+            <div class="col-md-6">
+                <ul class="new_arrow_options">
+                    <li (click)="arrowLoad('left')">
+                        <img src="assets/images/mb_img/left_arrow.svg"/>
+                    </li>
+                    <li (click)="arrowLoad('right')">
+                        <img src="assets/images/mb_img/right_arrow.svg"/>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

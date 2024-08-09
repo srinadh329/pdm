@@ -1,0 +1,63 @@
+.ui-select span.ui-li-count {
+    display: none !important;
+}
+
+.table td {
+    padding: 5px !important;
+}
+
+.dropdownDesign {
+    width: 55%;
+}
+
+.pagination {
+    font-size: 14px;
+    text-align: center;
+    margin: 20px auto;
+}
+
+::ng-deep .pagination-next a,
+::ng-deep .pagination-previous a {
+    outline: none;
+}
+
+::ng-deep .ngx-pagination .current {
+    border-radius: 4px;
+}
+
+::ng-deep .ngx-pagination {
+    padding: 0 !important;
+}
+
+::ng-deep .ngx-pagination a:hover,
+::ng-deep .ngx-pagination button:hover {
+    border-radius: 4px;
+}
+
+::ng-deep .ngx-pagination a,
+::ng-deep .ngx-pagination button {
+    border-radius: 4px;
+    outline: none;
+}
+
+@media screen and (max-width: 520px) {
+    #table-component {
+        margin: 15px;
+    }
+}
+
+.dropdownDesign1 {
+    background-color: #fff !important;
+    color: black !important;
+    margin: 0;
+    box-sizing: border-box;
+    border-radius: 10px !important;
+}
+
+.multiselect-item-checkbox input div {
+    border: 2px solid #0f0f0f !important;
+}
+
+.edit-table {
+    font-size: 12px;
+}

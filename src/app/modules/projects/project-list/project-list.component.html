@@ -1,0 +1,81 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<div>
+    <div class="mb-banner">
+        <div class="mb-banner-left" fxLayoutGap="3rem">
+            <div class="mb-banner-icon">
+                <img src="assets/img/order1.svg" alt="iconAltTxt" />
+            </div>
+            <div fxLayout="column" fxFlex="30" class="textleft">
+                <span class="mb-banner-left-text h1">PROJECTS</span><br>
+                <span class="margin-btw">View the status and summary of the orders.</span>
+            </div>
+        </div>
+        <div class="mb-banner-right">
+            <img height="100%" width="100%" src="assets/img/order-page.jpg" alt=" altTxt " />
+        </div>
+    </div>
+    <ng-content [select]="footer"></ng-content>
+</div>
+
+<section class="mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a class="addButton" (click)="editProject(null,'create')">
+                    <i class="fa fa-plus-circle iconDesign" aria-hidden="true"></i>
+                </a>
+                <span class="p-2 pt-4 ml-3" style="font-size: 20px; color: black;"><b>Create New Project</b></span>
+            </div>
+        </div>
+    
+    </div>
+</section>
+
+<section class="mt-5">
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div class="dropdown select_dropdown_view form-control">
+                <a type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">
+                    {{company?.company ? company?.company :'Select Company Name'}}
+                </a>
+                <ul class="dropdown-menu">
+                    <li (click)="selectCompany(list)" [ngClass]="{'project_list_active':list?.sgid==this.company?.sgid}"  *ngFor='let list of companyList' [value]="list.sgid"> {{list.company}}</li>
+                </ul>
+            </div>
+            <div class="input_search">
+                <input type="text" class="form-control" (change)="selectProject(projectName)" [(ngModel)]="projectName" placeholder="Please Enter Project Name"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mt-5 pb-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <thead>
+                        <th>ID</th>
+                        <th>Project Name</th>
+                        <th>Company Name</th>
+                        <th>Business Segment</th>
+                        <th>Project Type</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let table of projectTable;let i=index">
+                            <td>{{table?.project_id}}</td>
+                            <td>{{table?.project_name ? table?.project_name :'-'}} <span *ngIf="table?.ops_project_id">- {{table?.ops_project_id}}</span></td>
+                            <td>{{table?.company_name}}</td>
+                            <td>{{table?.segment_type}}</td>
+                            <td>{{table?.project_type ? table?.project_type:'-'}}</td>
+                            <td (click)="editProject(table,'edit')"><i class="fa fa-pencil-square-o pointer"></i></td>
+                        </tr>
+                        <tr>
+                            <td *ngIf="!projectTable?.length" colspan="12">No Data Found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

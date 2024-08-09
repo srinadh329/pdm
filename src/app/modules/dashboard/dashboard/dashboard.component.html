@@ -1,0 +1,21 @@
+<section class="dashboard_section">
+  <div class="container">
+    <div class="card_view">
+      <div class="card dashboard_card" *ngFor="let dashboard of dashboardCount;let i=index">
+        <div class="card-body" [routerLink]="[dashboard.url]" [queryParams]="dashboard.params">
+          <ul>
+            <li>
+              <img src={{dashboard.image}} alt={{dashboard.title}}>
+            </li>
+            <li>
+              {{dashboard.title}}
+            </li>
+            <li>
+              {{dashboard.count}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

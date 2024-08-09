@@ -1,0 +1,240 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<section class="create-product-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-center">Create Product</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-md-10 m-auto create_form_view">
+                <form [formGroup]="productForm">
+                    <div class="row form-row-view">
+                        <div class="form-group mb-2 col-12 col-md-6 ">
+                            <label for="address" class="control-label">Product Name <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="name"
+                                [ngClass]="{'error-line':productForm.get('name').hasError('required') && is_submitted}">
+                        </div>
+                        <div class="form-group mb-2 col-12 col-md-6 ">
+                            <label for="address" class="control-label">Lead Time</label>
+                            <input type="text" class="form-control" placeholder="Number of days"  
+                            (keypress)="($event.charCode >= 48 && $event.charCode < 58)"
+                                formControlName="lead_time">
+                        </div>
+                        <div class="form-group mb-2 col-12 col-md-6 ">
+                            <label for="address" class="control-label">SKU</label>
+                            <input type="text" class="form-control" formControlName="sku" disabled placeholder="SKU #">
+                        </div>
+                        <div class="form-group mb-2 col-12 col-md-6 ">
+                            <label for="address" class="control-label">Product Type <span
+                                    class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <div class="dropdown select_dropdown_view form-control add_info_input"
+                                    [ngClass]="{'error-line':productForm.get('product_type').hasError('required') && is_submitted}">
+                                    <a style="text-decoration: none" class="dropdown-toggle" data-toggle="dropdown">
+                                        {{productForm?.value?.product_type ? productForm?.value?.product_type :
+                                        'Selected Product Type'}}
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li *ngFor="let product of productType" (click)="selectProduct(product)"
+                                            [ngClass]="{'item-active': productForm?.value?.product_type==product?.key}">
+                                            {{product?.key}}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-2 col-12 col-md-6">
+                            <div class="add-button">
+                                <div>
+                                    <label for="mbType" class="control-label">Category</label>
+                                    <span class="text-danger">*</span>
+                                </div>
+                                <!-- <a class="cursor-pointer" (click)="categoryDialog()"><small><i class="fa fa-plus-circle pr-1"></i>Add Category</small> </a> -->
+                            </div>
+                            <div class="form-group">
+                                <div class="dropdown select_dropdown_view form-control add_info_input"
+                                    [ngClass]="{'error-line':productForm.get('category_name').hasError('required') && is_submitted}">
+                                    <a style="text-decoration: none" class="dropdown-toggle" data-toggle="dropdown">
+                                        {{productForm?.value?.category_name ? productForm?.value?.category_name :
+                                        'Selected Category'}}
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <input class="form-control search-input" type="text" placeholder="Search"
+                                            (keyup)="searchCategory($event,'category')">
+                                        <li *ngFor="let category of categoryList"
+                                            [ngClass]="{'item-active': productForm?.value?.category_id==category?.sgid}"
+                                            (click)="selectCategory(category,'category')">{{category?.name}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-2 col-12 col-md-6">
+                            <div class="add-button">
+                                <div>
+                                    <label for="mbType" class="control-label">Supplier name</label>
+                                    <span class="text-danger">*</span>
+                                </div>
+                                <a class="cursor-pointer" (click)="getSegment()"><small><i
+                                            class="fa fa-plus-circle pr-1"></i>Add Supplier</small> </a>
+                            </div>
+                            <div class="form-group">
+                                <div class="dropdown select_dropdown_view form-control add_info_input"
+                                    [ngClass]="{'error-line':productForm.get('supplier_name').hasError('required') && is_submitted}">
+                                    <a style="text-decoration: none" class="dropdown-toggle" data-toggle="dropdown">
+                                        {{productForm?.value?.supplier_name ? productForm?.value?.supplier_name :
+                                        'Selected Supplier'}}
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <input class="form-control search-input" type="text" placeholder="Search"
+                                            (keyup)="searchCategory($event,'supplier')">
+                                        <li *ngFor="let supplier of supplierList"
+                                            [ngClass]="{'item-active': productForm?.value?.supplier_id==supplier?.sgid}"
+                                            (click)="selectCategory(supplier,'supplier')">{{supplier?.name}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-2 col-12 col-md-6 ">
+                            <label for="address" class="control-label">Asset Price<span
+                                    class="text-danger">*</span></label>
+                            <input type="text" min="1" max="10"
+                                (keypress)="($event.charCode >= 48 && $event.charCode < 58)"
+                                [ngClass]="{'error-line':productForm.get('pricing_asset_value').hasError('required') && is_submitted}"
+                                (keyup)="purchasePriceCal($event)" class="form-control" placeholder="# Numeric input"
+                                formControlName="pricing_asset_value">
+                        </div>
+                        <div class="form-group mb-2 col-12 col-md-6 ">
+                            <label for="address" class="control-label">Purchase Price<span
+                                    class="text-danger">*</span></label>
+                            <input type="number" disabled (keypress)="($event.charCode >= 48 && $event.charCode < 58)"
+                                class="form-control" placeholder="# Numeric input" formControlName="asset_value">
+                        </div>
+
+                        <div class="form-group mb-2 col-12 col-md-6 ">
+                            <label for="address" class="control-label">Supplier SKU<span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" placeholder="SKU #" formControlName="supplier_sku"
+                                [ngClass]="{'error-line':productForm.get('supplier_sku').hasError('required') && is_submitted}">
+                        </div>
+                        <div class="form-group mb-2 col-12 col-md-6 ">
+                            <label for="address" class="control-label">Inhabitr SKU</label>
+                            <input type="text" disabled class="form-control" formControlName="inhabitr_sku"
+                                placeholder="SKU #">
+                        </div>
+                    </div>
+                    <!-- attributes fields -->
+                    <div class="row  form-row-view">
+                        <div class="col-md-12">
+                            <label for="address" class="control-label">Attributes</label>
+                        </div>
+                        <div class="form-group mb-2 col-12 col-md-6" *ngFor="let attribute of attributeList">
+                            <label for="mbType" class="control-label">{{attribute?.name}}</label>
+                            <span class="text-danger">*</span>
+                            <div class="form-group">
+                                <div class="dropdown select_dropdown_view form-control add_info_input"
+                                    [ngClass]="{'error-line':!attribute.value && is_submitted}">
+                                    <a style="text-decoration: none" class="dropdown-toggle" data-toggle="dropdown">
+                                        {{attribute.label_name ? attribute.label_name : 'Selected attributes'}}
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li *ngFor="let list of attribute?.attribute_list"
+                                            [ngClass]="{'item-active':attribute.value==list.sgid}"
+                                            (click)="selectAttr(list,attribute)">{{list?.attribute_value}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- attributes fields -->
+                    <!-- Demension field -->
+                    <div class="row  form-row-view">
+                        <div class="col-md-12">
+                            <label for="address" class="control-label">Dimensions <span class="latest-table-tooltip weight"><i aria-hidden="true"
+                                        class="fa fa-info-circle mr-1"></i><span class="latest-table-tooltiptext">
+                                        <span> Ex: 90L x 79W x 60H<br>
+                                            Ex: For a round dinina table: Diameter: 48 inches</span>
+                                    </span>
+                                </span>
+                                (<span class="text-danger">*</span>)</label>
+                        </div>
+                        <div class="col-md-12">
+                            <textarea class="form-control custom-textarea" placeholder="
+                           Ex: 90L x 79W x 60H
+                           Ex: For a round dinina table: Diameter: 48 inches" formControlName="dimension"
+                                [ngClass]="{'error-line':productForm.get('dimension').hasError('required') && is_submitted}"></textarea>
+                        </div>
+                    </div>
+                    <!-- Demension field -->
+                    <!-- Feature field -->
+                    <div class="row  form-row-view">
+                        <div class="col-md-12">
+                            <label for="address" class="control-label">Features<span
+                                    class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-md-12">
+                            <textarea class="form-control custom-textarea" formControlName="features"
+                                [ngClass]="{'error-line':productForm.get('features').hasError('required') && is_submitted}"></textarea>
+                        </div>
+                    </div>
+                    <!-- Feature field -->
+                    <!-- Description field -->
+                    <div class="row  form-row-view">
+                        <div class="col-md-12">
+                            <label for="address" class="control-label">Description<span
+                                    class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-md-12">
+                            <textarea class="form-control custom-textarea" formControlName="description"
+                                [ngClass]="{'error-line':productForm.get('description').hasError('required') && is_submitted}"></textarea>
+                        </div>
+                    </div>
+                    <!-- Description field -->
+                    <!-- Image upload field -->
+                    <div class="row  form-row-view" *ngIf="is_img_show">
+                        <div class="col-md-12">
+                            <label for="address" class="control-label">Images<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-lg-3 col-md-4" appDragdrop (onFileDropped)="onSelectedFrontImg($event)">
+                            <label for="input-file-id" class="upload-img-view">
+                                <div class="svg_icon">
+                                    <i class="fa fa-plus-circle pr-1"></i>
+                                </div>
+                                <input class="d-none" #fileUploader id="input-file-id" type="file" name="file" multiple
+                                    (change)="onSelectedFrontImg($event)" accept=".png, .jpeg, .jpg" />
+                            </label>
+                        </div>
+                        <div class="col-lg-9 flex-image">
+                            <div class="col-md-12 upload-flex" #scrollDiv>
+                                <img *ngFor='let preview of previews' [src]="preview" class="preview">
+                            </div>
+                        </div>
+                        <div class="upload-arrows">
+                            <ul *ngIf="fileElement?.length>=5">
+                                <li (click)="scroll(-120,'scroll')">
+                                    <img src="assets/images/mb_img/left_arrow.svg">
+                                </li>
+                                <li (click)="scroll(120,'scroll')">
+                                    <img src="assets/images/mb_img/right_arrow.svg">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Image upload field -->
+                    <div class="row d-flex justify-content-center pt-3">
+                        <button type="submit" class="btn px-4 add-btn" *ngIf="!is_img_show"
+                            (click)="submit()"><span>Next</span></button>
+                        <button type="submit" class="btn px-4 add-btn" *ngIf="is_img_show"
+                            [disabled]="!fileElement?.length" (click)="save()"><span>Save</span></button>
+                        <!-- <button type="button" class="btn px-4 add-btn" routerLink="/admin/products/list">Cancel</button> -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

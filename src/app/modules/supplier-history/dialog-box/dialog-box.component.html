@@ -1,0 +1,50 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<div *ngIf="invIp?.dialogType=='inventory-log'">
+    <div class="modal-header inventory-popup-header">
+        <h4 class="modal-title title-font  w-100 color">{{invIp?.content}}</h4>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body inventory-popup-body">
+        <table class="inventory-table">
+          <thead>
+                <th>Supplier Name</th>
+                <th>Warehouse Name</th>
+                <th> File URL</th>
+                <th> Loading Status</th>
+                <th>Exception</th>
+                <th>File Received Time (Chicago Time Zone)</th>
+                <th>Loading Start Time (Chicago Time Zone)</th>
+                <th> Loading End Time (Chicago Time Zone)</th>
+          </thead>
+          <tbody>
+                <tr *ngFor="let supplier of invIp?.res">
+                    <td>{{supplier?.supplier_name ? supplier?.supplier_name :'-'}}</td>
+                    <td>{{supplier?.warehouse_name ? supplier?.warehouse_name : '-'}}</td>
+                    <td>
+                      <span *ngIf="supplier?.FileURL"><a href="{{supplier?.FileURL}}">{{supplier?.FileURL}}
+  
+                      </a>
+                      </span>
+                      <span *ngIf="!supplier?.FileURL">-</span>
+                    </td>
+                    <td>{{supplier?.loading_status ? supplier?.loading_status : '-'}}</td>
+                    <td>{{supplier?.log_exception ? supplier?.log_exception : '-'}}</td>
+                    <td>
+                      <span *ngIf="supplier?.file_received_time">{{supplier?.file_received_time | date:'short' }}</span>
+                      <span *ngIf="!supplier?.file_received_time">-</span>
+                    </td>
+                    <td>
+                      <span *ngIf="supplier?.loading_start_time ">{{supplier?.loading_start_time  | date:'short'}}</span>
+                      <span *ngIf="!supplier?.loading_start_time ">-</span>
+                    </td>
+                    <td>
+                      <span *ngIf="supplier?.loading_end_time">{{supplier?.loading_end_time  | date:'short'}}</span>
+                      <span *ngIf="!supplier?.loading_end_time">-</span>
+                    </td>
+                </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>

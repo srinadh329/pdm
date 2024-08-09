@@ -1,0 +1,855 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<!-- moodboard details popup -->
+
+<div *ngIf="mbDetailsInData?.dialogType ==='mbDetailsPopup'" class="mb_details_view">
+   <div class="row m-0 align-items-center">
+    <div class="col-md-4 p-0">
+        <p>Moodboard Details</p>
+    </div>
+    <div class="col-md-8 p-0 d-flex justify-content-center">
+        <ul>
+            <li (click)="shareMbDetails('share')">
+                <a><i class="fa fa-share-alt"></i> Share</a>
+            </li>
+            <li (click)="shareMbDetails('copy')">
+                <i class="fa fa-clone" aria-hidden="true"></i> Copy
+            </li>
+            <li (click)="shareMbDetails('edit')">
+                <i class="fa fa-pencil-square-o"></i> Edit
+            </li>
+        </ul>
+    </div>
+   </div>
+   <table>
+        <tbody>
+            <tr>
+                <td>Moodboard:</td>
+                <td>#{{mbDetailsInData?.res?.moodboard?.id}}</td>
+            </tr>
+            <tr>
+                <td>Moodboard Name:</td>
+                <td>{{mbDetailsInData?.res?.moodboard?.boardname}}</td>
+            </tr>
+            <tr>
+                <td>Business Segment:</td>
+                <td>{{mbDetailsInData?.res?.moodboard_wizard?.design_type}}</td>
+            </tr>
+            <tr *ngIf="mbDetailsInData?.res?.moodboard_wizard?.lable_type">
+                <td>{{mbDetailsInData?.res?.moodboard_wizard?.lable_type}}:</td>
+                <td>{{mbDetailsInData?.res?.moodboard_wizard?.room_type_name}}</td>
+            </tr>
+            <tr *ngIf="mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom==='rooms' 
+                || mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom ==='both'">
+                <td>Total Number of Rooms <span *ngIf="mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom ==='both'">/Unit</span>:</td>
+                <td>{{mbDetailsInData?.res?.moodboard_wizard?.no_of_rooms}}</td>
+            </tr>
+            <tr *ngIf="mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom==='units' 
+                || mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom ==='both'">
+                <td>Total Number of Units:</td>
+                <td>{{mbDetailsInData?.res?.moodboard_wizard?.no_of_units}}</td>
+            </tr>
+            <tr *ngIf="mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom ==='both'">
+                <td>Total Number of Beds:</td>
+                <td>{{mbDetailsInData?.res?.moodboard_wizard?.no_of_beds}}</td>
+            </tr>
+            <tr *ngIf="mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom==='square_feet'">
+                <td>Square Feet Area:</td>
+                <td>{{mbDetailsInData?.res?.moodboard_wizard?.square_feet}} sqft</td>
+            </tr>
+            <tr *ngIf="mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom==='rooms' 
+                || mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom==='units' || mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom==='square_feet'">
+
+                <td>
+                    Buy Budget 
+                    <span *ngIf="mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom ==='rooms'">/ Room:</span>
+                    <span *ngIf="mbDetailsInData?.res?.moodboard_wizard?.showUnitRoom ==='units'">/ Unit:</span>
+                </td>
+                <td>
+                    {{mbDetailsInData?.res?.moodboard_wizard?.budget}}
+                </td>
+            </tr>
+            <tr>
+                <td>Moodboard Type:</td>
+                <td>{{mbDetailsInData?.res?.moodboard_wizard?.moodboard_type ? mbDetailsInData?.res?.moodboard_wizard?.moodboard_type:'------------'}}</td>
+            </tr>
+            <tr>
+                <td>Design Type:</td>
+                <td>{{mbDetailsInData?.res?.moodboard_wizard?.design_type_name ? mbDetailsInData?.res?.moodboard_wizard?.design_type_name:'------------'}}</td>
+            </tr>
+            <tr>
+                <td>Company Name:</td>
+                <td>{{mbDetailsInData?.res?.moodboard?.company_name ? mbDetailsInData?.res?.moodboard?.company_name : '------------'}}</td>
+            </tr>
+            <tr>
+                <td>Project Name:</td>
+                <td>{{mbDetailsInData?.res?.moodboard?.project_name ? mbDetailsInData?.res?.moodboard?.project_name : '------------' }}</td>
+            </tr>
+            <tr>
+                <td>Estimated Delivery date:</td>
+                <td>{{mbDetailsInData?.res?.moodboard_wizard?.expected_delivery_date ? (mbDetailsInData?.res?.moodboard_wizard?.expected_delivery_date   |  date:'dd-MM-yyyy') : '------------'}}</td>
+            </tr>
+        </tbody>
+   </table>
+   <div class="row">
+    <div class="col-md-12 text-center">
+        <button class="close_button" (click)="activeModal.close('Close click')">Close</button>
+    </div>
+   </div>
+</div>
+
+
+<!-- moodboard details popup -->
+
+
+<!-- update old moodboard detail -->
+
+<div *ngIf="updateOldMbIn?.dialogType ==='update_old_moodboard_details'">
+    <div class="modal-header">
+        <h4 class="modal-title title-font w-100 color"></h4>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body">
+        <p class="text-center">
+            Please update Business Segment and Moodboard Type 
+        </p>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button class="close_button" (click)="activeModal.close('Close click')">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- update old moodboard details -->
+
+
+<div *ngIf="mbTypeInData?.dialogType ==='moodboardType'">
+    <div class="modal-header configuremoodboard-popup">
+        <h4 class="modal-title title-font text-center w-100 color"></h4>
+        <span class="close pointer" aria-label="Close" (click)="changeTypeNo()">
+            <span aria-hidden="true" class="text-white">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body configuremoodboard-popup-body">
+        <div class="delete-popup">
+            <h5 *ngIf="mbTypeInData?.res?.button_type===0">Do you want to change Type from Buy to Rent ?</h5>
+            <h5 *ngIf="mbTypeInData?.res?.button_type===1">Do you want to change Type from Rent to Buy ?</h5>
+            <button (click)="changeType(mbTypeInData?.res)">Yes</button>
+            <button class="no" (click)="changeTypeNo()">No</button>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- category popup -->
+<div *ngIf="categoryInData?.dialogType==='categorypopup'">
+    <div class="modal-header">
+        <h4 class="modal-title title-font color">{{categoryInData?.content}}</h4>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body categorypopup-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let category of categoryInData?.res | orderBy:'name':false;let i=index">
+                            <label class="custom-checkbox" *ngIf="i<categoryInData?.res.length/3">
+                                <input type="checkbox" (click)="selectedCategory(category)"
+                                [attr.checked]="category.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{category?.name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                &nbsp;({{category?.count}})
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let category of categoryInData?.res | orderBy:'name':false;let i=index">
+                            <label class="custom-checkbox"*ngIf="i >= categoryInData?.res.length/3 && i < categoryInData?.res.length/3*2">
+                                <input type="checkbox" (click)="selectedCategory(category)"
+                                [attr.checked]="category.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{category?.name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                &nbsp;({{category?.count}})
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let category of categoryInData?.res | orderBy:'name':false;let i=index">
+                            <label class="custom-checkbox"*ngIf="i >= categoryInData?.res.length/3*2">
+                                <input type="checkbox" (click)="selectedCategory(category)"
+                                [attr.checked]="category.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{category?.name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                &nbsp;({{category?.count}})
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="align" *ngIf="!categoryInData?.res?.length">No Data Found</div>
+    </div>
+</div>
+<!-- category popup -->
+
+
+<!-- supplier popup -->
+<div *ngIf="supplierInData?.dialogType==='supplierpopup'">
+    <div class="modal-header">
+        <h4 class="modal-title color">{{supplierInData?.content}}</h4>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body categorypopup-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let supplier of supplierInData?.res;let i=index">
+                            <label class="custom-checkbox" *ngIf="i<supplierInData?.res?.length/3">
+                                <input type="checkbox" (click)="selectedSupplier(supplier)"
+                                [attr.checked]="supplier.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{supplier?.name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                &nbsp;({{supplier?.count}})
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let supplier of supplierInData?.res;let i=index">
+                            <label class="custom-checkbox"*ngIf="i >=supplierInData?.res?.length/3 && i < supplierInData?.res?.length/3*2">
+                                <input type="checkbox" (click)="selectedSupplier(supplier)"
+                                [attr.checked]="supplier.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{supplier?.name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                &nbsp;({{supplier?.count}})
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let supplier of supplierInData?.res;let i=index">
+                            <label class="custom-checkbox"*ngIf="i >= supplierInData?.res?.length/3*2">
+                                <input type="checkbox" (click)="selectedSupplier(supplier)"
+                                [attr.checked]="supplier.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{supplier?.name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                &nbsp;({{supplier?.count}})
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="align" *ngIf="!supplierInData?.res?.length">No Data Found</div>
+    </div>
+</div>
+<!-- supplier popup -->
+
+
+<!-- ware house popup -->
+<div *ngIf="warehouseInData?.dialogType==='warehousepopup'">
+    <div class="modal-header">
+        <h4 class="modal-title color">{{warehouseInData?.content}}</h4>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body categorypopup-body">
+        <ul class="supply_list">
+            <li (click)="warehouseOpts('delivery_partner')" [ngClass]="{'warehouse_active':supply_opts=='delivery_partner'}">Delivery Partner Warehouse</li>
+            <li (click)="warehouseOpts('supplier_partner')" [ngClass]="{'warehouse_active':supply_opts=='supplier_partner'}">Supplier Partner Warehouses</li>
+        </ul>
+        <div *ngIf="supply_opts=='delivery_partner'">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let warehouse of warehouseInData?.res?.delivery_warehouse;let i=index">
+                            <label class="custom-checkbox" *ngIf="i<warehouseInData?.res?.delivery_warehouse.length/3">
+                                <input type="checkbox" (click)="selectedWarehouse(warehouse)"
+                                [attr.checked]="warehouse.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{warehouse?.warehouse_name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let warehouse of warehouseInData?.res?.delivery_warehouse;let i=index">
+                            <label class="custom-checkbox"*ngIf="i >=warehouseInData?.res?.delivery_warehouse.length/3 && i < warehouseInData?.res?.delivery_warehouse.length/3*2">
+                                <input type="checkbox" (click)="selectedWarehouse(warehouse)"
+                                [attr.checked]="warehouse.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{warehouse?.warehouse_name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let warehouse of warehouseInData?.res?.delivery_warehouse;let i=index">
+                            <label class="custom-checkbox"*ngIf="i >= warehouseInData?.res?.delivery_warehouse?.length/3*2">
+                                <input type="checkbox" (click)="selectedWarehouse(warehouse)"
+                                [attr.checked]="warehouse.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{warehouse?.warehouse_name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="supply_opts=='supplier_partner'">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let warehouse of warehouseInData?.res?.suppliery_warehouse;let i=index">
+                            <label class="custom-checkbox" *ngIf="i<warehouseInData?.res?.suppliery_warehouse.length/3">
+                                <input type="checkbox" (click)="selectedWarehouse(warehouse)"
+                                [attr.checked]="warehouse.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{warehouse?.warehouse_name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let warehouse of warehouseInData?.res?.suppliery_warehouse;let i=index">
+                            <label class="custom-checkbox"*ngIf="i >=warehouseInData?.res?.suppliery_warehouse.length/3 && i < warehouseInData?.res?.suppliery_warehouse.length/3*2">
+                                <input type="checkbox" (click)="selectedWarehouse(warehouse)"
+                                [attr.checked]="warehouse.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{warehouse?.warehouse_name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let warehouse of warehouseInData?.res?.suppliery_warehouse;let i=index">
+                            <label class="custom-checkbox"*ngIf="i >= warehouseInData?.res?.suppliery_warehouse?.length/3*2">
+                                <input type="checkbox" (click)="selectedWarehouse(warehouse)"
+                                [attr.checked]="warehouse.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{warehouse?.warehouse_name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                               
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>    
+
+
+<!-- ware house popup -->
+
+
+<!-- city popup -->
+<div *ngIf="cityInData?.dialogType==='citypopup'">
+    <div class="modal-header">
+        <h4 class="modal-title color">{{cityInData?.content}}</h4>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body categorypopup-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let city of cityInData?.res;let i=index">
+                            <label class="custom-checkbox" *ngIf="i<cityInData?.res?.length/3">
+                                <input type="checkbox" (click)="selectedCity(city)"
+                                [attr.checked]="city.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{city?.warehouse_name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                &nbsp;({{city?.count}})
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let city of cityInData?.res;let i=index">
+                            <label class="custom-checkbox"*ngIf="i >=cityInData?.res?.length/3 && i < cityInData?.res?.length/3*2">
+                                <input type="checkbox" (click)="selectedCity(city)"
+                                [attr.checked]="city.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{city?.warehouse_name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                &nbsp;({{city?.count}})
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled m-0">
+                        <li *ngFor="let city of cityInData?.res;let i=index">
+                            <label class="custom-checkbox"*ngIf="i >= cityInData?.res?.length/3*2">
+                                <input type="checkbox" (click)="selectedCity(city)"
+                                [attr.checked]="city.selected ? 'checked' : null" name="checkbox" />
+                                <span>{{city?.warehouse_name | titlecase }}</span>
+                                <span class="checkmark"></span>
+                                &nbsp;({{city?.count}})
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="align" *ngIf="!cityInData?.res?.length">No Data Found</div>
+    </div>
+</div>
+
+
+<!-- city popup -->
+
+
+<!-- attribute popup -->
+<div *ngIf="attributeInData?.dialogType==='attributepopup'">
+    <div class="modal-header">
+        <h4 class="modal-title color">{{attributeInData?.content}}</h4>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body">
+        <div *ngFor="let atttributeLists of attributeInData?.res" class="attribute">
+            <h6>{{atttributeLists?.name}} :</h6>
+            <div class="dropdown select_dropdown_view form-control add_info_input">
+                <a data-toggle="dropdown" class="dropdown-toggle" style="text-decoration: none;"
+                    aria-expanded="false"> 
+                    
+                    <span *ngFor="let attrList of atttributeLists?.attribute_list">
+                    {{attrList?.selected ? attrList?.attribute_value :''}}
+                    </span>
+                </a>
+                <ul  class="dropdown-menu">
+                    <li *ngFor=" let attrList of atttributeLists?.attribute_list" [ngClass]="{'attr_active':attrList?.selected}" (click)="selectedAttribute(attrList,atttributeLists)"> {{attrList?.attribute_value}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- attribute popup -->
+
+
+<!-- product details popup -->
+<div *ngIf="productDetailsInData?.dialogType==='productDetailspopup'" class="mb_details_popup">
+    <div class="modal-header view_insp_img">
+        <h4 class="modal-title product-content  w-100 color">{{selectedProduct?.name}} - {{selectedProduct?.product_id}}</h4>
+        <span class="close pointer" aria-label="Close" (click)="productClose()">
+            <span aria-hidden="true"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+        </span>
+    </div>
+    <div class="modal-body product-details-body">
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-lg-12 position-relative">
+                        <div class="card border-0">
+                            <div class="card-image">
+                                <img src="{{selectedProduct?.default_image}}"/>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="letside-variation-img-view" #scrollDiv>
+                                        <img *ngFor="let image of selectedProduct?.other_variations;let i =index" 
+                                        src="{{image?.default_images[0]?.image_url?.large}}"
+                                        [ngClass]="{'img-active':leftImgId===image?.sgid}" class="img-thumbnail"
+                                        (click)="variationReuslt(image)"/>
+                                    </div>
+                                    <ul class="arrow_view" *ngIf="selectedProduct?.other_variations?.length > 4">
+                                        <li (click)="scroll(-120,'scroll')"><img src="assets/images/mb_img/left_arrow.svg"></li>
+                                        <li (click)="scroll(120,'scroll')"><img src="assets/images/mb_img/right_arrow.svg"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="bg-white">
+                            <div class="letside-variation-img-view"  #colorDiv>
+                                <img *ngFor="let image of selectedProduct?.default_images;let i = index" [ngClass]="{'img-active':image===selectedProduct?.default_image}" src="{{image}}"
+                                        (click)="variationImage(image)" class="img-thumbnail cursor-pointer img-view" />
+                            </div>
+                            <ul class="arrow_view" *ngIf="selectedProduct?.default_images?.length > 4">
+                                <li (click)="scroll(-120,'color')"><img src="assets/images/mb_img/left_arrow.svg"></li>
+                                <li (click)="scroll(120,'color')"><img src="assets/images/mb_img/right_arrow.svg"></li>
+                            </ul>
+                        </div>
+                       
+                        <!-- <div class="variation-img-view">
+                           <img *ngFor="let image of selectedProduct?.default_images;let i = index" [ngClass]="{'img-active':image===selectedProduct?.default_image}" src="{{image}}"
+                                    (click)="variationImage(image)" class="img-thumbnail cursor-pointer img-view" />
+                           
+                        </div> -->
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12 popup_add_mb">
+                        <div>
+                            <div class="quantity-view">
+                                Qty : <span (click)="quanity('minus','-')"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                <input type="number" (keyup)="quanityInput(commonQty)" value="1" min="1" [(ngModel)]="commonQty" />
+                                <span (click)="quanity('plus','+')"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-center">
+                                <button class="btn-view btn" type="submit" (click)="addMb()">
+                                    <i  aria-hidden="true" class="fa fa-plus"></i> Add to Moodboard</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+
+                <div class="card border-0">
+                    <div class="card-body custom-card">
+                        <div class="pt-3">
+                            <table class="price-table">
+                                <tr>
+                                    <td>Product Name:</td>
+                                    <td> <span>{{selectedProduct?.name}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Asset Price:</td>
+                                    <td>  $<span>{{selectedProduct?.asset_value}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Buy Price:</td>
+                                    <td>  $<span>{{selectedProduct?.buyPrice}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Rent Price/12 month:</td>
+                                    <td> $<span>{{selectedProduct?.rental_price?.rental_price ?
+                                        selectedProduct?.rental_price?.rental_price : 0}}</span>
+                                    <small>/mo</small></td>
+                                </tr>
+                                <tr>
+                                    <td>Rent Duration:</td>
+                                    <td> <input class="range-slider-range" type="range" value="{{ monthNums }}" min="1"
+                                            max="36" (change)="updateRent($event)">
+                                        <span class="range-slider-value">{{monthNums}}</span>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="selectedProduct?.bed_size?.length">
+                                    <td>Size:</td>
+                                    <td>
+                                        <select class="custom-selection"(change)="sizeVariation($event)" [(ngModel)]="variation_id">
+                                            <option selected disabled>Choose Options</option>
+                                            <option value="{{size?.sku_variation_id}}"
+                                                *ngFor="let size of selectedProduct?.bed_size">{{size?.attribute_value}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="selectedProduct?.mattress_size?.length">
+                                    <td>Size:</td>
+                                    <td>
+                                        <select class="custom-selection"(change)="sizeVariation($event)" [(ngModel)]="variation_id">
+                                            <option selected disabled>Choose Options</option>
+                                            <option value="{{size?.sku_variation_id}}"
+                                                *ngFor="let size of selectedProduct?.mattress_size">{{size?.attribute_value}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="selectedProduct?.color?.length">
+                                    <td>Color:</td>
+                                    <td>
+                                        <select class="custom-selection" (change)="sizeVariation($event)" [(ngModel)]="variation_id">
+                                            <option selected disabled>Choose Options</option>
+                                            <option value="{{color?.sku_variation_id}}"
+                                                *ngFor="let color of selectedProduct?.color">{{color?.attribute_value}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Total Available Quantity:</td>
+                                    <td>{{ totalQtyOfSku }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Supplier Name:</td>
+                                    <td>{{ selectedProduct?.supplier_name }}</td>
+                                </tr>
+                            </table>
+                            <!-- <table>
+                                <tr *ngFor="let warehouse of selectedProduct?.warehouseLocations">
+                                    <td *ngFor="let warehouse of selectedProduct?.warehouseLocations"></td>
+                                </tr>
+                            </table> -->
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="tab-content tab-space">
+                            <div class="tab-pane active" id="dashboard-1">
+                                <div id="accordion1" class="faq_question">
+                                    <div class="card mt-2 custom-request-card">
+                                        <div class="card-header accordion-custom-header" id="headingOne" *ngIf="selectedProduct?.description !==null">
+                                            <a class="mb-0" data-toggle="collapse" href="#collapseOne"
+                                                aria-expanded="false" aria-controls="collapseOne"> <span class="request">Description</span>
+                                            </a>
+                                        </div>
+                                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                                            data-parent="#accordion1">
+                                            <div class="card-body text-justify">
+                                                <p>
+                                                    {{selectedProduct?.description}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-2  custom-request-card" *ngIf="selectedProduct?.features !==''">
+                                        <div class="card-header accordion-custom-header" id="headingTwo">
+                                            <a class="mb-0" data-toggle="collapse" href="#collapseTwo"
+                                                aria-expanded="false" aria-controls="collapseTwo"> <span class="request"> Features</span>
+                                            </a>
+                                        </div>
+                                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                                            data-parent="#accordion1">
+                                            <div class="card-body text-justify">
+                                                <p class="feature_list" [innerHtml]="selectedProduct?.features"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-2 custom-request-card" *ngIf="selectedProduct?.dimension !==null">
+                                        <div class="card-header accordion-custom-header" id="headingThree">
+                                            <a class="mb-0" data-toggle="collapse" href="#collapseThree"
+                                                aria-expanded="false" aria-controls="collapseThree"> <span class="request">Dimensions</span>
+                                            </a>
+                                        </div>
+                                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                                            data-parent="#accordion1">
+                                            <div class="card-body text-justify">
+                                                <p>{{selectedProduct?.dimension}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-2  custom-request-card" *ngIf="selectedProduct?.attributes !==null">
+                                        <div class="card-header accordion-custom-header" id="headingFour">
+                                            <a class="mb-0" data-toggle="collapse" href="#collapseFour"
+                                                aria-expanded="false" aria-controls="collapseFour"> <span class="request">Attributes</span>
+                                            </a>
+                                        </div>
+                                        <div id="collapseFour" class="collapse" aria-labelledby="headingFour"
+                                            data-parent="#accordion1">
+                                            <div class="card-body text-justify">
+                                                <p>{{selectedProduct?.attributes}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-2 custom-request-card">
+                                        <div class="card-header accordion-custom-header" id="headingFive">
+                                            <a class="mb-0" data-toggle="collapse" href="#collapseFive" aria-expanded="false"
+                                                aria-controls="collapseFour"> <span class="request"> Warehouse</span> </a>
+                                        </div>
+                                        <div id="collapseFive" class="collapse" aria-labelledby="headingFive"
+                                            data-parent="#accordion1">
+                                            <div class="card-body text-justify">
+                                                <table class="WarehouseTable" border="1">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><span>Warehouse</span></th>
+                                                            <th style="white-space: nowrap;">Inventory</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody
+                                                        *ngFor="let prod of selectedProduct?.warehouseLocations;let i = index">
+                                                        <tr *ngIf="prod.is_inhabitr_warehouse==='Y'">
+                                                            <td style="white-space: nowrap;"><span>
+                                                                    <span
+                                                                        *ngIf="prod.is_inhabitr_warehouse==='Y'">{{prod.warehouse_name
+                                                                        | titlecase}}</span>
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <div><span><u style="cursor: pointer;">{{prod.non_assigned_inv ?
+                                                                            prod.non_assigned_inv : 0}}</u></span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngIf="prod.is_inhabitr_warehouse==='N'">
+                                                            <td><span style="white-space: nowrap;">
+                                                                    <span
+                                                                        *ngIf="prod.is_inhabitr_warehouse==='N'">{{prod.warehouse_name
+                                                                        | titlecase}}</span>
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <span>{{prod.supplier_quantity ? prod.supplier_quantity :
+                                                                    0}}</span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tr>
+                                                        <td> <b>Total</b> </td>
+                                                        <td> {{ totalQtyOfSku }} </td>
+                                                    </tr>
+                                                </table>
+                                                <table>
+                                                    <tr style="text-align: left;padding-top: 4px;display: block;">
+                                                        <td>Source Type :</td>
+                                                        <td> {{selectedProduct?.source }}</td>
+                                                    </tr>
+                                                    <tr style="text-align: left;padding-top: 4px;display: block;">
+                                                        <td>Supplier SKU :</td>
+                                                        <td> {{selectedProduct?.supplier_sku | uppercase }}</td>
+                                                    </tr>
+                                                    <tr style="text-align: left;padding-top: 4px;display: block;" *ngIf="selectedProduct?.is_ops_db">
+                                                        <td>Inhabitr SKU : </td>
+                                                        <td> {{selectedProduct?.inhabitr_sku | uppercase }}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- product details popup -->
+
+<!-- variation popup -->
+<div *ngIf="variationInData?.dialogType==='variationpopup'">
+    <div class="modal-header">
+        <h4 class="modal-title product-content  w-100 color"></h4>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body text-center">
+        <div class="variation-msg">
+            <p>{{variationInData?.res?.message}}</p>
+        </div>
+        <div class="force-button">
+            <button type="submit" class="btn" (click)="forceAddMb(variationInData?.variation)">Yes</button>
+            <button type="submit" class="btn" (click)="activeModal.close('Close click')">No</button>
+        </div>
+    </div>
+</div>  
+
+
+
+<!-- variation popup -->
+
+
+
+<!-- share mb data -->
+<div *ngIf="shareMbInData?.dialogType==='share-mb-popup'">
+    <div class="modal-header">
+        <h4 class="modal-title product-content  w-100 color"></h4>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body text-center share-view">
+        <div>
+            <h4 class="shared-text">
+                To share the Moodboard, please enter an email address : </h4>
+                <input _ngcontent-cox-c106=""  [(ngModel)]="emailAdd" type="email" 
+                 placeholder="Enter email" class="form-control">
+                 
+               
+        </div>
+        <div>
+            <button type="submit" class="btn" (click)="shareMb()">Submit</button>
+        </div>
+    </div>
+</div>    
+
+<!-- share mb data -->
+
+
+  <!-- variation popup -->
+  <div *ngIf="prodDeleteInData?.dialogType==='delete-popup'" class="popup_view">
+    <div class="modal-header">
+        <h4 class="modal-title product-content  w-100 color">
+           
+        </h4>
+        <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>
+    <div class="modal-body text-center">
+        <div class="variation-msg">
+            <p>Are you sure you want delete ?</p>
+        </div>
+        <div class="force-button">
+            <button type="submit" class="btn" (click)="deleteProduct(prodDeleteInData?.res)">Yes</button>
+            <button type="submit" class="btn" (click)="activeModal.close('Close click')">No</button>
+        </div>
+    </div>
+  </div>  
+  
+  <!-- variation popup -->
+
+
+ 
+
+
+
+ 
+
+
+    <!-- segement popup -->
+    <div *ngIf="segementInData?.dialogType==='segement-popup'">
+        <div class="modal-header">
+            <h4 class="modal-title product-content  w-100 color">
+               {{segementInData?.title}}
+            </h4>
+            <span class="close pointer" aria-label="Close" (click)="activeModal.close('Close click')">
+                <span aria-hidden="true">&times;</span>
+            </span>
+        </div>
+        <div class="modal-body text-center">
+            <div class="variation-msg">
+               <img src="{{segementInData?.segmented_image_url}}"/>
+            </div>
+
+        </div>
+      </div>  
+      
+      <!-- segement popup -->
+
+
+
+
+
+      

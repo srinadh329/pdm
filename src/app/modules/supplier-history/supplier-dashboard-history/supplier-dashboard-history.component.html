@@ -1,0 +1,57 @@
+
+<div class="container bg-white mt-4" id="summary">
+    <div class="container-fluid-table bg-white table-center p-1 mt-3">
+      <div class="col-xl-12" style="padding: 30px;">
+        <div class="row align-items-center">
+          <div class="col-lg-5">
+            <div class="dropdownDesign">
+              <ng-multiselect-dropdown class="dropdownDesign1" [placeholder]="'Select Supplier'" [settings]="dropdownSettings"
+                [data]="supplierList" (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)"
+                (onDeSelect)="onItemDeSelect($event)" (onDeSelectAll)="onUnSelectAll()">
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+          <div class="col-lg-7 text-right">
+            <!-- <p class="m-0 cursor-pointer" style="color: #007bff;" (click)="inventoryDialog()">Inventory Log </p> -->
+        </div>
+        </div>
+        
+  
+      <div id="table-component" class="mt-3">
+        <table class="table table-bordered edit-table bg-white" id="mainTable">
+          <thead>
+            <tr>
+              <th scope="col" class="text-center">Supplier Name</th>
+              <th scope="col" class="text-center">Feed Type </th>
+              <th scope="col" class="text-center">Date &nbsp;&nbsp;&nbsp;
+              <i role="button" (click)="assing('asc')" class="fa fa-arrow-down" aria-hidden="true">&nbsp;&nbsp;</i>
+              <i role="button" (click)="desing('desc')" class="fa fa-arrow-up" aria-hidden="true"></i></th>
+              <th scope="col" class="text-center">Time</th>
+              <th scope="col" class="text-center">Status </th>
+              <th scope="col" class="text-center">Total Products </th>
+              <th scope="col" class="text-center">Total Updated Products</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr  *ngFor="
+            let list of supplierTData | paginate: { itemsPerPage: 12, currentPage: p }">
+              <td class="text-center">{{list.supplier_name}}</td>
+              <td class="text-center">{{list.feed_type}}</td>
+              <td class="text-center">{{list.last_updated_date | date:'MMM d y'}} </td>
+              <td class="text-center">{{list.last_updated_time}} EST</td>
+              <td class="text-center">{{list.status}}</td>
+              <td class="text-center">{{list.total_products}}</td>
+              <td class="text-center">{{list.total_updated_record}}</td>
+            </tr>
+            <tr>
+              <td *ngIf="!supplierTData?.length" colspan="12" class="text-center">No Data Found</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>

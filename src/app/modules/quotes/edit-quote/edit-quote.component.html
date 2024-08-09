@@ -1,0 +1,838 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<!-- Quote heading -->
+<section class="mb-header-section" *ngIf="quoteInfo.is_show">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-4 mb-heading">
+        <div class="mb-heading">
+          <h1 *ngIf="quoteInfo?.quote?.is_order !=='YES'">QUOTE</h1>
+          <h1 *ngIf="quoteInfo?.quote?.is_order =='YES'">ORDER</h1>
+          <img src="assets/img/quote1.svg" alt="iconAltTxt">
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <ul *ngIf="quoteInfo?.quote?.is_order =='YES'" class="order_details">
+          <li>Order Number: <span>{{quoteInfo?.quote?.order_reference}}</span></li>
+          <li>Order Sumbmitted Date: <span>{{quoteInfo?.quote?.order_date | date:'dd-MMM-yyyy'}}</span></li>
+        </ul>
+        <table class="mb-list">
+          <tr>
+            <td><span>Quote# </span> <span>{{quoteInfo?.quote?.sgid}}</span></td>
+            <td><span>Customer Name:</span><span>{{quoteInfo?.quote?.name}}</span></td>
+            <td><span>Email:</span> <span>{{quoteInfo?.quote?.email}}</span></td>
+            <td><span>Company Name:</span><span>{{quoteInfo?.quote?.company_name}}</span></td>
+          </tr>
+          <tr>
+            <td><span>Business Segment:</span><span>{{quoteInfo?.quote?.business_segment_type}}</span></td>
+            <td><span>Project Name:</span><span>{{quoteInfo?.quote?.project_name}}</span></td>
+            <td><span>Project ID:</span><span>{{quoteInfo?.quote?.ops_project_id}}</span></td>
+            <td><span>Contact No:</span><span>{{quoteInfo?.quote?.contactno}}</span></td>
+
+          </tr>
+          <tr>
+            <td><span>Order Type:</span><span>{{quoteInfo?.quote?.quote_order_type}}</span></td>
+            <td><span>Delivery Timeline:</span><span>{{quoteInfo?.quote?.preferred_delivery_start_date |
+                date:'dd-MM-yyyy'}} <span *ngIf="quoteInfo?.quote?.preferred_delivery_end_date">-</span>
+                {{quoteInfo?.quote?.preferred_delivery_end_date | date:'dd-MM-yyyy'}}</span></td>
+          </tr>
+        </table>
+        <div class="shipping_view">
+          <h6>Shipping Address</h6>
+          <ul>
+              <li><span>Address:</span><span>{{quoteInfo?.quote?.address}}</span></li>
+              <li><span>State:</span> <span>{{quoteInfo?.quote?.is_state_name}}</span></li>
+              <li><span>City:</span><span>{{quoteInfo?.quote?.city_name}}</span></li>
+              <li><span>Zip code:</span><span>{{quoteInfo?.quote?.is_zip_code}}</span></li>
+          </ul>
+          <!-- <table class="shipping-list">
+
+            <tr>
+              <td><span>Address:</span><span>{{quoteInfo?.quote?.address}}</span></td>
+              <td><span>State:</span> <span>{{quoteInfo?.quote?.is_state_name}}</span></td>
+              <td><span>City:</span><span>{{quoteInfo?.quote?.city_name}}</span></td>
+              <td><span>Zip code:</span><span>{{quoteInfo?.quote?.is_zip_code}}</span></td>
+            </tr>
+          </table> -->
+        </div>
+        <div class="shipping_view">
+          <h6>Billing Address</h6>
+          <ul>
+            <li><span>Address:</span><span>{{quoteInfo?.quote?.billing_address}}</span></li>
+            <li><span>State:</span> <span>{{quoteInfo?.quote?.is_billing_state_name}}</span></li>
+            <li><span>City:</span><span>{{quoteInfo?.quote?.billing_city}}</span></li>
+            <li><span>Zip code:</span><span>{{quoteInfo?.quote?.is_billing_zip_code}}</span></li>
+        </ul>
+          <!-- <table class="shipping-list">
+
+            <tr>
+              <td><span>Address:</span><span>{{quoteInfo?.quote?.billing_address}}</span></td>
+              <td><span>State:</span> <span>{{quoteInfo?.quote?.is_billing_state_name}}</span></td>
+              <td><span>City:</span><span>{{quoteInfo?.quote?.billing_city}}</span></td>
+              <td><span>Zip code:</span><span>{{quoteInfo?.quote?.is_billing_zip_code}}</span></td>
+            </tr>
+          </table> -->
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+          <ul class="social-links">
+            <li>
+              <a title="Quote Edit"><i class="fa fa-pencil-square-o"
+                  [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}" (click)="edit('edit')"></i></a>
+              <small>Edit Quote</small>
+            </li>
+            <li>
+              <a title="Quote Copy"><i class="fa fa-files-o" (click)="edit('copy')"></i></a>
+            </li>
+            <li>
+              <a title="Project Edit"><i class="fa fa-pencil-square-o"
+                  [ngClass]="{'event-none': quoteInfo?.quote?.is_order =='YES'}" (click)="edit('projectedit')"></i></a>
+              <small>Edit Project</small>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Quote heading -->
+
+
+
+<!-- quote details -->
+<section *ngIf="quoteInfo.is_show">
+  <div class="container-fluid">
+    <div class="row mt-4">
+      <div class="col-md-11 m-auto">Floor Plans and Units</div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-11 m-auto">
+        <!-- tabs -->
+        <div class="tab_view">
+          <ul class="nav nav-tabs custom-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link" [ngClass]="{'active':tabInfo=='floor'}" (click)="tabView('floor')">Floor Plans</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [ngClass]="{'active':tabInfo=='units'}" (click)="tabView('units')">Units</a>
+            </li>
+          </ul><!-- Tab panes -->
+          <div class="tab-content custom-content">
+            <div class="tab-pane" [ngClass]="{'active':tabInfo=='floor'}" *ngIf="tabInfo=='floor'">
+              <div class="floorplan-view">
+                <div class="card" *ngFor="let floor of floorInfo?.floorPlan">
+                  <div class="card-header" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}">
+                    <a *ngIf="floorInfo?.is_show" class="cursor-pointer add-icon" (click)="addFloor(floor)"><i
+                        class="fa fa-plus"></i> </a>
+                    <span class="pl-2 pr-2">{{floor?.floorname}}</span>
+                    <a *ngIf="floorInfo?.is_show" class="cursor-pointer add-icon" (click)="editFloor(floor)"><i
+                        class="fa fa-pencil"></i></a>
+                    <a *ngIf="floorInfo?.is_show=='cancel'" class="cursor-pointer cancel-view"
+                      (click)="removeFloor(floor)"><i class="fa fa-times" aria-hidden="true"></i></a>
+                  </div>
+                  <div class="card-body cursor-pointer">
+                    <ul (click)="floorDetails(floor)">
+                      <li><u>{{floor?.total_unit}} Units</u></li>
+                      <li>{{floor?.floorplan_type_name}}</li>
+                      <li>{{floor?.floorplan_mb_cnt}} Moodboards</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-md-12 no-floor-plans" *ngIf="!floorInfo?.floorPlan?.length">No Floor Plans found. Please
+                  add Floor Plan.</div>
+              </div>
+              <div class="text-right">
+                <button class="btn mr-3" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                  *ngIf="floorInfo?.is_show=='remove'" (click)="addFloorDialog()">Add Floor Plan</button>
+                <button class="btn mr-3" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                  *ngIf="floorInfo?.is_show=='remove'" (click)="removeFloorButton('cancel')">Remove Floor
+                  Plan</button>
+                <button class="btn mr-3" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                  *ngIf="floorInfo?.is_show=='cancel'" (click)="removeFloorButton('remove')">Cancel</button>
+              </div>
+            </div>
+            <div class="tab-pane" [ngClass]="{'active':tabInfo=='units'}" *ngIf="tabInfo=='units'">
+              <ul class="unit-list">
+                <li *ngFor="let unit of unitsInfo?.units"
+                  [ngClass]="{'un-assigned': !unit.floorplan_id ? true : false}">
+                  <a (click)="unitDetails(unit)">{{unit?.name}}</a>
+                  <span (click)="removeUnits(unit)" *ngIf="unitsInfo?.is_show=='cancel'"
+                    class="cursor-pointer cancel cancel-view"><i class="fa fa-times" aria-hidden="true"></i></span>
+                </li>
+              </ul>
+              <div class="col-md-12 no-floor-plans" *ngIf="!unitsInfo?.units.length">No Unit found. Please add Unit.
+              </div>
+              <div class="unassigned-flex">
+                <div>
+                  <span class="px-2 mb-2 ml-2 border unit-view un-assigned"></span>&nbsp;<span class="font-13"> -
+                    Unassigned</span>
+                </div>
+                <div>
+                  <button class="btn mr-3" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                    *ngIf="unitsInfo?.is_show=='remove'" (click)="addUnitDialog()">Add Unit(s)</button>
+                  <button class="btn mr-3" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                    *ngIf="unitsInfo?.is_show=='remove'" (click)="removeUnitButton('cancel')">Remove Unit(s)</button>
+                  <button class="btn mr-3" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                    *ngIf="unitsInfo?.is_show=='cancel'" (click)="removeUnitButton('remove')">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- tabs -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- quote details -->
+
+<!-- rent slider -->
+<section *ngIf="quoteInfo?.quote_items?.length && quoteInfo?.is_show" class="range_section">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-11 m-auto">
+        <div *ngIf="button_type=='0'">
+          <div class="range-slider">
+            <label class="rentDuration">
+              <b>Rent Duration:</b></label>
+            <input type="range" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+              class="range_slider_input" value="12" min="1" max="36" (change)="updateRent($event)" />
+            <span class="range_month">{{ monthNums}} &nbsp;Months</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- rent slider -->
+
+
+
+
+<!-- quote product details -->
+<section *ngIf="quoteInfo?.is_show && quoteInfo?.quote_items?.length">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-11 m-auto">
+        <table class="table floor-unit-table">
+          <thead>
+            <tr>
+              <th scope="col" style="vertical-align: middle"></th>
+              <th scope="col" style="vertical-align: middle">SKU</th>
+              <th scope="col" style="vertical-align: middle">Image</th>
+              <th scope="col" style="vertical-align: middle">Product Name</th>
+              <th scope="col" style="vertical-align: middle">Type</th>
+              <th scope="col" style="vertical-align: middle">
+                Supplier Name
+              </th>
+              <th scope="col" style="vertical-align: middle">
+                Warehouse Location
+              </th>
+              <th scope="col" style="vertical-align: middle">
+                Inventory Level
+              </th>
+              <th scope="col" style="vertical-align: middle">
+                Moodboard Item Qty
+              </th>
+              <th scope="col" style="vertical-align: middle">Asset Value</th>
+              <th scope="col" style="vertical-align: middle">
+                $&nbsp;Sale Price&nbsp;/ Month
+              </th>
+              <th scope="col" style="vertical-align: middle">
+                $&nbsp;Buy Price
+              </th>
+              <th scope="col" style="vertical-align: middle">
+                $&nbsp;Discount&nbsp;/ Month
+              </th>
+              <th scope="col" style="vertical-align: middle">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let quote of quoteInfo?.quote_items;let i=index">
+              <td>{{i+1}}</td>
+              <td>{{quote?.sku}}</td>
+              <td>
+                <img src="{{quote?.b64img ? quote?.b64img :  quote?.product_images?.large  }}" />
+              </td>
+              <td>{{quote?.name}}</td>
+              <td>
+                <span *ngIf="button_type=='0'" class="text-warning">Rent</span>
+                <span *ngIf="button_type=='1'" class="text-primary">Buy</span>
+              </td>
+              <td>{{quote?.supplier_name}}</td>
+              <td>{{quote?.warehouse_name ? quote?.warehouse_name :'-'}}</td>
+              <td>{{quote?.inventory_level}}</td>
+              <td>{{quote?.is_qty}}</td>
+              <td>${{quote?.asset_value | number : '1.2-2'}}</td>
+              <td>
+                <span *ngIf="button_type=='0'" class="flex_view"> $
+                  <input class="table-input" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}" type="text"
+                    value="{{quote?.price}}" (keyup)="itemCalulation($event,quote,'price')" /> </span>
+                <span *ngIf="button_type=='1'" class="text-danger">NA</span>
+                <span *ngIf="button_type=='0'" class="d-none">{{quote?.price}}</span>
+              </td>
+              <td>
+                <span *ngIf="button_type=='1'" class="flex_view">$
+                  <input type="text" class="table-input" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                    (keyup)="itemCalulation($event,quote,'buy_price')" value="{{quote?.buy_price}}" />
+                </span>
+                <span *ngIf="button_type=='0'" class="text-danger">NA</span>
+                <span *ngIf="button_type=='1'" class="d-none">{{quote?.buy_price}}</span>
+              </td>
+              <td>
+                <span class="flex_view">$ <input type="text"
+                    [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}" class="table-input"
+                    (keyup)="itemCalulation($event,quote,'buy_discount')" value="{{quote?.discount}}"
+                    (keyup)="itemCalulation($event,quote,'discount')" />
+                </span>
+                <span class="d-none">{{quote?.discount ? quote?.discount : '0'}}</span>
+              </td>
+              <td>${{quote?.is_total | number : '1.2-2'}}</td>
+            </tr>
+            <tr>
+              <td colspan="9" class="asset_lable">Total Asset Amount </td>
+              <td colspan="5" class="asset_value">${{quoteInfo?.quote?.asset_value | number : '1.2-2'}}</td>
+            </tr>
+            <tr *ngIf="button_type=='0'">
+              <td colspan="13" class="text-right border-0">
+                <span class="non_tax_view">
+                  <input type="checkbox" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                    [checked]="quoteInfo?.quote?.is_tax_exempt==1 ? true :false" (change)="taxExempt($event)" />Tax
+                  Exempt
+                </span>
+                Monthly Rent Total
+              </td>
+              <td>${{quoteInfo?.quote?.rent_sub_total | number : '1.2-2'}}</td>
+            </tr>
+            <tr *ngIf="button_type=='0'">
+              <td colspan="13" class="text-right border-0">
+                <a class="fa fa-pencil pointer edit-icon" (click)="amountAdjustPopup('rent_adjument_amount','')"></a>
+                Monthly Rent Adjustment Amount
+              </td>
+              <td>
+                {{quoteInfo?.rent_adjument_value < 0 ? '-' :''}}
+                  ${{((quoteInfo?.rent_adjument_value+'').replace('-','')| number : '1.2-2' )}} </td>
+            </tr>
+            <tr *ngIf="button_type=='0'">
+              <td colspan="13" class="text-right border-0 weight">Final Monthly Rent After Adjustment</td>
+              <td>
+                ${{quoteInfo?.quote?.rent_after_adjustment_value | number : '1.2-2'}}
+              </td>
+            </tr>
+            <tr *ngIf="button_type=='1'">
+              <td colspan="13" class="text-right border-0">
+                <span class="non_tax_view">
+                  <input type="checkbox" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                    [checked]="quoteInfo?.quote?.is_tax_exempt==1 ? true :false" (change)="taxExempt($event)" />Tax
+                  Exempt
+                </span>
+                Buy Total
+              </td>
+              <td>${{quoteInfo?.quote?.buy_sub_total | number : '1.2-2'}}</td>
+            </tr>
+            <tr *ngIf="button_type=='1'">
+              <td colspan="13" class="text-right border-0">
+                <a class="fa fa-pencil pointer edit-icon" (click)="amountAdjustPopup('buy_discount_amount','')"></a>
+                Buy Discount Amount
+              </td>
+              <td>
+                <span> ${{quoteInfo?.quote?.buy_discount}}</span>
+              </td>
+            </tr>
+            <tr *ngIf="button_type=='1'">
+              <td colspan="13" class="text-right border-0">Final Buy Amount After discount</td>
+              <td>
+                ${{quoteInfo?.quote?.buy_net_total | number : '1.2-2'}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="13" class="text-right border-0">
+                <span class="non_tax_view">
+                  <input type="checkbox" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                    [checked]="quoteInfo?.quote?.is_delivery_fee_taxable==0 ? true :false"
+                    (change)="nonTaxable('delivery',$event)" />Non - Taxable
+                </span>
+                <a class="fa fa-pencil pointer edit-icon" (click)="editPopUp('delivery-fee','Update Delivery Fee')"></a>
+                <span class="non_tax_text">Delivery Fee</span>
+              </td>
+              <td>
+                <span>${{quoteInfo?.quote?.delivery_fee}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="13" class="text-right  border-0">
+                <span class="non_tax_view">
+                  <input type="checkbox" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                    [checked]="quoteInfo?.quote?.is_freight_charges_taxable==0 ? true :false"
+                    (change)="nonTaxable('freight_charges',$event)" />Non - Taxable
+                </span>
+                <a class="fa fa-pencil pointer edit-icon" (click)="taxPopup('freight_charges')"></a>
+                <span class="non_tax_text">Freight Charges</span>
+              </td>
+              <td>
+                ${{quoteInfo.quote?.freight_charges ? quoteInfo.quote?.freight_charges : 0}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="13" class="text-right border-0">
+                <span class="non_tax_view"> <input type="checkbox"
+                    [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                    [checked]="quoteInfo?.quote?.is_other_services_taxable==0 ? true :false"
+                    (change)="nonTaxable('other_service',$event)" />Non - Taxable</span>
+                <a class="fa fa-pencil pointer edit-icon" (click)="servicePopup()"></a>
+                <span class="non_tax_text">Other Services</span>
+              </td>
+              <td>
+                ${{quoteInfo.quote?.other_services ? quoteInfo.quote?.other_services : 0}}
+              </td>
+            <tr>
+              <td colspan="13" class="text-right border-0">Taxes ({{quoteInfo?.quote?.tax_percentage}} %) on
+                Delivery/Freight/Other Services</td>
+              <td>${{quoteInfo?.quote?.tax_on_delivery_freight_other ?
+                quoteInfo?.quote?.tax_on_delivery_freight_other:0}}</td>
+            </tr>
+            <tr *ngIf="button_type=='0'">
+              <td colspan="13" class="text-right border-0">
+                Taxes ({{quoteInfo?.quote?.tax_percentage}} %) on Final Monthly Rent After Adjustment</td>
+              <td>
+                ${{quoteInfo?.quote?.tax_on_rent_after_adjustment ? quoteInfo?.quote?.tax_on_rent_after_adjustment :0}}
+              </td>
+            </tr>
+            <tr *ngIf="button_type=='1'">
+              <td colspan="13" class="text-right border-0">
+                Taxes ({{quoteInfo?.quote?.tax_percentage}} %) on Final Buy Amount After discount </td>
+              <td>
+                ${{quoteInfo?.quote?.tax_on_buy_after_adjustment | number : '1.2-2'}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="13" class="text-right border-0">
+                <span *ngIf="button_type==0" class="justify-content-end weight">
+                  <a class="fa fa-pencil pointer edit-icon mr-1" (click)="advancePopUP('item','rent')"></a>
+                  Total Rent Order Amount After Taxes
+                </span>
+                <span *ngIf="button_type==1" class="justify-content-end weight">
+                  <a class="fa fa-pencil pointer edit-icon mr-1" (click)="advancePopUP('item','buy')"></a>
+                  Total Buy Order Amount After Taxes
+                </span>
+                <p class="m-0"> Total Installment Amount</p>
+                <p class="m-0"> Total Amount Due</p>
+              </td>
+              <td style="vertical-align: top;">
+                <span *ngIf="button_type==0" class="weight">${{quoteInfo?.quote?.total_rent_order_amount_after_taxes |
+                  number : '1.2-2'}}</span>
+                <span *ngIf="button_type==1" class="weight">${{quoteInfo?.quote?.total_buy_order_amount_after_taxes |
+                  number : '1.2-2'}}</span>
+                <p class="m-0">${{quoteInfo?.quote?.total_installment_amount | number : '1.2-2'}}</p>
+                <p class="m-0">
+                  <span *ngIf="button_type==0">${{quoteInfo?.quote?.rent_total_amount_due | number : '1.2-2'}}</span>
+                  <span *ngIf="button_type==1">${{quoteInfo?.quote?.buy_total_amount_due | number : '1.2-2'}}</span>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="13" class="text-right border-0">
+                <span class="latest-table-tooltip weight">
+                  <i class="fa fa-info-circle mr-1" aria-hidden="true"></i>
+                  <span class="latest-table-tooltiptext">
+                    <span>Delivery Fee + Freight Charges + Other Services</span>
+                  </span>
+                </span>
+                <span class="weight"><a class="fa fa-pencil pointer edit-icon mr-1"
+                    (click)="advancePopUP('service','rent')"></a> Total Services Order Amount</span>
+                <p class="m-0">Total Installment Amount</p>
+                <p class="m-0">Total Amount Due</p>
+              </td>
+              <td style="vertical-align: top;">
+                <span class="weight">${{quoteInfo?.quote?.total_services_order_amount | number : '1.2-2'}}</span>
+                <p class="m-0">${{quoteInfo?.quote?.total_service_installment_amount | number : '1.2-2'}}</p>
+                <p class="m-0">${{quoteInfo?.quote?.service_total_amount_due | number : '1.2-2'}}</p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="13" class="text-right border-0 weight text-primary">
+                <span class="latest-table-tooltip">
+                  <i class="fa fa-info-circle" aria-hidden="true"></i>
+                  <span class="latest-table-tooltiptext tooltiptext2">
+                    <span>Buy/Rent/Services</span>
+                  </span>
+                </span>
+                Total Order Amount
+              </td>
+              <td class="weight">
+                <span *ngIf="button_type==0">${{quoteInfo?.quote?.total_order_amount_rent_and_services | number :
+                  '1.2-2'}}</span>
+                <span *ngIf="button_type==1">${{quoteInfo?.quote?.total_order_amount_buy_and_services | number :
+                  '1.2-2'}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="13" class="text-right border-0 weight">
+                <a class="fa fa-pencil pointer edit-icon" (click)="editPopUp('pickup-fee','Update Pickup Fee')"></a>
+                Pickup Fee(Charged at the end of the lease)
+              </td>
+              <td>
+                <span>${{quoteInfo?.quote.pickup_fee}}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row mt-4 mb-5">
+      <div class="col-md-11 m-auto">
+        <div class="row">
+          <div class="col-md-1">
+            <input type="checkbox" class="checkbox" [(ngModel)]="quotePublic" (change)="changeStatus()"
+              id="checkbox-2" />
+            <label for="checkbox-2" class="checkbox-click-target"
+              [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}">
+              <span class="checkbox-box"></span><span class="position-relative" style="top: 3px">Public</span>
+            </label>
+          </div>
+          <div class="col-md-3">
+            <input type="checkbox" class="checkbox" [disabled]="quotePublicToBus" [(ngModel)]="quotePublicToBus"
+              (change)="publicToBus()" id="checkbox-3" />
+            <label for="checkbox-3" class="checkbox-click-target"
+              [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}">
+              <span class="checkbox-box"></span><span class="position-relative" style="top: 3px">Publish to Business
+                Inhabitr</span>
+            </label>
+          </div>
+          <div class="col-md-5">
+            <div style="display: flex;justify-content: center;">
+              <button type="button" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}"
+                class="border btn btn-light rounded-5 mt-2 px-3 add-btn align-item-center" (click)="order('save')">
+                <span *ngIf="quoteInfo?.quote?.is_order !=='YES'">Save Quote</span>
+                <span *ngIf="quoteInfo?.quote?.is_order =='YES'">Save Order</span>
+              </button>
+              <button type="button" class="border btn btn-light rounded-5 mt-2 px-3 add-btn align-item-cente ml-2"
+                (click)="order('create')" [ngClass]="{'event-none': quoteInfo?.quote?.is_disable==true}">
+                <span *ngIf="quoteInfo?.quote?.is_order !=='YES'">Create Order</span>
+                <span *ngIf="quoteInfo?.quote?.is_order =='YES'">Update Order</span>
+              </button>
+              <button type="button" class="border btn btn-light rounded-5 mt-2 px-3 add-btn align-item-cente ml-2"
+                (click)="generatePDF()">
+                Generate PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- quote product details -->
+
+
+<!-- Floor Plan Summary -->
+<section class="mt-5 mb-5" *ngIf="floorSummaryInfo?.is_show">
+  <app-floor-plan-details [floorDetails]="floorSummaryInfo?.floorData" [order_status]="quoteInfo?.quote?.is_disable"
+    [tax_details]="quoteInfo?.quote?.tax_percentage" (quote_view)="backToQuote($event)"></app-floor-plan-details>
+
+</section>
+
+<!-- Floor Plan Summary -->
+
+
+<!-- unit summary -->
+
+<section class="mt-5 mb-5" *ngIf="unitSummaryInfo?.is_show">
+  <app-unit-details [unitDetails]="unitSummaryInfo?.unitData" [order_status]="quoteInfo?.quote?.is_disable"
+    (quote_view)="backToQuote($event)"></app-unit-details>
+
+</section>
+
+<!-- unit summary -->
+
+
+
+<!-- Generate pdf details -->
+
+<table id="userInfoTable" style="display: none">
+  <tbody>
+    <tr>
+      <td align="right">Customer Name</td>
+      <td>{{ quoteInfo?.quote?.name }}</td>
+    </tr>
+
+    <tr>
+      <td align="right">Email</td>
+      <td>{{ quoteInfo?.quote?.email }}</td>
+    </tr>
+
+    <tr>
+      <td align="right">Contact No.</td>
+      <td>{{ quoteInfo?.quote?.contactno }}</td>
+    </tr>
+    <tr>
+      <td align="right">Address</td>
+      <td>{{ quoteInfo?.quote?.address }}</td>
+    </tr>
+    <tr>
+      <td align="right">State</td>
+      <td>{{ quoteInfo?.quote?.is_state_name }}</td>
+    </tr>
+    <tr>
+      <td align="right">City</td>
+      <td>{{ quoteInfo?.quote?.city_name }}</td>
+    </tr>
+    <tr>
+      <td align="right">Zip Code</td>
+      <td>{{ quoteInfo?.quote?.is_zip_code }}</td>
+    </tr>
+    <tr>
+      <td align="right">Company Name</td>
+      <td>{{ quoteInfo?.quote?.company_name }}</td>
+    </tr>
+    <tr>
+      <td align="right">Project Name</td>
+      <td>{{ quoteInfo?.quote?.project_name }}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="table table-bordered edit-table bg-white d-none" id="printImage">
+  <tbody>
+    <ng-container
+      *ngFor="let group of quoteInfo?.quote_items | slice:0:(quoteInfo?.quote_items.length + 3) / 4; let i = index">
+      <tr>
+        <ng-container *ngFor="let rowData of quoteInfo?.quote_items | slice:(i * 4):(i + 1) * 4">
+          <td>
+            <img src="{{ rowData?.b64img ? rowData.b64img:  rowData?.product_images?.large }}" class="table_img" />
+            <div>{{ rowData?.name | uppercase }}</div>
+          </td>
+        </ng-container>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
+
+
+<table class="table floor-unit-table d-none" id="mainTable">
+  <thead>
+    <tr>
+      <th scope="col" style="vertical-align: middle"></th>
+      <th scope="col" style="vertical-align: middle">SKU</th>
+      <th scope="col" style="vertical-align: middle">Image</th>
+      <th scope="col" style="vertical-align: middle">Product Name</th>
+      <th scope="col" style="vertical-align: middle">Type</th>
+      <th scope="col" style="vertical-align: middle">
+        Supplier Name
+      </th>
+      <th scope="col" style="vertical-align: middle">
+        Warehouse Location
+      </th>
+      <th scope="col" style="vertical-align: middle">
+        Inventory Level
+      </th>
+      <th scope="col" style="vertical-align: middle">
+        Moodboard Item Qty
+      </th>
+      <th scope="col" style="vertical-align: middle">Asset Value</th>
+      <th scope="col" style="vertical-align: middle">
+        $&nbsp;Sale Price&nbsp;/ Month
+      </th>
+      <th scope="col" style="vertical-align: middle">
+        $&nbsp;Buy Price
+      </th>
+      <th scope="col" style="vertical-align: middle">
+        $&nbsp;Discount&nbsp;/ Month
+      </th>
+      <th scope="col" style="vertical-align: middle">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let quote of quoteInfo?.quote_items;let i=index">
+      <td>{{i+1}}</td>
+      <td>{{quote?.sku}}</td>
+      <td>
+        <img src="{{quote?.b64img ? quote?.b64img :  quote?.product_images?.large  }}" />
+      </td>
+      <td>{{quote?.name}}</td>
+      <td>
+        <span *ngIf="button_type=='0'" class="text-warning">Rent</span>
+        <span *ngIf="button_type=='1'" class="text-primary">Buy</span>
+      </td>
+      <td>{{quote?.supplier_name}}</td>
+      <td>{{quote?.warehouse_name ? quote?.warehouse_name :'-'}}</td>
+      <td>{{quote?.inventory_level}}</td>
+      <td>{{quote?.is_qty}}</td>
+      <td>${{quote?.asset_value | number : '1.2-2'}}</td>
+      <td>
+        <span *ngIf="button_type=='0'"> ${{quote?.price}}</span>
+        <span *ngIf="button_type=='1'" class="text-danger">NA</span>
+
+      </td>
+      <td>
+        <span *ngIf="button_type=='1'">${{quote?.buy_price}}</span>
+        <span *ngIf="button_type=='0'" class="text-danger">NA</span>
+      </td>
+      <td>
+        ${{quote?.discount}}
+      </td>
+      <td>${{quote?.is_total | number : '1.2-2'}}</td>
+    </tr>
+    <tr>
+      <td colspan="9" class="asset_lable">Total Asset Amount </td>
+      <td colspan="5" class="asset_value">${{quoteInfo?.quote?.asset_value | number : '1.2-2'}}</td>
+    </tr>
+    <tr *ngIf="button_type=='0'">
+      <td colspan="13" class="text-right border-0">
+        <span *ngIf="quoteInfo?.quote?.is_tax_exempt==1">Tax Exempt</span> Monthly Rent Total
+      </td>
+      <td>${{quoteInfo?.quote?.rent_sub_total | number : '1.2-2'}}</td>
+    </tr>
+    <tr *ngIf="button_type=='0'">
+      <td colspan="13" class="text-right border-0">
+        Monthly Rent Adjustment Amount
+      </td>
+      <td>
+        {{quoteInfo?.rent_adjument_value < 0 ? '-' :''}} ${{((quoteInfo?.rent_adjument_value+'').replace('-','')| number
+          : '1.2-2' )}} </td>
+    </tr>
+    <tr *ngIf="button_type=='0'">
+      <td colspan="13" class="text-right border-0 weight">Final Monthly Rent After Adjustment</td>
+      <td>
+        ${{quoteInfo?.quote?.rent_after_adjustment_value | number : '1.2-2'}}
+      </td>
+    </tr>
+    <tr *ngIf="button_type=='1'">
+      <td colspan="13" class="text-right border-0">
+        <span *ngIf="quoteInfo?.quote?.is_tax_exempt==1">Tax Exempt</span> Buy Total
+      </td>
+      <td>${{quoteInfo?.quote?.buy_sub_total | number : '1.2-2'}}</td>
+    </tr>
+    <tr *ngIf="button_type=='1'">
+      <td colspan="13" class="text-right border-0">
+        Buy Discount Amount
+      </td>
+      <td>
+        <span> ${{quoteInfo?.quote?.buy_discount}}</span>
+      </td>
+    </tr>
+    <tr *ngIf="button_type=='1'">
+      <td colspan="13" class="text-right border-0">Final Buy Amount After discount</td>
+      <td>
+        ${{quoteInfo?.quote?.buy_net_total | number : '1.2-2'}}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="13" class="text-right border-0">
+        <span *ngIf="quoteInfo?.quote?.is_delivery_fee_taxable==0">Non - Taxable</span>
+        <span class="non_tax_text">Delivery Fee</span>
+      </td>
+      <td>
+        <span>${{quoteInfo?.quote?.delivery_fee}}</span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="13" class="text-right  border-0">
+        <span *ngIf="quoteInfo?.quote?.is_freight_charges_taxable==0">Non - Taxable</span>
+        <span class="non_tax_text">Freight Charges</span>
+      </td>
+      <td>
+        ${{quoteInfo.quote?.freight_charges ? quoteInfo.quote?.freight_charges : 0}}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="13" class="text-right border-0">
+        <span *ngIf="quoteInfo?.quote?.is_other_services_taxable==0">Non - Taxable</span>
+        <span class="non_tax_text">Other Services</span>
+      </td>
+      <td>
+        ${{quoteInfo.quote?.other_services ? quoteInfo.quote?.other_services : 0}}
+      </td>
+    <tr>
+      <td colspan="13" class="text-right border-0">Taxes ({{quoteInfo?.quote?.tax_percentage}} %) on
+        Delivery/Freight/Other Services</td>
+      <td>${{quoteInfo?.quote?.tax_on_delivery_freight_other ? quoteInfo?.quote?.tax_on_delivery_freight_other:0}}</td>
+    </tr>
+    <tr *ngIf="button_type=='0'">
+      <td colspan="13" class="text-right border-0">
+        Taxes ({{quoteInfo?.quote?.tax_percentage}} %) on Final Monthly Rent After Adjustment</td>
+      <td>
+        ${{quoteInfo?.quote?.tax_on_rent_after_adjustment ? quoteInfo?.quote?.tax_on_rent_after_adjustment :0}}
+      </td>
+    </tr>
+    <tr *ngIf="button_type=='1'">
+      <td colspan="13" class="text-right border-0">
+        Taxes ({{quoteInfo?.quote?.tax_percentage}} %) on Final Buy Amount After discount </td>
+      <td>
+        ${{quoteInfo?.quote?.tax_on_buy_after_adjustment | number : '1.2-2'}}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="13" class="text-right border-0">
+        <ul>
+          <li>
+            <span *ngIf="button_type==0">Total Rent Order Amount After Taxes</span>
+            <span *ngIf="button_type==1">Total Buy Order Amount After Taxes</span>
+          </li><br>
+          <li>Total Installment Amount</li><br>
+          <li>Total Amount Due</li><br>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li>
+            <span *ngIf="button_type==0">${{quoteInfo?.quote?.total_rent_order_amount_after_taxes | number :
+              '1.2-2'}}</span>
+            <span *ngIf="button_type==1">${{quoteInfo?.quote?.total_buy_order_amount_after_taxes | number :
+              '1.2-2'}}</span>
+          </li><br>
+          <li>${{quoteInfo?.quote?.total_installment_amount | number : '1.2-2'}}</li><br>
+          <li>
+            <span *ngIf="button_type==0">${{quoteInfo?.quote?.rent_total_amount_due | number : '1.2-2'}}</span>
+            <span *ngIf="button_type==1">${{quoteInfo?.quote?.buy_total_amount_due | number : '1.2-2'}}</span>
+          </li><br>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="13" class="text-right border-0">
+        <ul>
+          <li>(Delivery Fee + Freight Charges + Other Services) Total Services Order Amount</li><br>
+          <li>Total Installment Amount</li><br>
+          <li>Total Amount Due</li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li>${{quoteInfo?.quote?.total_services_order_amount | number : '1.2-2'}}</li><br>
+          <li>${{quoteInfo?.quote?.total_service_installment_amount | number : '1.2-2'}}</li><br>
+          <li>${{quoteInfo?.quote?.service_total_amount_due | number : '1.2-2'}}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="13" class="text-right border-0 weight text-primary">
+        (Buy/Rent/Services) Total Order Amount</td>
+      <td class="weight">
+        <span *ngIf="button_type==0">${{quoteInfo?.quote?.total_order_amount_rent_and_services | number :
+          '1.2-2'}}</span>
+        <span *ngIf="button_type==1">${{quoteInfo?.quote?.total_order_amount_buy_and_services | number :
+          '1.2-2'}}</span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="13" class="text-right border-0 weight">
+        Pickup Fee(Charged at the end of the lease)</td>
+      <td>
+        <span>${{quoteInfo?.quote.pickup_fee}}</span>
+      </td>
+    </tr>
+
+
+
+  </tbody>
+</table>
+
+
+<!--Generate pdf details -->

@@ -1,0 +1,523 @@
+<html>
+<head>
+    <style>
+        @page { size: landscape; }
+        body{
+            font-family:Arial, Helvetica, sans-serif;
+            padding : 10px 15px;
+        }
+ 
+ table {
+  border-collapse: collapse;
+  font-size:14px;
+}
+.sub-head{
+    color:grey;
+    margin-bottom:5px;
+}
+
+table, th, td {
+    padding:5px 15px;
+  border: 1px solid black;
+}
+.top-table th{
+text-align:left;
+}
+.top-table td{
+
+}
+ul{
+    list-style:none;
+display:flex;
+padding-left:0;
+}
+ul li{
+    padding:5px 30px;
+}
+.li-left{
+font-size:14px;
+color:grey;
+}
+.li-right{
+    font-size:14px;
+    font-weight:bold
+}
+.summary .text-right{
+    text-align:right;
+    padding:10px; 
+    border:none;
+}
+.summary{
+    border:0;
+    
+}
+.table_img{
+    width:80px;
+    height:80px;
+}
+
+    </style>
+</head>  
+<script>
+    window.onload = function() { window.print();};
+</script>
+
+<body>
+    <h4 class="heading"><span class="sub-head">Quote No:</span> 1234</h4>
+
+    
+
+    <ul style="margin-top:30px;">
+        <li style="padding-left:0;"><span class="li-left">Customer Name: </span> <span class="li-right">Jasim</span></li>
+        <li><span class="li-left">Email: </span> <span class="li-right">Jasim</span></li>
+        <li><span class="li-left">Contact NO: </span> <span class="li-right">Jasim</span></li>
+        <li><span class="li-left">Address: </span> <span class="li-right">Jasim</span></li>
+        <li><span class="li-left">State: </span> <span class="li-right">Jasim</span></li>
+        <li><span class="li-left">City: </span> <span class="li-right">Jasim</span></li>
+        <li><span class="li-left">Zip code: </span> <span class="li-right">Jasim</span></li>
+        </ul>
+
+        
+
+    <h4 class="sub-head" style="margin-top:50px;">Floor Plans Detail: </h4>
+    <table class="top-table">
+      <thead>
+        <tr>
+            <th>SI No.</th>
+            <th>Floor plans</th>
+            <th>No of Units</th>
+            <th>No of Moodboards</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>1</th>
+            <td>Lake view</td>
+            <td>5</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <th>2</th>
+            <td>Madission Plan</td>
+            <td>2</td>
+            <td>1</td>
+          </tr>
+        </tbody>
+    </table>
+
+    <h4 class="sub-head" style="margin-top:50px;">Moodboard Details: </h4>
+    <table class="mbDeatils">
+      <thead>
+        <tr>
+            <th>SI No.</th>
+            <th>Moodboards</th>
+            <th>Floor Plan</th>
+            <th>No of Unit / Floor plan</th>
+            <th>Units / Moodboard</th>
+            <th>No of Unit / Moodboard</th>
+            <th>Units / Moodboard</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>1</th>
+            <td>Living Bed room</td>
+            <td>Lake View</td>
+            <td>5</td>
+            <td>U2,U3, U4, U5</td>
+            <td>2</td>
+            <td>U3, U4</td>
+          </tr>
+          
+        </tbody>
+    </table>
+
+
+    <h4 class="sub-head" style="margin-top:50px;">Quote Summary: </h4>
+    <table class="summary" style="width:100%">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">SKU</th>
+            <th scope="col">Image</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Supplier Name</th>
+            <th scope="col">Inventory Level</th>
+            <th scope="col">Moodboard Item Qty</th>
+            <th scope="col">Inhabitr Asset Value</th>
+            <th scope="col">$ Price / month</th>
+            <th scope="col">$ Discount / month</th>
+            <th scope="col">$ B2b Discount / month</th>
+            <th scope="col">Sale Price / month</th>
+            <th scope="col">months</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr> <tr  *ngFor="let prod of quotationData?.quote_items;let i = index">
+                <th scope="row">1</th>
+                <td>Amaz</td>
+                <td ><img src="https://storage.googleapis.com/furniture-testing-datas/products/pro1849/com2141/thumbs/beth-bed-1581113019.jpg"  class="table_img" ></td>
+                <td>Living</td>
+                <td>Amazon</td>
+                <td>5</td>
+                <td class="text-center "> 3 </td>
+                <td>$100</td>
+                <td>$150</td>
+                <td>2%</td>
+                 <td class="text-center">2%</td>
+                <td>$150</td>
+                <td>12</td>
+                <td>15000</td>
+              </tr>
+              <tr>
+              
+               <td colspan="13" class="text-right ">Sub Total</td>
+                <td>$15000</td>
+              </tr>
+              <tr>
+                <td colspan="13" class="text-right ">Discount 5%</td>
+                 <td>$12000</td>
+               </tr>
+               <tr>
+                <td colspan="13" class="text-right ">Monthly Rent</td>
+                 <td>$12000</td>
+               </tr>
+               <tr>
+                <td colspan="13" class="text-right ">Delivery and Pickup Fee</td>
+                 <td class="px-1 position-relative">$99</td>
+               </tr>
+               <tr>
+                <td colspan="13" class="text-right ">Taxes( 0 % ) </td>
+                 <td>0</td>
+               </tr>
+               <tr>
+                <td colspan="13" class="text-right font-weight-bold border-0">Total</td>
+                 <td>$12099</td>
+               </tr>
+
+        </tbody>
+</body>
+</html>
+
+

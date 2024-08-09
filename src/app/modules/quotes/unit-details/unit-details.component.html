@@ -1,0 +1,203 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<section>
+  <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-11 m-auto back_quote">
+          <a class="cursor-pointer " (click)="backToQuote()"><i class="fa fa-angle-left"></i> Back to Quote  </a>
+          / <span>Floor Plan</span> 
+        </div>
+      </div>
+      <div class="row mt-2" >
+        <div class="col-md-11 m-auto">
+          <div class="units-assigned-view">
+            <div class="row px-4 py-3">
+              <div class="col-lg-8">
+                <table class="unit_table" *ngIf="this.unitDetails?.floorplan_id !==null" [ngClass]="{'event-none':order_status==true}">
+                  <tr>
+                      <td>Unit name</td>
+                      <td><input type="text" disabled value="{{unitSummaryInfo.indv_unit?.name}}" class="form-control" /></td>
+                      <td><button type="submit" class="btn" (click)="updateUnitDialog()">Change Unit Name</button></td>
+                  </tr>
+                  <tr>
+                    <td>Floor Plan</td>
+                    <td style="font-weight: 500;">{{unitSummaryInfo?.floorplan?.floorname}}</td>
+                  </tr>
+                </table>
+                <table class="unit_table" *ngIf="this.unitDetails?.floorplan_id ==null">
+                  <tr>
+                    <td>Select Floor Plan</td>
+                    <td style="width: 200px;">
+                      <div class="dropdown select_dropdown_view form-control add_info_input">
+                        <a class="dropdown-toggle"
+                            type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{assingFloorPlan?.floorname}}
+                        </a>
+                        <ul class="dropdown-menu scroll" aria-labelledby="dropdownMenuButton1">
+                            <li class="dropdown-item" *ngFor="let floorplan of unitSummaryInfo.assign_floorplan" 
+                            (click)="selectFloor(floorplan)" href="javascript:void(0)">{{ floorplan.floorname }}</li>
+                        </ul>
+                    </div>
+                    </td>
+                    <td style="width: 100px;"><button type="submit" class="btn w-100" (click)="AddFloorplanunitlevel()">Add</button></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 text-right">
+                <a class="cursor-pointer back-quote" (click)="backToQuote()"><i class="fa fa-angle-left"></i>Back to Quote</a>
+              </div>
+            </div>
+            <!-- moodboard details -->
+            <div class="row" [ngClass]="{'event-none':order_status==true}">
+              <div class="col-md-12">
+                <div class="moodboard-flex-view">
+                  <div *ngFor="let moodboard of unitSummaryInfo.moodboards">
+                      <div class="img_view" *ngIf="moodboard?.unitmoodboards">
+                        <span (click)="deleteUnitMoodboard(moodboard)"><i class="fa fa-times" aria-hidden="true"></i></span>
+                        <img src="{{moodboard?.unitmoodboards?.is_moodboard_images?.small}}">
+                        <p>{{moodboard?.unitmoodboards?.boardname}}</p>
+                      </div>
+                      
+                  </div>
+                  <div class="add-mb-view" (click)="getMoodboards('unit')">
+                    + Moodboard
+                  </div>
+                 
+                </div>
+              </div>
+            </div> 
+            <!-- moodboard details -->
+            <!-- Floor Plan Summary -->
+            <div class="row">
+              <div class="col-md-12">
+                <table class="table floor-unit-table table-responsive">
+                  <thead>
+                      <th scope="col" style="vertical-align: middle"></th>
+                      <th scope="col" style="vertical-align: middle">SKU</th>
+                      <th scope="col" style="vertical-align: middle">Image</th>
+                      <th scope="col" style="vertical-align: middle">Product Name</th>
+                      <th scope="col" style="vertical-align: middle">
+                        Supplier Name
+                      </th>
+                      <th scope="col" style="vertical-align: middle">
+                        Warehouse Location
+                      </th>
+                      <th scope="col" style="vertical-align: middle">
+                        Moodboard Name
+                      </th>
+                      <th scope="col" style="vertical-align: middle">
+                        Inventory Level
+                      </th>
+                      
+                      <th scope="col" style="vertical-align: middle">
+                        Moodboard Item Qty
+                      </th>
+                      <th scope="col" style="vertical-align: middle">Asset Value</th>
+                      <th scope="col" style="vertical-align: middle">
+                        $&nbsp; Price&nbsp;/ Month
+                      </th>
+                      <th scope="col" style="vertical-align: middle">
+                        $&nbsp;Buy Price 
+                      </th>
+                      <th scope="col" style="vertical-align: middle">
+                        $&nbsp;Discount&nbsp;/ Month
+                      </th>
+                      <th scope="col" style="vertical-align: middle">
+                        %&nbsp;Discount&nbsp;/ Month
+                      </th>
+                      <th scope="col" style="vertical-align: middle">
+                        $&nbsp;B2B Discount &nbsp;/ Month
+                      </th>
+                      <th>Months</th>
+                      <th scope="col" style="vertical-align: middle">Total</th>
+                  </thead>
+                  <tbody [ngClass]="{'event-none':order_status==true}">
+                      <tr *ngFor="let quote of unitSummaryInfo.items;let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{quote?.sku}}</td>
+                        <td>
+                          <img src="{{quote?.product_images?.large}}"/></td>
+                        <td>{{quote?.name}}</td>
+                        <td>{{quote?.supplier_name}}</td>
+                        <td>{{quote?.warehouse_name ? quote?.warehouse_name :'NA'}}</td>
+                        <td>{{quote?.moodboard_name}}</td>
+                        <td>{{quote?.inventory_level}}</td>
+                        <td>
+                          <span>
+                            <span class="fa fa-minus pointer" (click)="unitQty(quote,'-')"></span>
+                            <span class="inc">{{quote.is_qty }}</span>
+                            <span class="fa fa-plus pointer" (click)="unitQty(quote,'+')"></span>
+                          </span>
+                        </td>
+                        <td>${{quote?.asset_value | number : '1.2-2'}}</td>
+                        <td>
+                          <span *ngIf="button_type=='0'"> $ <input class="table-input" (keyup)="unitItemCal($event,quote,'price')"  type="text" value="{{quote?.price}}" /> </span>
+                          <span *ngIf="button_type=='1'" class="text-danger">NA</span>
+                          
+                        </td>
+                        <td>
+                          <span *ngIf="button_type=='1'">$ <input type="text" (keyup)="unitItemCal($event,quote,'buy_price')" class="table-input"  value="{{quote?.buy_price}}" /> </span>
+                          <span *ngIf="button_type=='0'" class="text-danger">NA</span>
+                        </td>
+                        <td>
+                          $<input type="text" class="table-input" (keyup)="unitItemCal($event,quote,'discount')"  value="{{quote?.discount}}" />
+                         </td>
+                          <td>
+                          $<input type="text" class="table-input"  value="{{quote?.discount}}" />
+                         </td>
+                         <td>
+                          ${{quote?.price | number : '1.2-2'}}
+                        </td>
+                        <td>
+                          <span *ngIf="button_type=='0'">
+                            <span class="fa fa-minus pointer" (click)="unitMonth(quote,'-')"></span>
+                            <span class="inc">{{quote.months }}</span>
+                            <span class="fa fa-plus pointer" (click)="unitMonth(quote,'+')"></span>
+                          </span>
+                          <span *ngIf="button_type=='1'" class="text-danger">NA</span>
+                        </td>
+                        <td>
+                          ${{quote?.is_total | number : '1.2-2'}}
+                        </td>
+                        <td *ngIf="show_delete=='delete'">
+                          <i class="fa fa-trash" (click)="deleteItem(quote)"></i>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="16" class="text-right border-0 weight">Total Asset Value</td>
+                        <td>
+                          <span *ngIf="button_type=='0'">${{unitSummaryInfo.indv_unit?.rent_net_total | number : '1.2-2'}}</span>
+                          <span *ngIf="button_type=='1'">${{unitSummaryInfo.indv_unit?.buy_net_total | number : '1.2-2'}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="16" class="text-right border-0 weight">Delivery Fee</td>
+                        <td>
+                            <span>$<input type="text" value="{{unitSummaryInfo.indv_unit?.delivery_fee}}" class="table-input"/></span>
+                        </td>
+                      </tr>
+                     
+                      <tr>
+                        <td colspan="16" class="text-right border-0 weight">Pickup Fee(Charged at the end of the lease)</td>
+                        <td>
+                            <span>$<input  value="{{ unitSummaryInfo.indv_unit?.pickup_fee }}" type="text" class="table-input"/></span>
+                        </td>
+                      </tr>
+                  </tbody>
+                </table>  
+                <div class="update_floor" [ngClass]="{'event-none':order_status==true}">
+                  <button type="submit" class="btn" (click)="updateUnit()">Update Unit</button>
+                  <button type="submit" class="btn" *ngIf="show_delete=='cancel'" (click)="removeItem('delete')">Remove Unit</button>
+                  <button type="submit" class="btn" *ngIf="show_delete=='delete'" (click)="removeItem('cancel')">Cancel</button>
+              </div>
+              </div>
+            </div>
+  
+            <!-- Floor Plan Summary -->
+          </div>
+        </div>
+      </div>
+         
+    </div>  
+</section>

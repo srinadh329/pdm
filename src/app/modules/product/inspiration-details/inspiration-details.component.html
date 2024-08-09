@@ -1,0 +1,146 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<section class="item-details">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-between align-items-center">
+                <div>
+                    <img src="/assets/img/project/arrow-left.png" routerLink="/admin/products/inspirationList" class="cursor-pointer pr-1">
+                    Back to Inspiration List
+                </div>
+            </div>    
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-12">
+                <div class="card custom-card">
+                    <div class="d-flex justify-content-between">
+                        <h4>Inspiration Image ( Source : {{item?.source}})</h4>
+                       
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="insp-img">
+                            <img src="{{item?.image_url}}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4" *ngIf="item?.created_at">
+            <div class="col-md-12">
+                <h6 class="m-0 request_date" >Request Date: {{item?.created_at | date :'d MMMM y, h:mm a'}}</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-between align-items-center">
+                <div>
+                    <button class="btn mb_button" (click)="segmentView()">View Segmented Image</button>
+                </div>
+                <ul class="light_view">
+                    <div *ngFor="let light of item?.lights;let i =index;" class="light_numbers">
+                        <li class="latest-table-tooltip" 
+                            [ngClass]="{'class_green' :light?.status==true,'class_red':light?.status!==true}" 
+                            >
+                            {{light?.code}}
+                            <span class="latest-table-tooltiptext">{{light?.message}}</span>
+                        </li>
+                        <p>{{i+1}}</p>
+                    </div>
+                </ul>
+            </div>
+        </div>
+        <div class="row mt-4" *ngIf="item?.matching_requests?.length">
+            <div class="col-md-12">
+                <h6 class="m-0 request_date" >Matching Product Request</h6>
+            </div>
+        </div>
+        <div class="row mt-4 match_products_view" *ngIf="item?.matching_requests?.length">
+            <div class="col-md-6">
+                <div class="tab-content tab-space">
+                    <div class="tab-pane active" id="dashboard-1">
+                        <div [id]="'accordion'+i" class="faq_question" *ngFor="let req of item?.matching_requests;let i=index">
+                            <p class="m-1">Category : {{req?.category}}</p>
+                            <div class="card mt-2 custom-request-card">
+                                <div class="card-header accordion-custom-header" id="heading{{i}}">
+                                    <a class="mb-0" data-toggle="collapse" [href]="'#collapseOne'+i" aria-expanded="false"
+                                        > <span class="request">Request</span> </a>
+                                </div>
+                                <div [id]="'collapseOne'+i" class="collapse"  data-parent="#accordion1">
+                                    <div class="card-body text-justify">
+                                        <ngx-json-viewer [json]="req?.request_json" [expanded]="false" [depth]="3"></ngx-json-viewer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="tab-content tab-space">
+                    <div class="tab-pane active" id="dashboard-1">
+                        <div id="accordion2" class="faq_question" *ngFor="let req of item?.matching_requests;let i=index">
+                            <p class="m-1 invisible">Category : {{req?.category}}</p>
+                            <div class="card mt-2 custom-request-card">
+                                <div class="card-header accordion-custom-header" id="heading{{i}}">
+                                    <a class="mb-0" data-toggle="collapse" [href]="'#collapseTwo'+i" aria-expanded="false"
+                                        > <span class="request">Response</span></a>
+                                </div>
+                                <div [id]="'collapseTwo'+i" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion2">
+                                    <div class="card-body text-justify">
+                                        <ngx-json-viewer [json]="req?.response_json" [expanded]="false" [depth]="3"></ngx-json-viewer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h6 class="m-0 request_date">Packages <span *ngIf="item?.res?.budget">(Budget: {{item?.res?.budget}})</span></h6>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <div class="tab-content tab-space">
+                    <div class="tab-pane active" id="dashboard-1">
+                        <div id="accordion1" class="faq_question">
+                            <div class="card mt-2 custom-request-card">
+                                <div class="card-header accordion-custom-header" id="headingOne">
+                                    <a class="mb-0" data-toggle="collapse" href="#collapseOne" aria-expanded="false"
+                                        aria-controls="collapseOne"> <span class="request">Generate Design Option Request</span></a>
+                                </div>
+                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion1">
+                                    <div class="card-body text-justify">
+                                        <ngx-json-viewer [json]="item?.package_request" [expanded]="false" [depth]="3"></ngx-json-viewer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <h6 class="m-0 request_date">Design Options</h6>
+            </div>
+        </div>
+        <div>
+            <div *ngFor="let package of item?.packages">
+                <p class="item_name">{{package?.name}} <span class="ml-3">Total Price<span class="dollar">: $ {{package?.total | number : '1.2-2'}}</span></span></p>
+                <ul class="package-list">
+                    <li *ngFor="let item of package?.items">
+                        <img src="{{item?.image}}"/>
+                        <div class="lable-view">
+                            <p class="m-0" *ngIf="item?.score">Score <span>: {{item?.score}}</span></p>
+                            <p class="m-0" *ngIf="item?.design_option_score">Design Option Score<span>: {{item?.design_option_score}}</span></p>
+                            <p class="m-0" *ngIf="item?.buy_price">Buy Price<span>: ${{item?.buy_price | number : '1.2-2'}}</span></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

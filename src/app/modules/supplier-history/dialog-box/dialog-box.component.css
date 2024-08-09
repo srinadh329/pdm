@@ -1,0 +1,37 @@
+.inventory-table{
+    width: 100%;
+    text-align: center;
+    border: 1px solid #d5d4d4;
+    font-size: 12px;
+}
+.inventory-table  th{
+    border: 1px solid #d5d4d4;
+    background-color: #F4F4F4;
+    padding: 10px;
+}
+.inventory-table  tr td{
+    border: 1px solid #d5d4d4;
+    padding: 10px;
+}
+.inventory-popup-header{
+    background-color: #484848;
+    color: #fff;
+}
+.inventory-popup-header span{
+    color: #fff;
+}
+.inventory-table tr:nth-child(even) {background-color: #F4F4F4;}
+.inventory-popup-body{
+    padding:30px;
+    height: 500px;
+    overflow-y: scroll;
+}
+.inventory-table a{
+    width: 200px;
+    display: block;
+    word-break: break-all;
+    color: #007bff;
+}
+.title-font{
+    font-size: 14px;
+}
